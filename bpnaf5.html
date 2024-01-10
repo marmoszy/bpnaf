@@ -1095,8 +1095,8 @@ function url_params() { // overwrite globals from url params
 			console.log(sss[0]+'->'+sss[1]);
 			if(sss[0]==="ex") {
 				sss[1] = decodeURIComponent(sss[1]);
-				if( (sss[1][0]=='#') {
-					window[sss[0]] = sss[1]
+				if( sss[1][0]=='#') {
+					window[sss[0]] = sss[1];
 				} else { 
 					try { window[sss[0]] = eval(sss[1])); }
 					catch (err) {console.log(err.message);}; 
