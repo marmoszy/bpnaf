@@ -1093,9 +1093,17 @@ function url_params() { // overwrite globals from url params
 		for (var i = 0; i < ss.length; i++) {
 			var sss = ss[i].split('=');
 			console.log(sss[0]+'->'+sss[1]);
-			if(sss[0]==="ex") window[sss[0]] = (sss[1][0]=='#'?sss[1]:eval(sss[1]));
-			else window[sss[0]] = sss[1];
-			
+			if(sss[0]==="ex") {
+				sss[1] = decodeURIComponent(sss[1]);
+				if( (sss[1][0]=='#') {
+					window[sss[0]] = sss[1]
+				} else { 
+					try { window[sss[0]] = eval(sss[1])); }
+					catch (err) {console.log(err.message);}; 
+				}
+			} else { 
+				window[sss[0]] = sss[1];
+			}
     	}
 	}
 }
