@@ -616,6 +616,8 @@ It is partly filled by an evaluator.
 			if(document.location.hostname.includes(".github.io")) { 
 				document.getElementById('f7').method = "get";
 				document.getElementById('ex').value = encodeURIComponent(s.replaceAll('\n','|'));
+				document.getElementById('fx').value = "";
+				document.getElementById('fx_name').value = "";
 				document.getElementById('f7').action = "bpnaf5.html"
 			} else {
 				document.getElementById('f7').action = 
