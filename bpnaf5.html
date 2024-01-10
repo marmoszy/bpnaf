@@ -1141,6 +1141,7 @@ function lang_changed(s) {
 	for(var key in lang_dict) {
 		var k=lang_dict[key];
 		var s1=k[idx<k.length?idx:0];
+try {
 		if(Array.isArray(s1)) {
 			for(var j=0;j<s1.length;j++) {
 				if(key.includes("$NN")) {
@@ -1170,12 +1171,12 @@ function lang_changed(s) {
 					document.getElementById(kk[0])[kk[1]]=s1;
 				}
 			} else {
-				console.log(key+" "+s1);
-				try { document.getElementById(key).innerHTML=s1; }
-				catch(err) {console.log(err.message + "\nerror ->" + key+" "+s1);}
+				document.getElementById(key).innerHTML=s1;
 			}
 		}
+} catch(err) {console.log(err.message + "\nerror ->" + key+" "+s1);}
 	}
+
 }
 function init(s) {
 	read_processes(s);
