@@ -978,7 +978,7 @@ function load_file0(file) {  // using XMLHttpRequest
 }
 
 async function load_file(file) {  // using fetch
-	if(file[0])=='#') {
+	if(file[0]=='#') {
 		ex=file;
 	} else {
 		var url = path + file;
