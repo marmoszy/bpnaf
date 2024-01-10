@@ -721,7 +721,7 @@ function read_processes(s) {
 	s=s.trimStart();
 	if(s[0]!='#') s=convert_csv(s);
 	var ss=s.replaceAll('|','\n').split('\n');
-	var vid=[],vcat=[];vpr=[];vws=[];vts=[];vx=[],vi=[],vst=[],com="",ev="",d="",w=[],ind="",csize="";
+	var vid=[],vcat=[];vpr=[];vws=[];vts=[];vx=[],vi=[],vst=[],com="",ev="",d="",w=[],ind="",csize="",cc="";
 	for(var i=0;i<ss.length;i++) {
 		ss[i] = ss[i].replace(/(\r\n|\n|\r)/gm, "");
 		if(ss[i].length>1) {
