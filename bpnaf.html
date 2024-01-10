@@ -613,6 +613,7 @@ It is partly filled by an evaluator.
 		
 		var s2 = '\nCompany-Evaluator Code: '+company + '\nEvaluator: '+evaluator + '\nLanguage: '+lang +'\n'; //ss.join('\n');
 		if(window.location.protocol==="file:" || document.location.hostname.includes(".github.io")) {
+			if(document.location.hostname.includes(".github.io")) document.getElementById('f7').method = "get";
 			document.getElementById('f7').action = 
 				'bpnaf5.html?ex='+encodeURIComponent(s.replaceAll('\n','|'))+"&lang="+lang;
 			s2='\nDo you want to open generated process map?\n'+s2+'\n';			
