@@ -978,14 +978,18 @@ function load_file0(file) {  // using XMLHttpRequest
 }
 
 async function load_file(file) {  // using fetch
-	var url = path + file;
-	var response = await fetch(url, {cache:"reload"});
-	var allText = await response.text();
-	if(allText.length>0) {
-		ex=allText;
-		var exex;
-		if(file in bpnaf5) exex=bpnaf5[file];
-		if(exex) ex=exex;
+	if(file[0])=='#') {
+		ex=file;
+	} else {
+		var url = path + file;
+		var response = await fetch(url, {cache:"reload"});
+		var allText = await response.text();
+		if(allText.length>0) {
+			ex=allText;
+			var exex;
+			if(file in bpnaf5) exex=bpnaf5[file];
+			if(exex) ex=exex;
+		}
 	}
 	init(ex);	  	
 }
