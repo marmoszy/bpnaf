@@ -171,7 +171,7 @@ var phpname="bpnaf.php" // server component
 var enabled=2;   // enable=0 disable editing (only preview) 
 var lang="pl";
 
-var lang_idx={"en":0,"pl":1,"es":2,"de":3,"":4};
+var lang_idx={"en":0,"pl":1,"es":2,"de":3};
 var lang_dict={
 	 "lang_name":["English","Polski","Español","Deutsch"]
 	,"b_save":["Save","Zachowaj","Guardar","Speichern"]
@@ -225,8 +225,10 @@ var lang_dict={
 			,"Poziom<br>nieprzewidy-walności","Intensywność<br>wiedzy"]
 	]
 */
+
 	,"weight_$NN:title":["1 - the lowest, ... , 6 - the highest","1 - najmniejsza, ... , 6 - największa","1 - la más baja, ..., 6 - la más alta","1 – der niedrigste, ... , 6 – der höchste"]
 	,"trend_$NN:title":["-2 - decreasing, ... , 2 - increasing","-2 - zmniejszający, ... , 2 - zwiększający","-2 - decreciente, ... , 2 - creciente","-2 - abnehmend, ... , 2 - steigend"]
+	
 	,"predi1":["Low unpredictibilty","Niska nieprzewidywalność","Baja imprevisibilidad"]
 	,"predi2":["High unpredictibilty","Wysoka nieprzewidywalność","Alta imprevisibilidad"]
 	,"predi3":["High unpredictibilty","Wysoka nieprzewidywalność","Alta imprevisibilidad"]
@@ -1129,6 +1131,37 @@ var fx=null;
 function exfun(n,s) {
 	ex = (n==0?s:eval(['example1','example2','example3'][n-1]));
 	init(ex);
+}
+function lang_changed0(s) {
+	//alert("lang_changed:"+s+" "+lang);
+	lang=s;  // set global var lang 
+	document.getElementById("lang").value=lang;
+	template1aa = (s==="pl") ? template1aa_pl : template1aa_en;
+
+	var idx=lang_idx[lang];
+	for(var key in lang_dict) {
+		var k=lang_dict[key];
+		var s1=k[idx<k.length?idx:0];
+		if(Array.isArray(s1)) {
+			for(var j=0;j<s1.length;j++) {
+				if(key.includes("$NN")) {
+					for(var k=0;k<ids.length;k++) {
+						var key2 = key.replace("$NN",ids[k]).replace("$DD",(j+1));
+						document.getElementById(key2).innerHTML=s1[j];
+					}
+				} else {
+					document.getElementById(key+(j+1)).innerHTML=s1[j];
+				}
+			}
+		} else {
+			var kk = key.split(':');
+			if(kk.length>1) {
+				document.getElementById(kk[0])[kk[1]]=s1;
+			} else {
+				document.getElementById(key).innerHTML=s1;
+			}
+		}
+	}
 }
 
 function lang_changed(s) {

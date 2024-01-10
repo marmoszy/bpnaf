@@ -148,7 +148,6 @@ It is partly filled by an evaluator.
 			<p>The following form enables preparing a questionnaire that will be visible to dedicated users. After submiting it will generate the link to access it and redirects to this link. It its recommended to store the link from browser address bar. The link is a company and an evaluator dependent what allows for evaluating a company  by several experts.
 			<form id='f7' action='bpnaf.php' method="post" onsubmit="return on_submit();">
 				<input type="hidden" id="fx_name" name="fx_name" value="bpnaf_default.tsv">
-				<input type="hidden" id="ex" name="ex" value="">
 				
 				<fieldset class="border rounded-3 p-3">
 					<legend class="scheduler-border">Company Info:</legend>
@@ -418,11 +417,13 @@ It is partly filled by an evaluator.
 		.then(response => {return response.text();})
 		.then(s => {
 			ss=s.match(/bpnaf_(.)+\.tsv/gi);                     // match bpnaf_*.tsv files
-			var el2=document.getElementById("CompanyHelpList");
-			for(var i=0;i<ss.length;i++) {
-				var option = document.createElement("option");   // creating new option
-				option.value = ss[i].slice(6,-4).replace("_","&");
-				el2.appendChild(option);
+			if(ss!=null) {
+				var el2=document.getElementById("CompanyHelpList");
+				for(var i=0;i<ss.length;i++) {
+					var option = document.createElement("option");   // creating new option
+					option.value = ss[i].slice(6,-4).replace("_","&");
+					el2.appendChild(option);
+				}
 			}
 		})
 		mcs_changed(document.getElementsByName("MCS")[0]);  // update mcs code
@@ -615,8 +616,7 @@ It is partly filled by an evaluator.
 		if(window.location.protocol==="file:" || document.location.hostname.includes(".github.io")) {
 			if(document.location.hostname.includes(".github.io")) { 
 				document.getElementById('f7').method = "get";
-				document.getElementById('ex').value = encodeURIComponent(s.replaceAll('\n','|'));
-				document.getElementById('fx_name').value = "";
+				document.getElementById('fx_name').value = encodeURIComponent(s.replaceAll('\n','|'));
 				document.getElementById('f7').action = "bpnaf5.html";
 			} else {
 				document.getElementById('f7').action = 
