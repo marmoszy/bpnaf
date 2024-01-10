@@ -1170,7 +1170,9 @@ function lang_changed(s) {
 					document.getElementById(kk[0])[kk[1]]=s1;
 				}
 			} else {
-				document.getElementById(key).innerHTML=s1;
+				console.log(key+" "+s1);
+				try { document.getElementById(key).innerHTML=s1; }
+				catch(err) {console.log(err.message + "\nerror ->" + key+" "+s1);}
 			}
 		}
 	}
