@@ -902,8 +902,8 @@ function report() {
 	s += '<p><center>'+document.getElementById("svg_container").innerHTML+'</center></p></body>';
 	// download(s,fname);
 	server_save(s,fname);
-//	var tab = window.open('about:blank', '_blank');tab.document.write(s); tab.document.close();
-	openAsPageInNewTab(s); 	
+	var tab = window.open('about:blank', '_blank');tab.document.write(s); tab.document.close();
+//	openAsPageInNewTab(s); 	
 }
 
 function openAsPageInNewTab(pageContent) {
