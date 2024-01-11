@@ -180,6 +180,7 @@ var lang_dict={
 		,"Guarde el estado actual antes de abrir algo nuevo"
 		,"Speichern Sie den aktuellen Status, bevor Sie etwas Neues öffnen"
 	]
+	,"b_copy:title":["Copy table","Kopiuj tabelę","Copiar tabla","Tabelle kopieren"]
 	,"b_report":["Report","Raport","Reportar","Bericht"]
 	,"b_report:title":["Create html report and open it in the new tab"
 		,"Utwórz raport w nowej karcie"
@@ -207,10 +208,10 @@ var lang_dict={
 	,"b_prev":["Prev","Poprzedni","Previo","Vorherige"]
 	,"b_next":["Next","Następny","Próximo","Nächste"]
 	,"h1_":[
-		 ["Process Level","Process Name","Weight","Trend","Structured","Structured with exceptions","Unstructured with fragments","Unstructured","Knowledge Intensity"]
+		 ["Process Level","Process Name","Weight","Trend","Struc-tured","Struc-tured with exceptions","Unstruc-tured with fragments","Unstruc-tured","Knowledge Intensity"]
 		,["Poziom procesu","Nazwa procesu","Waga","Trend","Ustruktu-ryzowane","Ustruktu-ryzowane z wyjątkami","Nieustruk-turyzowane z wyjątkami","Nieustruk-turyzowane","Intensywność wiedzy"]
 		,["Nivel de proceso","Nombre del proceso","Peso","Tendencia","Estructu-rado","Estructurado con excepciones","Desestru-cturado con fragmentos","Desestru-cturado","Intensidad del conocimiento"]
-		,["Prozessebene", "Prozessname", "Gewich-tung", "Trend", "Struk-turiert", "Strukturiert mit Ausnahmen", "Unstrukturiert mit Fragmenten", "Unstruk-turiert", "Wissen-sintensität"]
+		,["Prozessebene", "Prozessname", "Gewich-tung", "Trend", "Struk-turiert", "Struk-turiert mit Ausnahmen", "Unstruk-turiert mit Fragmenten", "Unstruk-turiert", "Wissen-sintensität"]
 	]
 	,"h2_":[
 		 ["Statement","Do not agree","Partly agree","Mostly agree","Fully agree","Knowledge<br>Intensity"]
@@ -276,7 +277,7 @@ var template1a=`
 	<table id="maintab" class="table">
 		<thead>
 			<tr style="text-align:center">
-				<th></th>
+				<th><input type=button onclick="document.oncopy();" value="#" id="b_copy" title="Copy" style="width:24px"/></th>
 				<th id="h1_1" colspan=2>Process Level</th>
 				<th id="h1_2">Process Name</th>
 				<th id="h1_3">Weight</th>
@@ -539,10 +540,10 @@ function update() {
 	
 	for(var j=0;j<ids.length;j++) {  // for all processes
 		el=document.getElementById(ids[j]+"_w");  // weigths update
-		el.style.color = (el.value>4) ? 'red' : '';
+		el.style.color = (el.value>4) ? 'blue' : '';
 		weights[j] = el.value; 
 		el=document.getElementById(ids[j]+"_t");  // trends update
-		el.style.color = (el.value>=2) ? 'red' : (el.value<=-2)? 'blue' : '';
+		el.style.color = (el.value>=1) ? 'red' : (el.value<=-1)? 'green' : '';
 		trends[j] =el.value;
 		
 		var y='';
@@ -900,21 +901,26 @@ function report() {
 	}
 	s += template1c + '</center><br><br></p>';
 	s += '<p><center>'+document.getElementById("svg_container").innerHTML+'</center></p></body>';
-	// download(s,fname);
 	server_save(s,fname);
-	var tab = window.open('about:blank', '_blank');tab.document.write(s); tab.document.close();
-//	openAsPageInNewTab(s); 	
+	//var tab = window.open('about:blank', '_blank');tab.document.write(s); tab.document.close();
+    if(window.location.protocol.startsWith("file:")) {
+		download(s,fname);
+	} else {
+		openAsPageInNewTab(s, path + fname); 
+	}
 }
 
-function openAsPageInNewTab(pageContent) {
+function openAsPageInNewTab(pageContent,href) {
 	let encoded = encodeURIComponent(pageContent); 
 	let a = document.createElement(`a`);
 	a.target = `_blank`;
-	a.href = `data:text/html;charset=utf-8,${encoded}`;
-	a.style.display = `none`;
-	document.body.appendChild(a); // We need to do this,
-	a.click();                    // so that we can do this,
-	document.body.removeChild(a); // after which we do this.
+	a.href = href || `data:text/html;charset=utf-8,${encoded}`;
+//	if(confirm('Do yo want to open: '+ a.href + ' ?')) {
+		a.style.display = `none`;
+		document.body.appendChild(a); // We need to do this,
+		a.click();                    // so that we can do this,
+		document.body.removeChild(a); // after which we do this.
+//	}
 }
 
 function state_tostring(flag) {
@@ -934,7 +940,7 @@ function state_tostring(flag) {
 		for(var j=0;j<intensities[i].length;j++) {  // all intensities
 			s+='\t'+intensities[i][j];  				
 		} 
-		if(flag) s+='\t\t'+f1pl+(-1*(i+1))+f2pl	;
+		if(flag) s+='\t\t'+(lang=="pl"?f1pl:f1en)+(-1*(i+1))+(lang=="pl"?f2pl:f2en);
 		s+='\n';
 	}
 	return(s);
@@ -1172,6 +1178,10 @@ function lang_changed(s) {
 	//alert("lang_changed:"+s+" "+lang);
 	lang=s;  // set global var lang 
 	document.getElementById("lang").value=lang;
+	for(var key in lang_idx) {
+		document.getElementById(key).style["color"]="black";		
+	}
+	document.getElementById(lang).style["color"]="#9e7ba8";
 	template1aa = (s==="pl") ? template1aa_pl : template1aa_en;
 
 	var idx=lang_idx[lang];
@@ -1244,6 +1254,7 @@ function main() {
 <body onload="main();">
 	
 <div class="container">
+<!--
 	<center>
 		<h2 id="banner">
 			<a id="t_title" href="#" data-bs-toggle="modal" data-bs-target="#modal1">
@@ -1251,6 +1262,36 @@ function main() {
 			</a>
 		</h2> 
 	</center>
+-->	
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+		<button class="navbar-toggler" type="button"
+			data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+			aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarMenu">
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+				<li class="nav-item"><a class="nav-link" aria-current="page" href="javascript:lang_changed('en');" id="en">EN</a></li>
+				<li class="nav-item"><a class="nav-link  active" href="javascript:lang_changed('pl');" id="pl">PL</a></li>
+				<li class="nav-item"><a class="nav-link" href="javascript:lang_changed('es');" id="es">ES</a></li>
+				<li class="nav-item"><a class="nav-link" href="javascript:lang_changed('de');" id="de">DE</a></li>
+			</ul>
+		</div>
+    </div>
+  </nav>
+
+
+<div class="mt-4 p-5" style="background-color:#9e7ba8;margin-top:0!important">
+	<center>
+		<h1 id="banner">
+			<a id="t_title" href="#" data-bs-toggle="modal" data-bs-target="#modal1" class="text-white">
+				Business Process Nature Assessment Framework
+			</a>
+		</h1>
+	</center>
+</div>
+	
 	<p>
 		<table id="header" style="width:100%">
 			<tr>	
