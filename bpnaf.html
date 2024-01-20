@@ -1,55 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>BPNAF</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>BPNAF</title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<style>
-	a {text-decoration:none;}
-	h3
-	{
-	 color: #20385a !important;
-	 background: #fff;
-	 text-align:center;
-	}
-	.sep{
-	    height: 1px;
-	    width: 90%;
-	    display: inline-block;
-	    text-align: right;
-	    background: #f07e00;
-	    vertical-align: middle;
-	}
+	<style>
+		a {text-decoration:none;}
+		h3
+		{
+		 color: #20385a !important;
+		 background: #fff;
+		 text-align:center;
+		}
+		.sep{
+		    height: 1px;
+		    width: 90%;
+		    display: inline-block;
+		    text-align: right;
+		    background: #f07e00;
+		    vertical-align: middle;
+		}
+		[class*="col-"] {
+		  margin-bottom: 18px;
+		  margin-left: -2px;
+		  margin-right: -2px;
+		}
+		.content {
+		  padding: 12px 16px 12px 16px;
+		  margin: 6px 0px 6px 0px;
+		  background-color: white;
+		  border-radius: .1rem;
+		}
+		.h-100 {
+			height:100%;
+		}
+	</style>
+</head>
 
-	[class*="col-"] {
-	  margin-bottom: 18px;
-	  margin-left: -2px;
-	  margin-right: -2px;
-	}
-
-	.content {
-	  padding: 12px 16px 12px 16px;
-	  margin: 6px 0px 6px 0px;
-	  background-color: white;
-	  border-radius: .6rem;
-	}
-
-	.h-100 {height:100%;}
-
-</style>
-
-<script src="bpnaf.js"></script>
+<script src="bpnaf.js">
+</script>
+	
 <script>
 	function main() {
 		var el=document.getElementById("ex6");
 		if(el && typeof example6 !== 'undefined') el.value=example6;
 	}
 </script>	
-</head>
+
 
 <body onload="main();" style="background-color:#eee">
 
@@ -58,11 +59,12 @@
 <!--
 <center><h2><a href="bpnaf5.html">Business Process Nature Assessment Framework</a></h2></center>
 -->
-<p><br></p>
-<div class="mt-4 p-5 bg-gradient" style="background-color:#9e7ba8;margin-top:0!important;background-image1:linear-gradient1(to right,#9e7ba8, #222)">
+<p><br>
+</p>
+<div class="mt-4 p-5 bg-gradient1 bg-light1" style="background-color:#b7d9fE;background-color1:#9e7ba8;margin-top:0!important;background-image:linear-gradient(to top,#e6ffe6,white,white,#b7d9fE)">
 	<center>
 		<h1 id="banner">
-			<a id="t_title" href="bpnaf5.html" class="text-white">
+			<a id="t_title" href="bpnaf5.html" class="text-white1">
 				Business Process Nature Assessment Framework
 			</a>
 		</h1>
@@ -70,7 +72,7 @@
 </div>
 <p>
 <p>The Business Process Nature Assessment Framework (BPNAF)  enables the quick and efficient assessment of the nature of business processes in an organization in terms of their unpredictability and knowledge intensity. The presentation of the results enables the objective recommendation of the selection of implementation methodologies, HRM policies, or IT systems supporting BPM in line with the real nature of business processes implemented in the organization, in a way that is understandable to both experts and non-experts.
-<p>This framework interface supports <a href="bpnaf5.html?lang=en">English</a>, <a href="bpnaf5.html">Polish</a> (default), <a href="bpnaf5.html?lang=es">Spanish</a> and <a href="bpnaf5.html?lang=de">German</a>.  It contains: (1) questionnaire generator for dedicated company and evaluating person, (2) system for completing the questionnaire, (3) server-side and local-side questionnaire management including importing the results from prioprietary files and report genaration. Generated report contains process map and results matrix (BPNAM) in a form of two charts. As a starting point you can go through several examples available below.
+<p>This framework interface supports <a href="bpnaf5.html?lang=en">English</a>, <a href="bpnaf5.html">Polish</a> (default), <a href="bpnaf5.html?lang=es">Spanish</a> and <a href="bpnaf5.html?lang=de">German</a>.  It contains: (1) questionnaire generator for dedicated company and evaluating person, (2) system for completing the questionnaire with option of previewing all questionnaires for one entity (3) server-side and local-side questionnaire management including importing the results from prioprietary files and report genaration. Generated report contains process map and results matrix (BPNAM) in a form of two charts. As a starting point you can go through several examples available below.
 <p>The method overview can be found in <i>Marek Szelągowski,Practical assessment of the nature of business processes, Information Systems and e-Business Management</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs.pdf">pdf</a>) or
 <a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>
  
@@ -82,6 +84,88 @@
 			<h3>Example<br>1</h3>
 			<p>This <a href="bpnaf5.html?ex=example1">example</a> contains the questionnaire contatinng 23 sample processes.
 It is prepared to be filled by an evaluator.
+
+					<a href="bpnaf5.html?ex=example1">
+						<div style="border:1px solid lightgray;">
+							<table width="100%" style="text-align:center"><tbody><tr><td style="height:100px">
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#e6ffe6">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">M1 (2)</text>
+									</svg>
+								</span>
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#e6ffe6">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">M2 (2)</text>
+									</svg>
+								</span>
+							</td></tr><tr><td style="height:100px">
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">C1 (3)</text>
+									</svg>
+								</span>
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">C2 (3)</text>
+									</svg>
+								</span>
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">C3 (3)</text>
+									</svg>
+								</span>
+							</td></tr><tr><td style="height:100px">
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">S1 (4)</text>
+									</svg>
+								</span>
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">S2 (4)</text>
+									</svg>
+								</span>
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">S3 (4)</text>
+									</svg>
+								</span>
+								<span>
+									<svg width="75" height="75" viewBox="0 0 100 100">
+										<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+											<title></title> 
+										</path>
+										<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">S4 (4)</text>
+									</svg>
+								</span>
+							</td></tr></tbody>
+						</table>
+					</div>
+				</a>
 			</p>
 		</div>
 	</div>
@@ -89,8 +173,31 @@ It is prepared to be filled by an evaluator.
 	<div class="col-sm-4">
 		<div class="h-100 content">
 			<h3>Example<br>2</h3>
-			<p>This <a href="bpnaf5.html?ex=example2">example</a> contains the questionnaire contatinng 19 sample processes.
+			<p>This <a href="bpnaf5.html?ex=example2">example</a> contains the questionnaire contatinng 18 sample processes.
 It is partly filled by an evaluator.
+				<a href="bpnaf5.html?ex=example2">
+					<div style="border:1px solid lightgray;">
+						<table width="100%" style="text-align:center"><tbody><tr><td style="height:100px">
+							<span>
+								<svg width="75" height="75" viewBox="0 0 100 100">
+									<path d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#e6ffe6">
+										<title></title> 
+									</path>
+									<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">M2 (9)</text>
+								</svg>
+							</span>
+						</td></tr><tr><td style="height:100px">
+							<span>
+								<svg width="75" height="75" viewBox="0 0 100 100">
+									<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+										<title></title> 
+									</path>
+									<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">C1 (9)</text>
+								</svg>
+							</span>
+						</td></tr><tr><td style="height:100px"></td></tr></tbody></table>
+					</div>
+				</a>
 			</p>
 		</div>
 	</div>
@@ -101,18 +208,88 @@ It is partly filled by an evaluator.
 			<p>
 			This <a href="bpnaf5.html?ex=example3">example</a> contains the questionnaire contatinng 8 sample processes.
 			It is already filled by an evaluator.
+			
+			<a href="bpnaf5.html?ex=example3">
+				<div style="border:1px solid lightgray;">
+					<table width="100%" style="text-align:center"><tbody><tr><td style="height:100px"></td></tr><tr><td style="height:100px">
+						<span>
+							<svg width="75" height="75" viewBox="0 0 100 100">
+								<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+									<title>undefined</title> 
+								</path>
+								<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">C1 (2)</text>
+							</svg>
+						</span>
+					</td></tr><tr><td style="height:100px">
+						<span>
+							<svg width="75" height="75" viewBox="0 0 100 100">
+								<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+									<title></title> 
+								</path>
+								<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">S1 (3)</text>
+							</svg>
+						</span>
+
+						<span>
+							<svg width="70" height="70" viewBox="0 0 100 100">
+								<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+									<title></title> 
+								</path>
+								<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">S2 (3)</text>
+							</svg>
+						</span>
+					</td></tr></tbody></table>
+				</div>
+			</a>
 			</p>
 		</div>
 	</div>
-</div>
+</div> <!-- end of row -->
 	 
 <p><h2>Functionality examples:</h2></p> 
   
 <div class="row">
-	<div class="col-sm-6">
+	<div class="col-md-4">
+		<div class="h-100 content">
+			<h3>Simple example for testing</h3>
+			<p>The framework can generate several questionnaires for one entity that are accesible with differnet link. This oversimplified example is prepared for fictitious company GG with two unnamed processes both in managment catagory:
+<center>
+	<table style="border:1px solid lightgray;">
+		<tbody>
+			<tr style="text-align:center;border-bottom: 1pt solid lightgray;">
+				<td style="text-align:right;padding:6px;">1</td>
+				<td style="border-left: 1pt solid lightgray;color:blue;padding:6px;background-color:#e6ffe6;" rowspan="2">M1</td>
+				<td style="border-right: 1pt solid lightgray;color:blue;text-align:left;padding:6px;background-color:#e6ffe6;" rowspan="2">Management</td>
+				<td style="color:blue;padding:6px;background-color:#e6ffe6;">M1.1</td>
+				<td style="text-align:left;padding:6px;background-color:#e6ffe6;"></td>
+			</tr>
+			<tr style="text-align:center;border-bottom: 1pt solid lightgray;">
+				<td style="text-align:right;padding:6px;">2</td>
+				<td style="color:blue;padding:6px;background-color:#e6ffe6;">M1.2</td>
+				<td style="text-align:left;padding:6px;background-color:#e6ffe6;"></td>
+			</tr>
+		</tbody>
+	</table>
+</center>
+			</p>
+			<p>The administrator of the framework has generated 4 questionnairies:
+				<ul>
+					<li><a href="bpnaf5.html?fx=uuZnglM0RicG5hZl9HRy50c3YlMjZsYW5nJTNEcGw=">Empty questionnaire</a>,</li>
+					<li><a href="bpnaf5.html?fx=uuZnglM0RicG5hZl9HRyUzQjEudHN2JTI2bGFuZyUzRHBs">Questionnaire for the first evaluator</a>,</li>
+					<li><a href="bpnaf5.html?fx=uuZnglM0RicG5hZl9HRyUzQjIudHN2JTI2bGFuZyUzRHBs">Questionnaire for the second evaluator</a>,</li>
+					<li><a href="bpnaf5.html?fx=uuZnglM0RicG5hZl9HRyUzQjElM0IyLnRzdiUyNmxhbmclM0RwbA==">Combined questionnaire for final evaluation</a>.</li>
+				</ul>
+			</p>
+			<p> The fourth questionnaire containes also the current contents of the second one and the third one in preview mode. It is dedicated to preparing final evaluation based on two earlier evaluations.
+			<p>
+			</p>
+		</div>
+	</div>
+
+	<div class="col-md-4">
 		<div class="h-100 content">
 			<h3>Importing files</h3>
-			<p>The framework can open proprietary xlsx results files provided <b>N-1</b> sheet is saved as csv file. Here below there are examples of converted csv files as presented in the framework in preview mode (the questionnaire editing is disabled):
+			<p>The framework can open proprietary xlsx results files provided <b>N-1</b> sheet is saved as csv file. Here below there are examples of converted csv files as presented in the framework in read only mode (editing of evalutors selections is disabled):
 				<ul>
 					<li><a href="bpnaf5.html?fx=csv/BPNAF -OBR.csv&enabled=0">BPNAF -OBR</a></li>
 					<li><a href="bpnaf5.html?fx=csv/BPNAF -prod chemiczna.csv&enabled=0">BPNAF -prod chemiczna</a></li>
@@ -125,7 +302,7 @@ It is partly filled by an evaluator.
 		</div>
 	</div>
 
-	<div class="col-sm-6">
+	<div class="col-md-4">
 		<div class="h-100 content">
 			<h3>Report generation</h3>
 			<p>The framework allows creating htmlized reports that can be later converted to pdf documents. The Report button is available in the multipurpose dialog that is accesible from title text "Business Process Nature Assessment Framework" of the <a href="bpnaf5.html">questionnaire page</a>. The report contains the process table with results and BPNAM charts. Here below you can find examples of reports in html and pdf versions generated from finished questionairies:
@@ -154,83 +331,67 @@ It is partly filled by an evaluator.
 <p><h2>Operating activity:</h2></p>
 
 <div class="row">
-	<div class="col-sm-8">
+	<div class="col-md-8">
 		<div class="h-100 content">
 			<h3>Questionnaire creation</h3>
 			<p>The following form enables preparing a questionnaire that will be visible to dedicated users. After submiting it will generate the link to access it and redirects to this link. It its recommended to store the link from browser address bar. The link is a company and an evaluator dependent what allows for evaluating a company  by several experts.
 			<form id='f7' action='bpnaf.php' method="post" onsubmit="return on_submit();">
 				<input type="hidden" id="fx_name" name="fx_name" value="bpnaf_default.tsv">
-				
 				<fieldset class="border rounded-3 p-3">
 					<legend class="scheduler-border">Company Info:</legend>
-					
-<div class="row">
-					<div class="col-7">
-						<div class="input-group">
-							<div class="input-group-text" title="Enter Company Name">Name:</div>
-							<input type="text" id="CompanyName" class="form-control" list="CompanyHelpList" onchange="company_changed(this);">
-							<datalist id="CompanyHelpList">
-							</datalist>			
+					<div class="row">
+						<div class="col-7">
+							<div class="input-group">
+								<div class="input-group-text" title="Enter Company Name">Name:</div>
+								<input type="text" id="CompanyName" class="form-control" list="CompanyHelpList" onchange="company_changed(this);">
+								<datalist id="CompanyHelpList">
+								</datalist>			
+							</div>
+						</div>
+						<div class="col-5">
+							<div class="input-group">
+								<div class="input-group-text" title="Select Company Country">Country:</div>
+								<select id="CompanyCountry" class="form-control">
+								</select>
+							</div>
 						</div>
 					</div>
-
-					<div class="col-5">
-						<div class="input-group">
-							<div class="input-group-text" title="Select Company Country">Country:</div>
-							<select id="CompanyCountry" class="form-control">
-							</select>
+					<div class="row">
+						<div class="col-7">
+							<div class="input-group">
+								<div class="input-group-text" title="Select optionally industry group codename of the company">Industry:</div>
+								<select id="Industry" class="form-select">
+								  <option value="0"></option>
+								</select>
+							</div>
+						</div>
+						<div class="col-5">
+							<div class="input-group">
+								<div class="input-group-text" title="Select optionally size group of the company">Size: </div>
+								<select id="CompSize" class="form-select">
+									<option value="0"></option>
+									<option value="1">Micro (&lt; 10)</option>
+									<option value="2">Small (11 - 50)</option>
+									<option value="3">Medium (51 - 250)</option>
+									<option value="4">Large (&gt; 250)</option>
+								</select>
+							</div>
 						</div>
 					</div>
-</div>
-<div class="row">
-					<div class="col-7">
-						<div class="input-group">
-							<div class="input-group-text" title="Select optionally industry group codename of the company">Industry:</div>
-							<select id="Industry" class="form-select">
-							  <option value="0"></option>
-							  <option value="1">1</option>
-							  <option value="2">2</option>
-							  <option value="3">3</option>
-							  <option value="4">4</option>
-							  <option value="5" style="color:red">5</option>
-							  <option value="6">6</option>
-							  <option value="7">7</option>
-							  <option value="8">8</option>
-							  <option value="9">9</option>
-							  <option value="10">10</option>
-							  <option value="11">11</option>
-							  <option value="12">12</option>
-							  <option value="13">13</option>
-							  <option value="14">14</option>
-							  <option value="14">15</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-5">
-						<div class="input-group">
-							<div class="input-group-text" title="Select optionally size group of the company">Size: </div>
-							<select id="CompSize" class="form-select">
-								<option value="0"></option>
-								<option value="1">Micro (&lt; 10)</option>
-								<option value="2">Small (11 - 50)</option>
-								<option value="3">Medium (51 - 250)</option>
-								<option value="4">Large (&gt; 250)</option>
-							</select>
-						</div>
-					</div>
-</div>
 				</fieldset>
 				<br>	
 				<fieldset class="border rounded-3 p-3">
-					<legend class="scheduler-border">Process Map Definition:</legend>
+					<legend class="scheduler-border">Processes Map Definition:</legend>
+<div class="row">
 					<div class="mb-2">
 						<div class="input-group">
-							<div class="input-group-text" title="Select by clicking the radio button, choose the value from listbox and edit a name. After selecting new combination the name will be cleared. You do not need to enter again the name if you come back to select previous combination (only first is meaningful for further processing)!" >
-								<font color="">Level N</font>&nbsp;
-							</div>
-							<div class="input-group-text" title="M - Management, C - Core, S - Support" >
-								&nbsp;<input type="radio" name="MCS" value="M" checked onchange="mcs_changed(this);"/>&nbsp;M&nbsp;
-								<select id="M" class="" style="width:40px" onchange="mcs_changed(this);">
+							<div id="LevelN" class="input-group-text" title="Select by clicking the radio button, choose the value from listbox and edit a name. After selecting new combination the name will be cleared. You do not need to enter again the name if you come back to select previous combination (only first is meaningful for further processing)!" >
+								<font color="">Level N</font>&nbsp;:
+							</div> 		
+
+							<div style="background-color:#e6ffe6" class="input-group-text" title="M - Management, C - Core, S - Support" >
+								<input type="radio" name="MCS" value="M" checked onchange="mcs_changed(this);"/>&nbsp;M&nbsp;
+									<select id="M" class="" style="width:40px" onchange="mcs_changed(this);">
 									<option value="1">1</option>
 									<option value="2">2</option>
 									<option value="3">3</option>
@@ -241,7 +402,9 @@ It is partly filled by an evaluator.
 									<option value="8">8</option>
 									<option value="9">9</option>
 								</select>
-								&nbsp;<input type="radio" name="MCS" value="C" onchange="mcs_changed(this);"/>&nbsp;C&nbsp;
+							</div>
+							<div style="background-color:azure" class="input-group-text" title="M - Management, C - Core, S - Support" >
+								<input type="radio" name="MCS" value="C" onchange="mcs_changed(this);"/>&nbsp;C&nbsp;
 								<select id="C" class="" style="width:40px" onchange="mcs_changed(this);" disabled>
 									<option value="1">1</option>
 									<option value="2">2</option>
@@ -253,7 +416,9 @@ It is partly filled by an evaluator.
 									<option value="8">8</option>
 									<option value="9">9</option>
 								</select>
-								&nbsp;<input type="radio" name="MCS" value="S" onchange="mcs_changed(this);"/>&nbsp;S&nbsp;
+							</div>
+							<div style="background-color:#ffffcc" class="input-group-text" title="M - Management, C - Core, S - Support" >
+								<input type="radio" name="MCS" value="S" onchange="mcs_changed(this);"/>&nbsp;S&nbsp;
 								<select id="S" class="" style="width:40px" onchange="mcs_changed(this);" disabled >
 									<option value="1">1</option>
 									<option value="2">2</option>
@@ -265,51 +430,91 @@ It is partly filled by an evaluator.
 									<option value="8">8</option>
 									<option value="9">9</option>
 								</select>
-								&nbsp;:
 							</div>
-							<input type="text" id="CategoryName" class="form-control" list="CategoryHelpList" value="">
-<!--
+								<input type="text" id="CategoryName" class="form-control" list="CategoryHelpList" 
+								value="" placeholder="Management">
 							<datalist id="CategoryHelpList">
-								<option value="M1 - ...">
-								<option value="C1 - ...">
-								<option value="S1 - ...">
-							</datalist>			
--->		
+
+							</datalist>
 						</div>
 					</div>
 					<div class="mb-2">
 						<div class="input-group">
-							<div class="input-group-text" title="Enter process N-1 level name in a edit field">Level N-1
+							<div class="input-group-text" title="Enter process N-1 level name in a edit field">Level N-1&nbsp;:
 							</div>
-							<div class="input-group-text" title="Level N-1 code">
-								&nbsp;&nbsp;&nbsp;<span id="ProcessCode"><font color="blue">M1</font>.1</span>:
+							<div id="LevelN1" class="input-group-text" title="Level N-1 code">
+								&nbsp;&nbsp;<span id="ProcessCode"><font color="blue">M1</font>.1</span>
 							</div>
 							<input type="text" id="ProcessName" class="form-control" list="ProcessHelpList"/>
 							<datalist id="ProcessHelpList">
 							</datalist>
 						</div>
 					</div>
-
+</div>
 					<button type="button" class="btn btn-info" title="Add the name of the process to the Process List" onclick="process_add(this);">Add</button>
 					<button type="button" class="btn btn-warning" title="Delecte last process name from the Process List" onclick="process_del(this);" style="float:right">Delete</button>
-
-					<legend class="scheduler-border">Process List:</legend>
-					<textarea id='ex7' name="fx" wrap="off" rows=11 style="width:100%;font-family:Consolas,monospace"></textarea>
+<p></p>	
+					<div class="row">
+						<div class="container">
+							<ul id="tabA" class="nav nav-tabs">
+								<li class="nav-item">
+									<a href="#tabA1" id="A1" class="nav-link" data-bs-toggle="tab">
+										Processes Map
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="#tabA2" id="A2" class="nav-link active" data-bs-toggle="tab">
+										Processes Table
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="#tabA3" id="A3" class="nav-link" data-bs-toggle="tab">
+										Processes File
+									</a>
+								</li>
+							</ul>
+						</div>
+						<p></p>
+						<div id="tabsA_c" class="tab-content">
+							<div id="tabA1" class="tab-pane fade in show">
+								<div id="tabA1_c" class="container">
+										<div id="ProcessMap" style="height:310px;overflow:auto">
 					
-<div class="row">
-					<div class="col-sm-8">
-						 <div class="input-group">
-							<div class="input-group-text" title="Evaluator Codename">Evaluator:</div>
-							<input type="text" id="EvaluatorName" class="form-control" list="EvaluatorList" onchange="evaluator_add(this.value);" value="">
-							<datalist id="EvaluatorList">
-								<option value="1">
-								<option value="2">
-							</datalist>			
+										</div>			
+								</div>
+							</div>
+							<div id="tabA2" class="tab-pane fade in show active">
+								<div id="tabA2_c" class="container">
+										<div id="ProcessTab" style="height:310px;overflow:auto">
+					
+										</div>			
+								</div>
+							</div>
+							<div id="tabA3" class="tab-pane fade in show">
+								<div id="tabA3_c" class="container">
+										<div style="height:310px">
+											<textarea id='ex7' name="fx" wrap="off" rows=12 style="width:100%;font-family:Consolas,monospace" onchange="update();"></textarea>
+										</div>			
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="col-sm-4">
-						 <div class="input-group">
-							<div class="input-group-text" title="language">Language:</div>
+					<p></p>
+					<div class="row">
+						<div class="col-8">
+							 <div class="input-group">
+								<div class="input-group-text" title="Evaluator Codename">Evaluator:</div>
+								<input type="text" id="EvaluatorName" class="form-control" list="EvaluatorList" onchange="evaluator_add(this.value);" value=""/>
+								<datalist id="EvaluatorList">
+									<option value="1">
+									<option value="2">
+									<option value="1&2">
+								</datalist>			
+							</div>
+						</div>
+						<div class="col-4">
+							<div class="input-group">
+								<div class="input-group-text" title="language">Language:</div>
 								<select class="form-select form-select-sm" id="lang" style="width:64px;display:right" onchange="lang_changed(this.value);">
 									<option value="en">en</option>
 									<option value="pl" selected>pl</option>
@@ -319,26 +524,35 @@ It is partly filled by an evaluator.
 							</div>
 						</div>
 					</div>
-				    <div class="">
-						<input type="submit" id="submit" value="Submit" class="btn btn-primary" style="float:right" disabled>
-					</div>
-</div>
+					<input type="submit" id="submit" value="Submit" class="btn btn-primary" style="float:right" disabled/>
 				</fieldset>
-
 			</form>
 		</div>
 	</div>	 
+
+	<div class="col-md-4">
+		<div class="h-100 content">
+			<h3>Administrator panel</h3>
+			<p>The server component of the framework is dedicated to postprocessing of questionnaire datafiles. It has access to all questionnaires so in deployed system it needs to be password protected. At the moment it allows just for <a href="bpnaf.php">previewing</a> the content of quiestionnire files and go to selected one. 
+			<p>The questionnaire file represents tab separated items hence the preview in the textarea could be copied and pasted to spredsheet software. For example the columns sixth and seventh (F and G when pasting into A) represents the data for BPNAM chart. Be aware that floating point numbers are represented with the dot character as the decimal point separator! </p>
+			<p>The component requires the system to be installed on a web server with php enabled interpreter.</p>
+		</div>
+	</div>		
 </div>  <!-- end of row -->
 
 </div> <!-- end of container -->
+
+</body>
 
 <script>
 	var bpnafname = "bpnaf"; // data files base name
 	var bpnafphp = "bpnaf.php";
 	var ext='.tsv';  // file format extension (tab separated)
 	var datapath="dat/";   // data subdirectory
-	var bom='\xef\xbb\xbf'; // utf-8 byte order mark
-
+	var bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // '\xef\xbb\xbf'; // utf-8 byte order mark
+	var debug = 0;
+	var bpnaf5 = {}
+	
 	// sample namess of processes as third field 
 	var example1=`
 	#;Przykładowa2 SA;Marek Oceniający;;;0;0.3;0.65;1
@@ -388,15 +602,34 @@ It is partly filled by an evaluator.
 		var url = datapath + file;
 		var response = await fetch(url,{cache: "reload"});
 		var pr = await response.text();
-		console.log("load_serverfile: "+pr);
+		if(debug) console.log("load_serverfile: "+pr);
+		bpnaf5[file]=pr;
+		localStorage.bpnaf5=JSON.stringify(bpnaf5);
 		return(pr);
 	}
 	function company_changed(el) {
 		var fname = bpnafname + "_" + el.value.replaceAll("&","_") + ext;
-		console.log("Company changed: "+fname);
-		load_serverfile(fname).then(s=>{
-			console.log("then: "+s);
-			if(s.length>0 && s[0]=='#') {
+		if(debug) console.log("Company changed: "+fname);
+		if(!window.location.protocol.startsWith("file:")) {
+			load_serverfile(fname).then(s=>{
+				if(debug) console.log("then: "+s);
+				if(s.startsWith(bom)) s.substring(s);
+				if(s.length>0 && s[0]=='#') {
+					document.getElementById("ex7").value=s;
+					var ss = s.split('\n');
+					var ss0 = ss[0].replace(/(\r\n|\n|\r)/gm, "").split(/[;\t]/);
+					var n=0;
+					n=1;document.getElementById("CompanyName").value = ss0.length>n && ss0[n].length>0 ? ss0[n]: '';
+					n=2;document.getElementById("EvaluatorName").value = ss0.length>n && ss0[n].length>0 ? ss0[n]: '';
+					n=12;document.getElementById("Industry").value = ss0.length>n && ss0[n].length>0 ? ss0[n] : '';
+					n=13;document.getElementById("CompSize").value = ss0.length>n && ss0[n].length>0 ? ss0[n] : '';
+					n=14;document.getElementById("CompanyCountry").value = ss0.length>n && ss0[n].length>0? ss0[n] : '';
+				}
+				update();
+			}); 
+		} else {
+			s = bpnaf5[fname];
+			if(s && s.length>0 && s[0]=='#') {
 				document.getElementById("ex7").value=s;
 				var ss = s.split('\n');
 				var ss0 = ss[0].replace(/(\r\n|\n|\r)/gm, "").split(/[;\t]/);
@@ -407,9 +640,9 @@ It is partly filled by an evaluator.
 				n=13;document.getElementById("CompSize").value = ss0.length>n && ss0[n].length>0 ? ss0[n] : '';
 				n=14;document.getElementById("CompanyCountry").value = ss0.length>n && ss0[n].length>0? ss0[n] : '';
 			}
-			update_mcs();
-			document.getElementById('submit').disabled=false;
-		}); 
+			update();
+			
+		}
 	}
 	function init_lists() {  
 	//fill ProcessHelpList from example1 internal variable		
@@ -425,19 +658,34 @@ It is partly filled by an evaluator.
 		}
 	//fill CompanyHelpList from server directory
 		url = bpnafphp +"?fx=.";  // url for getting list of data directory
-		fetch(url, {cache:"reload"})
-		.then(response => {return response.text();})
-		.then(s => {
-			ss=s.match(/bpnaf_(.)+\.tsv/gi);                     // match bpnaf_*.tsv files
-			if(ss!=null) {
-				var el2=document.getElementById("CompanyHelpList");
-				for(var i=0;i<ss.length;i++) {
-					var option = document.createElement("option");   // creating new option
-					option.value = ss[i].slice(6,-4).replace("_","&");
-					el2.appendChild(option);
+		if(!window.location.protocol.startsWith("file:")) {
+			fetch(url, {cache:"reload"})
+			.then(response => {return response.text();})
+			.then(s => {
+				ss=s.match(/bpnaf_(.)+\.tsv/gi);                     // match bpnaf_*.tsv files
+				if(ss!=null) {
+					var el2=document.getElementById("CompanyHelpList");
+					for(var i=0;i<ss.length;i++) {
+						var option = document.createElement("option");   // creating new option
+						option.value = ss[i].slice(6,-4).replace("_","&");
+						el2.appendChild(option);
+					}
+				}
+			})
+		} else {
+			console.log("Protocol: " + window.location.protocol);
+			for(var s in bpnaf5) {
+				ss=s.match(/bpnaf_(.)+\.tsv/gi);                     // match bpnaf_*.tsv files
+				if(ss!=null) {
+					var el2=document.getElementById("CompanyHelpList");
+					for(var i=0;i<ss.length;i++) {
+						var option = document.createElement("option");   // creating new option
+						option.value = ss[i].slice(6,-4).replace("_","&");
+						el2.appendChild(option);
+					}
 				}
 			}
-		})
+		}
 		mcs_changed(document.getElementsByName("MCS")[0]);  // update mcs code
 	//fill Company Country list from var countryListAlpha2 bpnaf.js
 		var ss=countryListAlpha2;
@@ -446,6 +694,18 @@ It is partly filled by an evaluator.
 			for(var i in ss) {
 				var option = document.createElement("option");  // creating candidate for new option
 				option.value = i;
+				option.innerHTML = ss[i];
+				//if(i==="PL") option.selected=true;
+				el.appendChild(option);
+			}
+		}
+	//fill Industry list from var industries bpnaf.js
+		var ss=industries;
+		var el=document.getElementById("Industry");
+		if(el && ss!=undefined) {
+			for(var i=0; i<ss.length; i++) {
+				var option = document.createElement("option");  // creating candidate for new option
+				option.value = (i+1);
 				option.innerHTML = ss[i];
 				//if(i==="PL") option.selected=true;
 				el.appendChild(option);
@@ -470,6 +730,18 @@ It is partly filled by an evaluator.
 			el2.innerHTML=get_next(mcs,nn);
 		}
 		document.getElementById('CategoryName').value='';  // clear CategoryName
+		document.getElementById('CategoryName').placeholder=mcs=='M'?'Management':mcs=='C'?'Core':mcs=='S'?'Support':''; 
+		document.getElementById('LevelN1').style["background-color"] = 
+			mcs=='M'? '#e6ffe6':mcs=='C'?'azure':mcs=='S'?'#ffffcc':''; 
+	}
+	function update() {
+		var ta = document.getElementById("ex7");  // update textarea
+		if(ta) {
+			update_table(ta.value);
+			update_map(ta.value);
+			update_mcs();
+			document.getElementById('submit').disabled=false;
+		}
 	}
 	function update_mcs() {
 		mcs=get_mcs();	// update mcs
@@ -484,7 +756,7 @@ It is partly filled by an evaluator.
 		var ss = ta.value.split('\n');
 		if(ss[ss.length-1].length<2) ss=ss.slice(0,-1);
 		ta.value = ss.slice(0,-1).join('\n')+'\n';
-		update_mcs();
+		update();
 	}
 	function evaluator_add(s) {
 		var ta = document.getElementById("ex7");
@@ -538,9 +810,10 @@ It is partly filled by an evaluator.
 		var compcountry =  el ? el.value : '';
 		
 		mcs=get_mcs();	
-		//console.log("mcs : " + mcs);
+		//if(debug) console.log("mcs : " + mcs);
 		var mcs_no=document.getElementById(mcs).value;   // MCS number
-		var mcs_name = document.getElementById("CategoryName").value;  
+		var mcs_name = document.getElementById("CategoryName").value; 
+		if(mcs_name==='')  mcs_name = document.getElementById("CategoryName").placeholder;
 /*		
 		var el = document.getElementById("CategoryName");
 		var mcs = el.value[0]; // el.options[el.selectedIndex].text[0]; //var val = e.value[0];
@@ -586,11 +859,174 @@ It is partly filled by an evaluator.
 			ta.value = hd + s ; 
 			el.value='';
 		}
-		var el = document.getElementById("ProcessCode"); // span element
+		update();
+	}
+	function update_table(s) {
+		var el = document.getElementById("ProcessTab"); // span element
 		if(el) {
-			el.innerHTML=get_next(mcs,mcs_no);
+			el.innerHTML=to_table(s);
 		} 
-		document.getElementById('submit').disabled=false;
+	}
+	function to_table(s,n) {
+		s = mcs_sort(s);
+		var colors=['#e6ffe6','azure','#ffffcc',''];
+/*
+		n = n || 20;
+		var ss=s.split('\n');
+		for(var i=0;i<ss.length;i++) {
+			var ss1=ss[i].split(/[;\t]/);
+			var s='';
+			var c='white';
+			if(ss1.length>1) c= ss1[0][0]=='M'?colors[0]:ss1[0][0]=='C'?colors[1]:ss1[0][0]=='S'?colors[2]:'white';
+			for(var j=0;j<n;j++) {
+				s+="<td style='min-width:20px;border: 1px solid gray;background-color:"+c+";'>"+ (ss1.length>j?ss1[j]:" ")+"</td>";
+			}
+			ss[i]="<tr>"+s+"</tr>";
+		}
+		ss="<table>"+ss.join('\n')+"</table>";
+		return(ss);
+*/		
+		var [ids,processes,categories]=to_ids(s);
+		var cat_ids=catids(ids);
+		var s2='';
+		for(var i=0;i<ids.length;i++) {
+			var c=ids[i][0];
+			var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
+
+			s2+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
+			s2+="<td style='text-align:right;padding:6px;'>"+(i+1)+"</td>";
+			var cat_id=ids[i].split('.')[0];
+			if(cat_ids[cat_id]>0) {
+				s2+="<td style='border-left: 1pt solid lightgray;color:blue;padding:6px;" + cc + "'rowspan="+
+					(cat_ids[cat_id])+">"+cat_id+"</td>";
+				s2+="<td style='border-right: 1pt solid lightgray;color:blue;text-align:left;padding:6px;" +cc + "'rowspan="+    				(cat_ids[cat_id])+">"+ (categories[i]) +"</td>";
+				cat_ids[cat_id]=0; // s+="<td></td>";
+			}
+			// s+="<td>"+categories[i]+"</td>";		
+			s2+="<td style='color:blue;padding:6px;"+cc+"'>"+(ids[i])+"</td>";
+			s2+="<td style='text-align:left;padding:6px;"+cc+"'>"+ (processes[i]) +"</td>";
+			s2+="</tr>";
+		}
+		s2 = '<table style="border:1px solid lightgray;">'+s2+"</table>";
+		return(s2);		
+	}
+var svg_M=`
+	<span>
+		<svg width="100" height="100" viewbox="0 0 100 100">
+			<path d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#e6ffe6">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;
+var svg_C=`
+	<span>
+		<svg width=100 height=100 viewbox="0 0 100 100">
+			<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;
+var svg_S=`
+	<span>
+		<svg width=100 height=100 viewbox="0 0 100 100">
+			<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;		
+	function update_map(s) {
+		var el = document.getElementById("ProcessMap"); // span element
+		if(el) {
+			el.innerHTML=to_map(s);
+		} 
+	}
+	function catids(ids) {
+		var cat_ids={};
+		for(var i=0;i<ids.length;i++) {
+			var cat_id=ids[i].split('.')[0];
+			if(cat_id in cat_ids) {
+				cat_ids[cat_id]+=1; 
+			} else {
+				cat_ids[cat_id]=1;
+			}
+		}
+		return(cat_ids);
+	}
+	function to_ids(s) {
+		var ids=[],processes=[],categories=[];
+		ss=s.split("\n");
+		for(i=0;i<ss.length;i++) {
+			ss1=ss[i].split(/[;\t]/);
+			if('MCS'.includes(ss1[0][0])) {
+				ids.push(ss1[0]);
+				processes.push(ss1.length>2?ss1[2]:'');
+				categories.push(ss1.length>1?ss1[1]:'');
+			} 
+		}
+		return([ids,processes,categories]);
+	}
+	function to_map(s) {
+		s = mcs_sort(s);
+		var [ids,processes,categories]=to_ids(s);
+		var cat_ids=catids(ids);
+		var ssm='',ssc='',sss='';
+		for(id in cat_ids) {
+			var cid=ids.indexOf(id+".1");
+			if(id[0]=='M') ssm += svg_M.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+			if(id[0]=='C') ssc += svg_C.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+			if(id[0]=='S') sss += svg_S.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+		}
+		var ss='<table width="100%" style="text-align:center">';
+		ss +="<tr><td style='height:100px'>"+ssm+"</td></tr>"
+			+"<tr><td style='height:100px'>"+ssc+"</td></tr>"
+			+"<tr><td style='height:100px'>"+sss+"</td></tr>";
+		ss +="</table>";
+/*
+		var n = 3;
+		var colors=['#e6ffe6','azure','#ffffcc'];
+		var ss=s.split('\n');
+		for(var i=0;i<ss.length;i++) {
+			var ss1=ss[i].split(/[;\t]/);
+			var s='';
+			var c='white';
+			if(ss1.length>1) c= ss1[0][0]=='M'?colors[0]:ss1[0][0]=='C'?colors[1]:ss1[0][0]=='S'?colors[2]:'white';
+			for(var j=0;j<n;j++) {
+				s+="<td style='min-width:20px;border: 1px solid gray;background-color:"+c+";'>"+ (ss1.length>j?ss1[j]:" ")+"</td>";
+			}
+			ss[i]="<tr>"+s+"</tr>";
+		}
+				ss="<table>"+ss.join('\n')+"</table>";
+*/
+		return(ss);
+	}
+	function mcs_sort(s) {
+		var ss=s.split('\n'); // sorting MCS
+		if(ss.length<=2) {
+			return(s);
+		}
+		var s1=ss.shift();  // first is header line
+		var sn=ss.pop();    // last is empty line
+		for(var i=ss.length-1;i>=0;i--) {
+			if(ss[i].length>0 && ss[i][0] !='#') {
+				if(ss[i][0]=='C') ss[i]='N'+ss[i].substring(1);
+			} else {
+				ss.splice(i,1);
+			}
+		}
+		ss=ss.sort();
+		for(var i=0;i<ss.length;i++) {
+			if(ss[i][0]=='N') ss[i]='C'+ss[i].substring(1);
+		}
+		ss.unshift(s1);
+		ss.push(sn);
+		s=ss.join('\n');
+		return(s);	
 	}
 	function on_submit() {
 		var company = document.getElementById("CompanyName").value;
@@ -599,29 +1035,15 @@ It is partly filled by an evaluator.
 		}
 		company = company!=='' ? company.replaceAll("&","_") : "default";
 		var evaluator = document.getElementById("EvaluatorName").value;
-		if(evaluator.length>0) company += ';'+evaluator;
+		if(evaluator.length>0) company += ';'+evaluator.replaceAll('&',';');
 		var fname = bpnafname+"_" + company + ext;	
 		var lang=document.getElementById("lang").value;
 		fname += "&lang="+lang;
 		fname = "uu"+btoa(encodeURIComponent("fx="+fname));
 		document.getElementById("fx_name").value=fname;
+		
 		var s = document.getElementById('ex7').value;
-		 var ss=s.split('\n');                          // sorting MCS
-		 if(ss.length<=2) {document.getElementById("submit").disabled=true;return(false);}
-		 var s1=ss.shift();  // first is header line
-		 var sn=ss.pop();    // last is empty line
-		 for(var i=ss.length-1;i>=0;i--) {
-			 if(ss[i].length>0 && ss[i][0] !='#') {
-				 if(ss[i][0]=='C') ss[i]='N'+ss[i].substring(1);
-			 } else {
-				 ss.splice(i,1);
-			 }
-		 }
-		 ss=ss.sort();
-		 for(var i=0;i<ss.length;i++) {if(ss[i][0]=='N') ss[i]='C'+ss[i].substring(1);}
-		 ss.unshift(s1);
-		 ss.push(sn);
-		 s=ss.join('\n');
+		s = mcs_sort(s);
 		document.getElementById('ex7').value=s;
 		
 		var s2 = '\nCompany-Evaluator Code: '+company + '\nEvaluator: '+evaluator + '\nLanguage: '+lang +'\n'; //ss.join('\n');
@@ -641,16 +1063,14 @@ It is partly filled by an evaluator.
 		return(confirm(s2));
 	}
 	init_lists();
-	
+	try {bpnaf5=JSON.parse(localStorage.bpnaf5);} catch(err) {}
 </script>
-
-</body>
 
 </html>
 
 
 <!--
-<div class="col-sm-6">
+<div class="col-sm-">
 	<div class="h-100 content">
 		<h3>Example<br>4</h3>
 		<p>Execute <a href="bpnaf5.html">framework</a> form without any input data what allows for continuing previous session.

@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>BPNAF v1.1</title>
+  <title>BPNAF v1.3</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <style>
 a {
-  text-decoration: none;
+	text-decoration: none;
+}
+th {
+	hyphens: auto
+}
+:checked+span { 
+	color: blue;
+	//font-weight: bold; 
 }
 .modal:nth-of-type(even) {
-    z-index: 1062 !important;
+	z-index: 1062 !important;
 }
 .modal-backdrop.show:nth-of-type(even) {
-    z-index: 1061 !important;
+	z-index: 1061 !important;
 }
 input[type=file]::file-selector-button {
 /*  background-color: #cceeff; */
@@ -23,7 +30,8 @@ input[type=file]::file-selector-button {
 
 <script src="bpnaf.js"></script>
 <script>
-
+// #4285f4 #ea4335 #fbbc05 #34a853
+	
 /* ----- global data ------ */
 var example1=`
 #;Przykładowa2 SA;Marek Oceniający;;;;;0;0.3;0.65;1
@@ -156,13 +164,13 @@ var trends=[];
 var structured=[];
 var intensity=[];
 var intensities=[];
-var company="",industry="",compsize="",compcountry;
+var company="",industry="",compsize="",compcountry="";
 var evaluator="";
 var data="";
 var st_weights=[0, 0.3, 0.65, 1];
 
-var colors=['#e6ffe6','azure','#ffffcc'];
-var colors2=['#00ff00','#00bfff','yellow'];
+var colors=['#e6ffe6','azure','#ffffcc',''];
+var colors2=['#00ff00','#00bfff','yellow',''];
 
 var path='dat/';  // server upload path 'dat/'
 var ext=".tsv";  // this framework file format extension
@@ -170,6 +178,9 @@ var bpnafname="bpnaf"; // data files base name
 var phpname="bpnaf.php" // server component
 var enabled=2;   // enable=0 disable editing (only preview) 
 var lang="pl";
+var bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // '\xef\xbb\xbf'; // utf-8 byte order mark
+var debug=0;  // for console.log
+var qmode = 1;  // number of questionnaires: 1 - default, 3 - for merging two questionnaires (one active, two for preview)
 
 var lang_idx={"en":0,"pl":1,"es":2,"de":3};
 var lang_dict={
@@ -187,7 +198,7 @@ var lang_dict={
 		,"Cree un informe html y ábralo en la nueva pestaña"
 		,"Erstellen Sie einen HTML-Bericht und öffnen Sie ihn im neuen Tab"
 	]
-	,"b_cancel":["Cancel","Anuluj","Cancelar","Abbrechen"]
+//	,"b_cancel":["Cancel","Anuluj","Cancelar","Abbrechen"]
 	,"b_open":["Open","Otwórz","Abrir","Offen"]
 	,"b_open:title":["Create new questionnaire from description in the textarea"
 		,"Utwórz nowy kwestionariusz z opisu w polu edycyjnym"
@@ -208,10 +219,10 @@ var lang_dict={
 	,"b_prev":["Prev","Poprzedni","Previo","Vorherige"]
 	,"b_next":["Next","Następny","Próximo","Nächste"]
 	,"h1_":[
-		 ["Process Level","Process Name","Weight","Trend","Struc-tured","Struc-tured with exceptions","Unstruc-tured with fragments","Unstruc-tured","Knowledge Intensity"]
-		,["Poziom procesu","Nazwa procesu","Waga","Trend","Ustruktu-ryzowane","Ustruktu-ryzowane z wyjątkami","Nieustruk-turyzowane z wyjątkami","Nieustruk-turyzowane","Intensywność wiedzy"]
-		,["Nivel de proceso","Nombre del proceso","Peso","Tendencia","Estructu-rado","Estructu-rado con excepciones","Desestructu-rado con fragmentos","Desestructu-rado","Intensidad del conoci-miento"]
-		,["Prozessebene", "Prozessname", "Gewich-tung", "Trend", "Struk-turiert", "Struk-turiert mit Ausnahmen", "Unstruk-turiert mit Fragmenten", "Unstruk-turiert", "Wissen-sintensität"]
+		 ["Process Level","Process Name","Weight","Trend","Structu&shy;red","Structured with exceptions","Unstructured with fragments","Unstruc&shy;tured","Knowledge Intensity"]
+		,["Poziom procesu","Nazwa procesu","Waga","Trend","Ustruktu&shy;ryzowane","Ustruktu&shy;ryzowane z wyjątkami","Nieustruk&shy;turyzowane z wyjątkami","Nieustruk&shy;turyzowane","Intensywność wiedzy"]
+		,["Nivel de proceso","Nombre del proceso","Peso","Tendencia","Estructu&shy;rado","Estructu&shy;rado con excepciones","Desestructu&shy;rado con fragmentos","Desestructu&shy;rado","Intensidad del conoci&shy;miento"]
+		,["Prozessebene", "Prozessname", "Gewich&shy;tung", "Trend", "Struktu&shy;riert", "Strukturiert mit Ausnahmen", "Unstruk&shy;turiert mit Fragmenten", "Unstruk&shy;turiert", "Wissen&shy;sintensität"]
 	]
 	,"h2_":[
 		 ["Statement","Do not agree","Partly agree","Mostly agree","Fully agree","Knowledge<br>Intensity"]
@@ -240,7 +251,9 @@ var lang_dict={
 	,"knowi4":["Low knowledge intensity","Niska intensywność wiedzy","Baja intensidad de conocimiento"]
 
 	,"st_$NN.$DD":[statements_en,statements_pl,statements_es,statements_de]
-	
+	,"A1":["Processes Map","Mapa procesów","Mapa de procesos","Prozesskarte"]
+	,"A2":["Processes Table","Tabela procesów","Tabla de procesos","Prozesstabelle"]
+	,"A3":["Processes List","Lista procesów","Lista de procesos","Prozessliste"]
 };
 
 
@@ -277,7 +290,7 @@ var template1a=`
 	<table id="maintab" class="table">
 		<thead>
 			<tr style="text-align:center">
-				<th><input type=button onclick="document.oncopy();" value="#" id="b_copy" title="Copy" style="width:24px"/></th>
+				<th><input type=button onclick="ta_copy();" value="#" id="b_copy" title="Copy" style="width:24px"/></th>
 				<th id="h1_1" colspan=2>Process Level</th>
 				<th id="h1_2">Process Name</th>
 				<th id="h1_3">Weight</th>
@@ -328,12 +341,12 @@ var template1aa=template1aa_en;
 
 var template1b=`
 			<tr style="text-align:center">
-				<td>$DD</td>
+				<td rowspan=$RS>$DD</td>
 				$RR
-				<td style="border-left: 1pt solid lightgray;background-color:$CC">
+				<td rowspan=$RS style="border-left: 1pt solid lightgray;background-color:$CC">
 					<a href="javascript:show_tab(\'$NN-tab\');">$NN</a>
 				</td>
-				<td style="background-color:$CC;text-align:left" onclick="show_tab(\'$NN-tab\');"><span id="$NN_name">$TT</span></td>
+				<td rowspan=$RS style="background-color:$CC;text-align:left" onclick="show_tab(\'$NN-tab\');"><span id="$NN_name">$TT</span></td>
 				<td id="weight_$NN" title="1 - the lowest, ... , 6 - the highest">
 					<select class="form-select form-select-sm" style="width:64px" onchange="update();" id="$NN_w">
 						<option value="0"> </option>
@@ -356,22 +369,22 @@ var template1b=`
 				</td>
 				<td style="text-align:center">
 					<div class="radio">
-						<label><input class="form-check-input" type="radio" name="$NN_r" value="1" onchange="update();">1</label>
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r" value="1" onchange="update();"><span> 1</span></label>
 					</div>
 				</td>
 				<td style="text-align:center">
 					<div class="radio">
-						<label><input class="form-check-input" type="radio" name="$NN_r" value="2" onchange="update();">2</label>
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r" value="2" onchange="update();"/><span> 2</span></label>
 					</div>
 				</td>
 				<td style="text-align:center">
 					<div class="radio">
-				 		<label><input class="form-check-input" type="radio" name="$NN_r" value="3" onchange="update();">3</label>
+				 		<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio"  name="$NN_r" value="3" onchange="update();"><span> 3</span></label>
 					</div>
 				</td>
 				<td style="text-align:center;">
 					<div class="radio">
-						<label><input class="form-check-input" type="radio" name="$NN_r" value="4" onchange="update();">4</label>
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r" value="4" onchange="update();"><span> 4</span></label>
 					</div>
 				</td>
 				<td>
@@ -381,6 +394,56 @@ var template1b=`
 				</td>
 			</tr>
 `;
+template1b2=`
+			<tr style="text-align:center">
+				<td id="weight_$NN" title="1 - the lowest, ... , 6 - the highest">
+					<select class="form-select form-select-sm" style="width:64px" onchange="update();" id="$NN_w_$MM">
+						<option value="0"> </option>
+						<option value="1">1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+						<option value="4">4</option>
+						<option value="5">5</option>
+						<option value="6">6</option>
+					</select>
+				</td>
+				<td  id="trend_$NN" title="-2 - decreasing, ... , 2 - increasing">
+					<select class="form-select form-select-sm" style="width:68px" onchange="update();" id="$NN_t_$MM">
+						<option value="-2">-2</option>
+						<option value="-1">-1</option>
+						<option value="0" selected> 0</option>
+						<option value="1"> 1</option>
+						<option value="2"> 2</option>
+					</select>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r_$MM" value="1" onchange="update();"><span> 1</span></label>
+					</div>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r_$MM" value="2" onchange="update();"/><span> 2</span></label>
+					</div>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+				 		<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio"  name="$NN_r_$MM" value="3" onchange="update();"><span> 3</span></label>
+					</div>
+				</td>
+				<td style="text-align:center;">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r_$MM" value="4" onchange="update();"><span> 4</span></label>
+					</div>
+				</td>
+				<td>
+					<a href="javascript:show_tab(\'$NN-tab\');">
+						<input type=button style="width:48px;min-width:48px;" id="$NN_pts_$MM" value=" " onclick="javascript:show_tab(\'$NN-tab\');">
+					</a>
+				</td>
+			</tr>
+`;
+
 var template1c=`
 		</tbody>
 	</table>
@@ -409,26 +472,26 @@ var template2a=`
 
 var template2b=`
 		<tr style="text-align:center">
-			<td>$DD</td>
-			<td style="text-align:left" id="st_$NN.$DD">$TT</td>
+			<td rowspan=$RS>$DD</td>
+			<td rowspan=$RS style="text-align:left" id="st_$NN.$DD">$TT</td>
 			<td style="text-align:center">
 				<div class="radio">
-					<label><input class="form-check-input" type="radio" name="$NN.$DD" value="1" onchange="update();" ></label>
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="1" onchange="update();" ></label>
 				</div>
 			</td>
 			<td style="text-align:center">
 				<div class="radio">
-					<label><input class="form-check-input" type="radio" name="$NN.$DD" value="2" onchange="update();"></label>
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="2" onchange="update();"></label>
 				</div>
 			</td>
 			<td style="text-align:center">
 				<div class="radio">
-					<label><input class="form-check-input" type="radio" name="$NN.$DD" value="3" onchange="update();"></label>
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="3" onchange="update();"></label>
 				</div>
 			</td>
 			<td style="text-align:center">
 				<div class="radio">
-					<label><input class="form-check-input" type="radio" name="$NN.$DD" value="4" onchange="update();"></label>
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="4" onchange="update();"></label>
 				</div>
 			</td>
 			<td>
@@ -436,6 +499,35 @@ var template2b=`
 			</td>
 		</tr>
 `;
+
+var template2b2=`
+		<tr style="text-align:center">
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="1" onchange="update();" ></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="2" onchange="update();"></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="3" onchange="update();"></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="4" onchange="update();"></label>
+				</div>
+			</td>
+			<td>
+				<input type=text size=4 id="$NN.$DD_pts_$MM" value=" " disabled>
+			</td>
+		</tr>
+`;
+
 var template2c=`	  
 		</tbody>
 	</table>
@@ -572,13 +664,13 @@ function update() {
 		
    		var el3=document.getElementById(ids[j]+"_name");  // copying process names
    		var el4=document.getElementById(ids[j]+"_name2");
-		if(el3 && el4) el4.innerHTML=el3.innerHTML; else {console.log("Error:\n"+el3+'\n'+el4);}
+		if(el3 && el4) el4.innerHTML=el3.innerHTML; else {if(debug) console.log("Error:\n"+el3+'\n'+el4);}
 		
 		var radios = document.getElementsByName(ids[j]+"_r");  // radios value for bpnam
 		if(radios) {
 			for (var i = 0, length = radios.length; i < length; i++) {
 			  if (radios[i].checked) {
-				//console.log(radios[i].value);
+				//if(debug) console.log(radios[i].value);
 				var x=parseFloat(radios[i].value);
 				if(el1) {
 					var y=parseFloat(el1.value);
@@ -586,13 +678,13 @@ function update() {
 					if(isFinite(y)) {
 						xy.push([x,y,j]);
 						var s=''+(100*x)+','+(500-50*y);
-						// console.log(ids[j]+": ("+x+","+y+") "+s);
+						// if(debug) console.log(ids[j]+": ("+x+","+y+") "+s);
 						var c1 = ids[j][0]=='M'?colors2[0]:ids[j][0]=='C'?colors2[1]:colors2[2];
 						var r = weights[j]>4 ? 6 : weights[j]>2 ? 5 : 4;
 						var c2 = trends[j]>0 ? 'red' : trends[j]<0 ? 'green' : 'darkblue';
 						var s2 = ids[j] + " " + processes[j]
 								+"\n(w:"+weights[j]+", t:"+trends[j]+", s:"+x+", i:"+y+")";
-						//console.log(ids[j]+" "+c2);
+						//if(debug) console.log(ids[j]+" "+c2);
 						svg_createpoint(bpnam,""+ids[j],s,c1,r,c2,s2);
 					}	
 				}
@@ -620,17 +712,17 @@ function update() {
 		var el=document.getElementById(ename);
 		if(el) {
 			var x1=1,y1=a*x1+b,x2=4,y2=a*x2+b;
-			console.log("L="+x1+" "+y1+" "+x2+" "+y2)
+			if(debug) console.log("L="+x1+" "+y1+" "+x2+" "+y2)
 			el.setAttribute("x1",100*x1);
 			el.setAttribute("y1",500-50*y1);
 			el.setAttribute("x2",100*x2);
 			el.setAttribute("y2",500-50*y2);
 		}
-		//console.log("a="+a+" b="+b);
+		//if(debug) console.log("a="+a+" b="+b);
 	}
 	
 	if(xy.length>1) {
-		console.log("xy: "+xy);
+		if(debug) console.log("xy: "+xy);
 		draw_trend(xy,"trend1");
 		
 		var xy2=[];
@@ -639,18 +731,18 @@ function update() {
 				xy2.push(xy[i]);
 			}
 		}
-		console.log("xy2: "+xy2);		
+		if(debug) console.log("xy2: "+xy2);		
 		draw_trend(xy2,"trend2");
 
 		var xy3=[];
 		for(var i=0;i<xy.length;i++) {
 			var n=parseInt(weights[xy[i][2]])+parseInt(trends[xy[i][2]]);
-			//console.log(n);
+			//if(debug) console.log(n);
 			for(var j=0;j<n;j++) { // until trended weight value
 				xy3.push(xy[i]);
 			}
 		}
-		console.log("xy3: "+xy3);
+		if(debug) console.log("xy3: "+xy3);
 		draw_trend(xy3,"trend3");
 	}	
 	for(var i=0;i<xy.length;i++) {
@@ -693,8 +785,8 @@ function update() {
 	store_state();
 }
 
-function convert_csv(s) {
-	var s2='#;\n';
+function convert_csv(s,fname) {
+	var s2='#;'+(fname||'')+'\n';
 	var ss=s.replaceAll('|','\n').split('\n');
 	for(var i=0;i<ss.length;i++) {
 		if(ss[i].indexOf('"')!=-1) {
@@ -716,7 +808,7 @@ function convert_csv(s) {
 			}
 		}
 	}
-	console.log(s2);
+	if(debug) console.log(s2);
 	return(s2);
 }
 
@@ -732,8 +824,8 @@ function read_processes(s) {
 			if(ss2[0][0]=='#') {
 				var n=0;
 				n++; com = ss2.length>n?ss2[n]:"";
-				n++; ev = ss2.length>n?ss2[n]:"";
-				n++; d = ss2.length>n && ss2[n].length>1 ?ss2[n]:new Date().toLocaleString();
+				n++; ev = ss2.length>n?ss2[n]:"";  qmode = ev.includes('&')?3:1;
+				n++; d = ss2.length>n && ss2[n].length>1 ? ss2[n] : new Date().toLocaleString();
 				n++; // empty field
 				n++; // empty field
 				n++; // empty field
@@ -747,8 +839,8 @@ function read_processes(s) {
 				continue;
 			}
 			var n=0; vid.push(ss2[n]);   // ids
-			n++; vcat.push(ss2[n]);  //  categories !!!
-			n++; vpr.push(ss2[n]);   //  processes
+			n++; vcat.push(ss2.length>n?ss2[n]:'');  //  categories !!!
+			n++; vpr.push(ss2.length>n?ss2[n]:'');   //  processes
 			n++; vws.push(ss2.length>n?ss2[n]:1);  // weights
 		    n++; vts.push(ss2.length>n?ss2[n]:0);  // trends
 		    n++; vx.push(ss2.length>n?ss2[n]:0);   // structured
@@ -781,7 +873,7 @@ function create_forms(flag) {
 	for(var i=0;i<ids.length;i++) { 
 		var t = template0c;
 		ss += t.replaceAll("$MM",ids[i].replace(".","_")).replaceAll("$NN",ids[i])
-		       .replaceAll("$CC",ids[i][0]=='M'?colors[0]:ids[i][0]=='C'?colors[1]:colors[2]);
+		       .replaceAll("$CC",ids[i][0]=='M'?colors[0]:ids[i][0]=='C'?colors[1]:ids[i][0]=='S'?colors[2]:'');
     }
 	var el = document.getElementById("bpnaf-ul");
 	if(el) el.innerHTML = ss;
@@ -799,13 +891,14 @@ function create_forms(flag) {
 		var s='';
 		if(cat_ids[cat_id]>0) {
 			s = "<td style='border-left: 1pt solid lightgray;vertical-align:middle;color:blue;background-color:$CC' rowspan="+
-				(cat_ids[cat_id])+">"+cat_id+"</td>";
+				(qmode*cat_ids[cat_id])+">"+cat_id+"</td>";
 			cat_ids[cat_id]=0;
 		}
-		var t = template1b.replaceAll("$RR",s);
+		var t = template1b.replaceAll("$RR",s).replaceAll("$RS",qmode); 
+		for(var j=1; j<qmode; j++) t += template1b2.replaceAll("$RR",s).replaceAll("$MM",j+1);
 		ss += t.replaceAll("$NN",ids[i]).replace("$DD",(i+1)).replace("$TT",processes[i])
 				.replaceAll("$MM",ids[i].replace(".","_"))
-				.replaceAll("$CC",ids[i][0]=='M'?colors[0]:ids[i][0]=='C'?colors[1]:colors[2]);
+				.replaceAll("$CC",ids[i][0]=='M'?colors[0]:ids[i][0]=='C'?colors[1]:ids[i][0]=='S'?colors[2]:'');
     }
 	var el = document.getElementById('home'+'_c');
 	if(el) el.innerHTML = template1a + ss + template1c;
@@ -835,16 +928,19 @@ function create_forms(flag) {
 // --- 4. creating knowledge intensity forms ----
 	for(var i=0;i<ids.length;i++) {
 		var id=ids[i];
-		//console.log("creating: "+id);
+		//if(debug) console.log("creating: "+id);
 		var s = template2a.replaceAll("$NN",id).replaceAll("$DD",(j+1));
+		
 		for(var j=0;j<statements.length;j++) {
-			s+=template2b.replaceAll("$NN",id).replaceAll("$DD",(j+1)).replace("$TT",statements[j])
+			s += template2b.replaceAll("$NN",id).replaceAll("$DD",(j+1)).replace("$TT",statements[j])
+			     .replaceAll("$RS",qmode); 
+			for(var k=1; k<qmode; k++) s += template2b2.replaceAll("$NN",id).replaceAll("$DD",(j+1)).replaceAll("$MM",k+1);
 	    }
 		var el = document.getElementById(id+'_c');
 		if(el) el.innerHTML = s+template2c.replaceAll("$NN",id);
 	}
 
-	for(var i=0;i<ids.length;i++) {                  // init radios from intensities matrix
+	for(var i=0;i<ids.length;i++) { // init radios from intensities matrix
 		for(var j=0;j<statements.length;j++) {
 			el=document.getElementsByName(ids[i]+"."+(j+1));  
 				for(var k=0;k<el.length;k++) {
@@ -855,7 +951,76 @@ function create_forms(flag) {
 			}
 		}
 	}
+// --- 5. filling additional elements when multiple questionnaires mode 	
+	if(qmode>1) { // assumes that more radio buttons are already created		
+		var ss= fx!=null ? fx.split(";"):[];
+		var fnames=[];
+		for(var i=1; i<ss.length; i++) { // build filenames of quiestionnaires to load
+			var fname = ss[0] + ';' + ss[i];
+			if(!fname.endsWith(ext)) fname += ext;
+			fnames.push(fname); 
+		}
+		console.log(fnames);
+		for(var k=0; k<fnames.length; k++) { // load and update
+			get_update2(fnames[k],k+2,update2);
+		}	
+	}
+}
 
+function get_update2(fname,k,fun) {
+	fetch(path+fname,{cache:"reload"})
+	.then((response)=>response.text())
+	.then((text)=>{
+		console.log("get_update2: "+fname+" "+k);
+		fun(text,k);
+	});
+}
+
+function update2(s,k) { // s -file content, k - data number ; uses global ids
+	var state=state_tostring();
+	read_processes(s);
+	for(var i=0;i<ids.length;i++) {
+		el=document.getElementById(ids[i]+"_w_"+(k));  // weigths init
+		el.disabled=true;
+		for(var j=0;j<el.length;j++) {
+			if(el.options[j].value==weights[i]) {
+				el.options[j].selected=true;
+				break;
+			}
+		}
+		el=document.getElementById(ids[i]+"_t_"+(k));  // trends init
+		el.disabled=true;
+		for(var j=0;j<el.length;j++) {
+			if(el.options[j].value==trends[i]) {
+				el.options[j].selected=true;
+				break;
+			}
+		}
+		el=document.getElementsByName(ids[i]+"_r_"+(k));  // init radios from structured array
+		for(var j=0;j<el.length;j++) {
+			if(el[j].value==structured[i]) {
+				el[j].checked=true;
+			}
+			el[j].disabled=true;
+		}
+		el=document.getElementById(ids[i]+"_pts_"+(k));  // knowledge intensity points
+		el.disabled=true;
+		el.value=intensity[i];
+		for(var j=1;j<=statements.length;j++) {    // calculating points
+			var el=document.getElementsByName(ids[i]+"."+j+"_"+k);  // detection of checked radio
+			for(var jj=0;jj<el.length;jj++) {
+				if(el[jj].value==intensities[i][j-1]) { // index from 0!!!)
+					el[jj].checked=true;
+					break;
+				}
+			}
+			var el2=document.getElementById(ids[i]+'.'+j+"_pts"+"_"+k);
+			if(el2) {
+				el2.value = intensities[i][j-1]>0 ? st_weights[intensities[i][j-1]-1] : '';
+			}
+		}		
+	}
+	read_processes(state);
 }
 
 //var cat_ids={};
@@ -875,7 +1040,7 @@ function report() {
 	}
 	for(var i=0;i<ids.length;i++) {
 		var c=ids[i][0];
-		var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:2]+";";
+		var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
 
 		s+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
 		s+="<td style='text-align:right;'>"+(i+1)+"</td>";
@@ -927,16 +1092,16 @@ function state_tostring(flag) {
 	flag = flag||0;
 	var f1pl='=SUMA(INDEKS(PRZESUNIĘCIE(ADR.POŚR(ADRES(WIERSZ();NR.KOLUMNY()));';
 	var f2pl=';-12;1;5);1+N(JEŻELI({1};PRZESUNIĘCIE(ADR.POŚR(ADRES(WIERSZ();NR.KOLUMNY()));0;-11;1;10)))))'; 
-	var f1en='=SUM(INDEX(OFFSET(INDIRECT(ADDRESS(ROW();COLUMN()));';
-	var f2en=';-12;1;5);1+N(IF({1};OFFSET(INDIRECT(ADDRESS(ROW();COLUMN()));0;-11;1;10)))))'; 
+	var f1en='=SUM(INDEX(OFFSET(INDIRECT(ADDRESS(ROW(),COLUMN())),';
+	var f2en=',-12,1,5);1+N(IF({1},OFFSET(INDIRECT(ADDRESS(ROW(),COLUMN())),0,-11,1,10)))))'; 
 	var s='#'+'\t'+company+'\t'+evaluator+'\t'+data+'\t\t\t';  // header + 3 empty
 	for(var i=0;i<st_weights.length;i++) { // all weights
-		s+='\t'+st_weights[i];  	
+		s+='\t'+(flag?'='+(100*st_weights[i])+"/100":st_weights[i]);  	
 	} 
 	s+='\t\t'+industry+'\t'+compsize+'\t'+compcountry+'\n';  // 2 empty + company info
 	for(var i=0;i<ids.length;i++) {  // for all processes
 		s+= ids[i]+'\t'+categories[i]+'\t'+processes[i]+'\t'
-		+weights[i]+'\t'+trends[i]+'\t'+structured[i]+'\t'+intensity[i];  //  
+		+weights[i]+'\t'+trends[i]+'\t'+structured[i]+'\t'+(flag?"="+(100*intensity[i])+"/100":intensity[i]);  //  
 		for(var j=0;j<intensities[i].length;j++) {  // all intensities
 			s+='\t'+intensities[i][j];  				
 		} 
@@ -946,7 +1111,8 @@ function state_tostring(flag) {
 	return(s);
 }
 
-document.oncopy = function(e) {
+//document.oncopy = function(e) {
+function ta_copy(e) {
 	var ta = document.getElementById('ta');
 	//var ta = document.createElement("textarea");
 	if(ta) {
@@ -962,27 +1128,6 @@ document.oncopy = function(e) {
 
 var bpnaf5={};
 
-function load_file0(file) {  // using XMLHttpRequest
-	file = path +file;
-	var rawFile = new XMLHttpRequest();
-	rawFile.open("GET", file, false);
-	rawFile.onreadystatechange = function () {
-    	if(rawFile.readyState === 4) {
-        	if(rawFile.status === 200 || rawFile.status == 0){
-            	var allText = rawFile.responseText;
-				if(allText.length>0) {
-					ex=allText;
-					var exex;
-					if(file in bpnaf5) exex=bpnaf5[file];
-					if(exex) ex=exex;
-				}
-				init(ex);
-			}
-		}
-	}
-	rawFile.send(null);
-}
-
 async function load_file(file) {  // using fetch
 	if(file[0]=='#') {
 		ex=file;
@@ -993,43 +1138,52 @@ async function load_file(file) {  // using fetch
 		if(allText.length>0) {
 			ex=allText;
 			var exex;
-			if(file in bpnaf5) exex=bpnaf5[file];
-			if(exex) ex=exex;
+			if(exex) {
+				ex=exex;
+				bpnaf5[file]=ex;
+				localStorage.bpnaf5=JSON.stringify(bpnaf5);
+			}
 		}
 	}
 	init(ex);	  	
 }
 
-function server_save0(data,fname) {
-	try {
-		const request = new XMLHttpRequest();
-		const formData = new FormData();
-		request.open("POST", phpname, true);
-		request.onreadystatechange = () => {
-			if(request.readyState === 4 && request.status === 200) {
-				console.log(request.responseText);
+async function load_file2(file) {  // using fetch
+	var ex2="";
+	if(file[0]=='#') {
+		ex2=file;
+	} else {
+		var url = path + file;
+		var response = await fetch(url, {cache:"reload"});
+		var allText = await response.text();
+		if(allText.length>0) {
+			ex2=allText;
+			//var exex;
+			if(ex2.length>1) {
+				bpnaf5[file]=ex;2
+				localStorage.bpnaf5=JSON.stringify(bpnaf5);
 			}
-		};
-		formData.append("fx_name", fname||(bpnafname+ext));
-		formData.append("fx", data);
-		request.send(formData);
-	} catch(err) {}
-} 
+		}
+	}
+	return(ex2);
+}
 
 function server_save(data,fname) {
 	const formData = new FormData();
 	var f=fname||(bpnafname+ext);
+	bpnaf5[f]=data;
+	localStorage.bpnaf5=JSON.stringify(bpnaf5);
 	formData.append("fx_name", f);
 	formData.append("fx", data);
 	var url = phpname;
-	console.log("server_save with fetch:"+url+" "+f+" : "+data);
+	if(debug) console.log("server_save with fetch:"+url+" "+f+" : "+data);
 	fetch(url, {method:"POST",body: formData} )
-		.then(result => {console.log("Completed with result:", result);})
-		.catch(err => { console.error(err);});
+		.then(result => {if(debug) console.log("Completed with result:", result);})
+		.catch(err => { if(debug) console.error(err);});
 }
 
 function download(data, filename, type) {
-	var file = new Blob([data], {type: type||"plain/text"});
+	var file = new Blob([/*bom,*/ /*"\ufeff",*/ data], {type: type||"plain/text;charset=utf-8"});
 	if (window.navigator.msSaveOrOpenBlob) // IE10+
 		window.navigator.msSaveOrOpenBlob(file, filename||(bpnafname+ext));
 	else { // Others
@@ -1051,16 +1205,29 @@ function readTextarea(id) {
 	}
 }
 
-function readFile(e) {
+function readFile(e) {  // local file reader
 	var file = e.files[0];
 	if (!file) return;
 	var reader = new FileReader();
-	reader.onload = function(e) {document.getElementById("ta1").value=e.target.result;};
-	console.log("readFile: "+file.name);
+	reader.onload = function(e) {
+		var s=e.target.result;
+		if(s.startsWith(bom)) s=s.substring(bom.length);
+		if(s[0]!='#') s=convert_csv(s,file.name.slice(0,-4));
+		fx=bpnafname+"_"+"Default"+ext;
+// ----- Warning: this allows storing local files on the server !!!
+		var ss=s.split(/[;\t]/);  
+		fx = bpnafname.toUpperCase()+"_"+(ss.length>1 ? ss[1] : '') + (ss.length>2 ? (';'+ss[2]) :'')+ext;
+// -----
+		if(debug) console.log(fx);
+		document.getElementById("ta1").value=s;
+		update_table(s);
+		update_map(s);
+	};
+	if(debug) console.log("readFile: "+file.name);
 	if(file.name.endsWith(".tsv")||file.name.endsWith(".csv")) {
 		if(file.name.endsWith(".csv")) {
 			fx = file.name.split(".")[0]+".tsv";
-			console.log("readFile: "+file.name+" -> "+fx);
+			if(debug) console.log("readFile: "+file.name+" -> "+fx);
 		}
 		reader.readAsText(file);
 	} else {
@@ -1070,7 +1237,7 @@ function readFile(e) {
 
 function show_tab(id) {
 	var el = document.getElementById(id);
-	console.log("show_tab: "+id);
+	if(debug) console.log("show_tab: "+id);
 	if(el) bootstrap.Tab.getOrCreateInstance(el).show(); // bootstrap 5
 	document.getElementById("banner").scrollIntoView();
 }
@@ -1084,7 +1251,7 @@ function next_tab(id) {
 	for(var i=0;i<ids.length;i++) {
 		if(ids[i]==id) break;
 	}
-	console.log(i + " | "+ ids.length + " | "+(i>=ids.length-1?'home':ids[i+1]));
+	if(debug) console.log(i + " | "+ ids.length + " | "+(i>=ids.length-1?'home':ids[i+1]));
 	return(i>=ids.length-1?'home':ids[i+1]);
 }
 
@@ -1094,24 +1261,24 @@ function next_tab(id) {
 
 function url_params() { // overwrite globals from url params
 	var s = decodeURIComponent(window.location.search.substring(1));
-	console.log(s);
+	if(debug) console.log(s);
 	if(s.startsWith("fx=uu")) {
 		s=decodeURIComponent(atob(s.substring(5)));
-		console.log(s);
+		if(debug) console.log(s);
 	}
-	console.log("fx=uu"+btoa(encodeURIComponent(s)));
+	if(debug) console.log("fx=uu"+btoa(encodeURIComponent(s)));
 	if(s.length>1) {
 		var ss = s.split('&');
 		for (var i = 0; i < ss.length; i++) {
 			var sss = ss[i].split('=');
-			console.log(sss[0]+'->'+sss[1]);
+			if(debug) console.log(sss[0]+'->'+sss[1]);
 			if(sss[0]==="ex") {
 				sss[1] = decodeURIComponent(sss[1]);
 				if(sss[1][0]=='#') {
 					window[sss[0]] = sss[1];
 				} else { 
 					try { window[sss[0]] = eval(sss[1]); }
-					catch (err) {console.log(err.message);}; 
+					catch (err) {if(debug) console.log(err.message);}; 
 				}
 			} else { 
 				window[sss[0]] = sss[1];
@@ -1126,6 +1293,8 @@ function store_state() {
 	server_save(ss,fx);
 	//localStorage.bpnaf5=JSON.stringify(bpnaf5);
 	document.getElementById("ta1").value=ss;
+	update_table(ss);
+	update_map(ss);
 }
 
 function restore_state() { 
@@ -1142,37 +1311,6 @@ function exfun(n,s) {
 	ex = (n==0?s:eval(['example1','example2','example3'][n-1]));
 	init(ex);
 }
-function lang_changed0(s) {
-	//alert("lang_changed:"+s+" "+lang);
-	lang=s;  // set global var lang 
-	document.getElementById("lang").value=lang;
-	template1aa = (s==="pl") ? template1aa_pl : template1aa_en;
-
-	var idx=lang_idx[lang];
-	for(var key in lang_dict) {
-		var k=lang_dict[key];
-		var s1=k[idx<k.length?idx:0];
-		if(Array.isArray(s1)) {
-			for(var j=0;j<s1.length;j++) {
-				if(key.includes("$NN")) {
-					for(var k=0;k<ids.length;k++) {
-						var key2 = key.replace("$NN",ids[k]).replace("$DD",(j+1));
-						document.getElementById(key2).innerHTML=s1[j];
-					}
-				} else {
-					document.getElementById(key+(j+1)).innerHTML=s1[j];
-				}
-			}
-		} else {
-			var kk = key.split(':');
-			if(kk.length>1) {
-				document.getElementById(kk[0])[kk[1]]=s1;
-			} else {
-				document.getElementById(key).innerHTML=s1;
-			}
-		}
-	}
-}
 
 function lang_changed(s) {
 	//alert("lang_changed:"+s+" "+lang);
@@ -1181,7 +1319,7 @@ function lang_changed(s) {
 	for(var key in lang_idx) {
 		document.getElementById(key).style["color"]="black";		
 	}
-	document.getElementById(lang).style["color"]="#9e7ba8";
+	document.getElementById(lang).style["color"]="blue";//"#9e7ba8";
 	template1aa = (s==="pl") ? template1aa_pl : template1aa_en;
 
 	var idx=lang_idx[lang];
@@ -1221,7 +1359,7 @@ try {
 				document.getElementById(key).innerHTML=s1;
 			}
 		}
-} catch(err) {console.log(err.message + "\nerror ->" + key+" "+s1);}
+} catch(err) {if(debug) console.log(err.message + "\nerror ->" + key+" "+s1);}
 	}
 
 }
@@ -1235,6 +1373,7 @@ function pre_init() {
 	if(template3==='') {
 		template3=document.getElementById("bpnaf-div").innerHTML; // storing html prepared container!	
 	}
+	try {bpnaf5=JSON.parse(localStorage.bpnaf5);} catch(err) {}
 }
 function main() {
 	pre_init();
@@ -1282,10 +1421,10 @@ function main() {
   </nav>
 
 
-<div class="mt-4 p-5 bg-gradient" style="background-color:#9e7ba8;margin-top:0!important;background-image1:linear-gradient(to right,#9e7ba8, gray)">
+<div class="mt-4 p-5 bg-gradient1 bg-light1" style="background-color1:#9e7ba8;margin-top:0!important;background-image:linear-gradient(to top, #e6ffe6,white,white,#b7d9fE)">
 	<center>
 		<h1 id="banner">
-			<a id="t_title" href="#" data-bs-toggle="modal" data-bs-target="#modal1" class="text-white">
+			<a id="t_title" href="#" data-bs-toggle="modal" data-bs-target="#modal1" class="text-white1">
 				Business Process Nature Assessment Framework
 			</a>
 		</h1>
@@ -1334,7 +1473,18 @@ function main() {
 	<div id="bpnam_menu" class="tab-pane fade">
 		<div id="svg_container" class="container">
 
-<svg id="svg1" xmlns="http://www.w3.org/2000/svg" width="460" height="560" font-family="Times" font-size=14>
+<script>
+function svg_copy(e) {
+	var ta = document.getElementById('ta');
+	if(ta) {
+		ta.value = e.outerHTML;
+		ta.select();
+		document.execCommand('copy');
+	}
+}
+</script>
+
+<svg oncopy="svg_copy(this);" id="svg1" xmlns="http://www.w3.org/2000/svg" width="460" height="560" font-family="Times" font-size=14>
  <g id="bpnam" transform="translate(20,30)">
  <rect width=400 height=500 style="fill:none;stroke:lightgray;stroke-width:1" />
 
@@ -1393,8 +1543,7 @@ function main() {
  </g>
 </svg>
 
-
-<svg id="svg2" xmlns="http://www.w3.org/2000/svg" width="430" height="560" font-family="Times" font-size=14>
+<svg  oncopy="svg_copy(this);" id="svg2" xmlns="http://www.w3.org/2000/svg" width="430" height="560" font-family="Times" font-size=14>
  <g id="bpnam2" transform="translate(30,30)">
  <rect width=400 height=500 style="fill:none;stroke:lightgray;stroke-width:1" />
 
@@ -1469,7 +1618,7 @@ function main() {
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h6 class="modal-title" id="modal1_label">BPNAF v1.1 - MM <span id="t_month">January</span> 2024</h6> 
+				<h6 class="modal-title" id="modal1_label">BPNAF v1.2 - MM <span id="t_month">January</span> 2024</h6> 
 				&nbsp;&nbsp;
 				<select class="form-select form-select-sm" id="lang" style="width:64px;display:right" onchange="lang_changed(this.value);">
 					<option value="en">en</option>
@@ -1485,16 +1634,201 @@ function main() {
 				<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="b_ex3"  style="width:32%;text-align:left" onclick="exfun(3);" title="Load example3">Example 3</button>
 			</div>
 			<div class="modal-footer">
-				<input title="Load file content to the textarea" class="form-control" type="file" id="formFile" onchange="readFile(this);" style="width:100%"/>
+				<input title="Load tsv or csv file content to the textarea" class="form-control" type="file" id="formFile" onchange="readFile(this);" style="width:100%"/>
+<!--				
 				<textarea title="Content to be opened" class="form-control" id="ta1" rows=4 cols=80 wrap="off" style="width:100%;white-space:pre;font-family:Consolas,monospace;"
 >#;CompanyName;EvaluatorName
 M1.1;;Process1
 C1.1;;Process2
 S1.1;;Process3
 </textarea>
+-->
+<script>
+	function mcs_sort(s) {
+		var ss=s.split('\n'); // sorting MCS
+		if(ss.length<=2) {
+			return(s);
+		}
+		var s1=ss.shift();  // first is header line
+		var sn=ss.pop();    // last is empty line
+		for(var i=ss.length-1;i>=0;i--) {
+			if(ss[i].length>0 && ss[i][0] !='#') {
+				if(ss[i][0]=='C') ss[i]='N'+ss[i].substring(1);
+			} else {
+				ss.splice(i,1);
+			}
+		}
+		ss=ss.sort();
+		for(var i=0;i<ss.length;i++) {
+			if(ss[i][0]=='N') ss[i]='C'+ss[i].substring(1);
+		}
+		ss.unshift(s1);
+		ss.push(sn);
+		s=ss.join('\n');
+		return(s);	
+	}
+	function update_table(s) {
+		var el = document.getElementById("ProcessTab"); // span element
+		if(el) {
+			el.innerHTML=to_table(s);
+		} 
+	}
+	function to_table(s,n) {
+		//var colors=['#e6ffe6','azure','#ffffcc'];
+		s = mcs_sort(s);
+		var [ids,processes,categories]=to_ids(s);
+		var cat_ids=catids(ids);
+		var s2='';
+		for(var i=0;i<ids.length;i++) {
+			var c=ids[i][0];
+			var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
+			s2+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
+			s2+="<td style='text-align:right;padding:6px;'>"+(i+1)+"</td>";
+			var cat_id=ids[i].split('.')[0];
+			if(cat_ids[cat_id]>0) {
+				s2+="<td style='border-left: 1pt solid lightgray;color:blue;padding:6px;" + cc + "'rowspan="+
+					(cat_ids[cat_id])+">"+cat_id+"</td>";
+				s2+="<td style='border-right: 1pt solid lightgray;color:blue;text-align:left;padding:6px;" +cc + "'rowspan="+    				(cat_ids[cat_id])+">"+ (categories[i]) +"</td>";
+				cat_ids[cat_id]=0; // s+="<td></td>";
+			}
+			// s+="<td>"+categories[i]+"</td>";		
+			s2+="<td style='color:blue;padding:6px;"+cc+"'>"+(ids[i])+"</td>";
+			s2+="<td style='text-align:left;padding:6px;"+cc+"'>"+ (processes[i]) +"</td>";
+			s2+="</tr>";
+		}
+		s2 = '<table style="border:1px solid lightgray;">'+s2+"</table>";
+		return(s2);		
+	}
+var svg_M=`
+	<span>
+		<svg width="100" height="100" viewbox="0 0 100 100">
+			<path d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#e6ffe6">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;
+var svg_C=`
+	<span>
+		<svg width=100 height=100 viewbox="0 0 100 100">
+			<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;
+var svg_S=`
+	<span>
+		<svg width=100 height=100 viewbox="0 0 100 100">
+			<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;		
+	function update_map(s) {
+		var el = document.getElementById("ProcessMap"); // span element
+		if(el) {
+			el.innerHTML=to_map(s);
+		} 
+	}
+	function catids(ids) {
+		var cat_ids={};
+		for(var i=0;i<ids.length;i++) {
+			var cat_id=ids[i].split('.')[0];
+			if(cat_id in cat_ids) {
+				cat_ids[cat_id]+=1; 
+			} else {
+				cat_ids[cat_id]=1;
+			}
+		}
+		return(cat_ids);
+	}
+	function to_ids(s) {
+		s = mcs_sort(s);
+		var ids=[],processes=[],categories=[];
+		ss=s.split("\n");
+		for(i=0;i<ss.length;i++) {
+			ss1=ss[i].split(/[;\t]/);
+			if('MCS'.includes(ss1[0][0])) {
+				ids.push(ss1[0]);
+				processes.push(ss1.length>2?ss1[2]:'');
+				categories.push(ss1.length>1?ss1[1]:'');
+			} 
+		}
+		return([ids,processes,categories]);
+	}
+	function to_map(s) {
+		var [ids,processes,categories]=to_ids(s);
+		var cat_ids=catids(ids);
+		var ssm='',ssc='',sss='';
+		for(id in cat_ids) {
+			var cid=ids.indexOf(id+".1");
+			if(id[0]=='M') ssm += svg_M.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+			if(id[0]=='C') ssc += svg_C.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+			if(id[0]=='S') sss += svg_S.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+		}
+		var ss='<table width="100%" style="text-align:center">';
+		ss +="<tr><td style='height:100px'>"+ssm+"</td></tr>"
+			+"<tr><td style='height:100px'>"+ssc+"</td></tr>"
+			+"<tr><td style='height:100px'>"+sss+"</td></tr>";
+		ss +="</table>";
+		return(ss);
+	}
+</script>
+<div class="row" style="padding:0">				
+	<div class="container" style="padding:0">
+		<ul id="tabA" class="nav nav-tabs" style="padding:0">
+			<li class="nav-item">
+				<a href="#tabA1" id="A1" class="nav-link" data-bs-toggle="tab" style="padding-left:10px;padding-right:10px">
+					Processes Map
+				</a>
+			</li>
+			<li class="nav-item">
+				<a href="#tabA2" id="A2" class="nav-link" data-bs-toggle="tab" style="padding-left:10px;padding-right:10px">
+					Processes Table
+				</a>
+			</li>
+			<li class="nav-item">
+				<a href="#tabA3" id="A3" class="nav-link active" data-bs-toggle="tab" style="padding-left:10px;padding-right:10px">
+					Processes File
+				</a>
+			</li>
+		</ul>
+	</div>
+	<p></p>
+	<div id="tabsA_c" class="tab-content" style="padding:0">
+		<div id="tabA1" class="tab-pane fade in show">
+			<div id="tabA1_c" class="container">
+					<div id="ProcessMap" style="height:180px;overflow:auto">
+					
+					</div>			
+			</div>
+		</div>
+		<div id="tabA2" class="tab-pane fade in show">
+			<div id="tabA2_c" class="container">
+					<div id="ProcessTab" style="height:180px;overflow:auto">
+					
+					</div>			
+			</div>
+		</div>
+		<div id="tabA3" class="tab-pane fade in show active">
+			<div id="tabA3_c" class="container">
+					<div style="height:180px">
+						<textarea id='ta1' wrap="off" rows=6 style="width:100%;font-family:Consolas,monospace" onchange="update_table(this.value);update_map(this.value);"></textarea>
+					</div>			
+			</div>
+		</div>
+	</div>
+</div>
+<p></p>
+
 				<span class="me-auto"><button title="Save current state before opening something new" type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="var s=state_tostring();download(s,fx);server_save(s,fx);" id="b_save">Save</button></span>
 				<span class="me-auto"><button title="Create html report and open it in the new tab" type="button" class="btn btn-info" data-bs-dismiss="modal" onclick="report();" id="b_report">Report</button></span>
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="b_cancel">Cancel</button>
+<!--				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="b_cancel">Cancel</button> -->
 				<button title="Create new questionnaire from description in the textarea" type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="exfun(0,document.getElementById('ta1').value);" id="b_open">Open</button>
 			</div>
 		</div>
