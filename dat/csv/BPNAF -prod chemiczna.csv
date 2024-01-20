@@ -1,0 +1,30 @@
+﻿;;Processes level N;;Processes level N-1;;The weight of the process;The process weight change trend;Processes unpredictability;;;;"Unpredictability 
+measure";Total knowledge-intensity
+;;;;;;;;Structured (static);Structured with ad hoc exceptions;Unstructured with pre-defined fragments;Unstructured (ad hoc);;
+;;;;;;;;1;2;3;4;;
+1;Management;M1;Zarządzanie strategiczne;M1.1;Kreowanie i kaskadowanie strategii;6;0 ;;x;;;2;6.50
+2;;;;M1.2;Kształtowanie kultury organizacyjnej;5;1 ;;;x;;3;4.50
+3;;M2;Planowanie i monitorowanie;M2.1;Definiowanie abicji i celów;5;0 ;;x;;;2;5.20
+4;;;;M2.2;Ocena efektywności;5;0 ;x;;;;1;0.60
+5;;C2;Marketing i sprzedaż;C1.1;Badanie rynku;5;2 ;;x;;;2;3.40
+6;;;;C1.2;Sprzedaż do klienta korporacyjnego;6;1 ;x;;;;1;1.85
+7;;;;C1.3;Sprzedaż do klienta indywidualnego;3;1 ;;x;;;2;3.40
+8;;C3;Produkcja;C2.1;Dostawy surowców płynnych;6;1 ;;x;;;2;0.95
+9;;;;C2.2;Dostawy surowców sypkich;6;0 ;;x;;;2;0.95
+10;;;;C2.3;Produkcja ;6;0 ;;x;;;2;1.20
+11;Support;S1;Zarządzanie zdrowiem i bezpieczeństwem;S1.1;Zarządanie ryzykiem dla zdrowia i bezpieczeństwa;6;1 ;x;;;;1;2.80
+12;;;;S1.2;Szkolenia BHP;6;0 ;x;;;;1;2.50
+13;;;;S1.3;Zarządzanie incydentami bezpieczeństwa;5;1 ;x;;;;1;1.85
+14;;S2;Zarządzanie jakością;S2.1;Kontorla jakości dostaw surowców;5;0 ;x;;;;1;0.60
+15;;;;S2.2;Kontrola jakości produkcji;5;0 ;x;;;;1;0.90
+16;;;;S2.3;Zarządzanie reklamacjami;5;0 ;;x;;;2;1.55
+17;;S3;HR;S3.1;Rekrutacja;5;2 ;x;;;;1;4.45
+18;;;;S3.2;Wdrażanie pracowników;4;2 ;x;;;;1;3.10
+19;;;;S3.3;Rozwój pracowników;4;1 ;;x;;;2;4.10
+20;;S4;Zarządzanie ochroną środowiska;S4.1;Identyfiakcja i ocena aspektów środowiskowych;5;0 ;x;;;;1;2.45
+21;;;;S4.2;Pomiary środowiskowe;6;0 ;;x;;;2;1.20
+;;;;;;;;;;;;;
+;;;;;;;;"obszar wpisywania ocen nieprzewidywalności
+(""x"" w jednej z 4 kolumn)";;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;

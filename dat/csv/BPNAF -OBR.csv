@@ -1,0 +1,38 @@
+﻿;;Processes level N;;Processes level N-1;;The weight of the process;The process weight change trend;Processes unpredictability;;;;"Unpredictability 
+measure";Total knowledge-intensity;;;;;;;
+;;;;;;;;Structured (static);Structured with ad hoc exceptions;Unstructured with pre-defined fragments;Unstructured (ad hoc);;;;;;;;;
+;;;;;;;;1;2;3;4;;;;;;;;;
+1;Management;M1;Budowanie ośrodka B+R w obszarze gospodarki cyfrowej;M1.1;budowanie grup badawczych;5;1 ;x;;;;1;6.55;;;;;;;
+2;;;;M1.2;rozwijanie strategii i wizji Centrum;6;0 ;x;;;;1;6.90;;;;;;;
+3;;M2; Zarządzanie jakością prowadzonych prac B+R;M2.1;monitorowanie efektów prac B+R;5;0 ;x;;;;1;4.50;;;;;;;
+4;;;;M2.2;wzmacnianie potencjału grup badawczych;6;0 ;;;x;;3;6.55;;;;;;;
+5;Core;C1;Tworzenie struktur organizacyjno-prawnych w celu rekrutacji naukowców;C1.1;nawiązywanie współpracy ze szkołami doktorskimi w kraju i zagranicą;6;1 ;;x;;;2;6.90;;;;;;;
+6;;;;C1.2;pozyskiwanie talentów;5;1 ;;;x;;3;7.20;;;;;;;
+8;;C2;Tworzenie środowiska informatyczno-projektowego;C2.1;analiza potrzeb rynku w zakresie rozwiązań B+R;4;0 ;;x;;;2;8.25;;;;;;;
+9;;;;C2.2;nawiązywanie współpracy instytucjonalnej;4;1 ;;;x;;3;7.90;;;;;;;
+10;;;;C2.3;identyfikacja i realizacja projektów;4;1 ;;;x;;3;7.90;;;;;;;
+11;;C3;Tworzenie środowiska obliczeniowego;C3.1;analiza potrzeb obliczeniowych;6;0 ;;x;;;2;4.15;;;;;;;
+12;;;;C3.2;efektywne wykorzystanie istniejących mocy obliczeniowych;6;0 ;;x;;;2;6.00;;;;;;;
+13;;;;C3.3;zapewnienie większych mocy obliczeniowych do nowych projektów;4;2 ;;;x;;3;6.00;;;;;;;
+14;Support;S1;Procesy zarządzania zasobami ludzkimi;S1.1;rekrutacja;4;1 ;;x;;;2;5.95;;;;;;;
+15;;;;S1.2;wprowadzanie do pracy;2;0 ;x;;;;1;4.90;;;;;;;
+16;;;;S1.3;wynagrodzenia i kontrakty;5;0 ;x;;;;1;3.25;;;;;;;
+18;;S2;Procesy finansowe;S2.1;obsługa faktur;4;0 ;x;;;;1;1.80;;;;;;;
+19;;;;S2.2;"rozrachunki wg zamówień i
+konktraktów";6;0 ;x;;;;1;3.95;;;;;;;
+20;;;;S2.3;rozliczenia projektów finansowanych z grantów;6;0 ;;x;;;2;5.15;;;;;;;
+21;;;;S2.4;rozliczenia delegacji;4;0 ;x;;;;1;2.60;;;;;;;
+22;;S3;Marketing i komunikacja;S3.1;przygotowanie materiałów promocyjnych i marketingowych ;3;0 ;;;x;;3;7.65;;;;;;;
+23;;;;S3.2;udział w targach i konferencjach;3;-1 ;;;x;;3;8.00;;;;;;;
+24;;;;S3.3;organizowanie kampanii informacyjnych;4;0 ;;x;;;2;7.60;;;;;;;
+25;;;;S3.4;wzmacnianie wizerunku instytutu poprzez wsparcie działań wizerunkowych indywidualnych  naukowców;6;2 ;;;x;;3;7.30;;;;;;;
+26;;S4;Procesy obsługi sprzętowej;S4.1;proces zamawiania nowego sprzętu IT ;3;2 ;;;;x;4;4.90;;;;;;;
+27;;;;S4.2;instalacja i obsługa oprogramowania dla naukowców;6;2 ;;x;;;2;3.85;;;;;;;
+28;;;;S4.3;"dystrubucja oraz zarządzanie sprzętem
+IT (Hardware oraz urządzenia pomocne)";3;0 ;;x;;;2;0.90;;;;;;;
+29;;;;S4.4;utrzymanie systemów wenątrzfirmowych;4;0 ;x;;;;1;0.95;;;;;;;
+;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;"obszar wpisywania ocen nieprzewidywalności
+(""x"" w jednej z 4 kolumn)";;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;

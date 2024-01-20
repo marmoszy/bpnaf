@@ -1,0 +1,38 @@
+﻿;;Processes level N;;Processes level N-1;;The weight of the process;The process weight change trend;Processes unpredictability;;;;"Unpredictability 
+measure";Total knowledge-intensity
+;;;;;;;;Structured (static);Structured with ad hoc exceptions;Unstructured with pre-defined fragments;Unstructured (ad hoc);;
+;;;;;;;;1;2;3;4;;
+1;Management;M1;Zarządzanie strategiczne;M1.1;Planowalnie strategii;6;0 ;;;x;;3;4.80
+2;;;;M1.2;;;;;;;;Uzupełnij!;0.00
+3;;M2;Planowanie i monitorowanie;M2.1;Proces audytu;5;1 ;;x;;;2;6.50
+4;;;;M2.2;;;;;;;;Uzupełnij!;0.00
+5;Core;C1;Wdrażanie nowych produktów;C1.1;Proces tworzenia produktów ubezpieczeniowych;6;0 ;;;x;;3;8.60
+6;;;;C1.2;Badanie potrzeb i oczekiwań klientów;6;2 ;;;x;;3;5.10
+7;;;;C1.3;;;;;;;;Uzupełnij!;0.00
+8;;C2;Marketing i sprzedaż;C2.1;Proces sprzedaży ubezpieczeń;5;0 ;;x;;;2;2.75
+9;;;;C2.2;Proces sprzedaży produktów zdrowotnych;5;2 ;;x;;;2;3.35
+10;;;;C2.3;Proces marketingowy;4;1 ;;;x;;3;8.95
+11;;C3;Produkcja;C3.1;Proces likwidacji szkód;5;0 ;;x;;;2;4.05
+12;;;;C3.2;Proces obsługi świadczeń zdrowotnych;5;0 ;;x;;;2;4.40
+13;;;;C3.3;Reasekuracja;4;0 ;x;;;;1;2.85
+14;Support;S1;Zarządzanie łańcuchem dostaw;S1.1;Proces zarządzania siecią placówek;4;-1 ;;x;;;2;4.40
+15;;;;S1.2;;;;;;;;Uzupełnij!;0.00
+16;;;;S1.3;;;;;;;;Uzupełnij!;0.00
+17;;;;S1.4;;;;;;;;Uzupełnij!;0.00
+18;;S2;Zarządzanie jakością;S2.1;Proces kontroli wewnętrznej;4;0 ;;x;;;2;5.20
+19;;;;S2.2;;;;;;;;Uzupełnij!;0.00
+20;;;;S2.3;;;;;;;;Uzupełnij!;0.00
+21;;;;S2.4;;;;;;;;Uzupełnij!;0.00
+22;;S3;HR;S3.1;Proces zarządzania zasobami ludzkimi;5;0 ;;x;;;2;7.20
+23;;;;S3.2;Proces szkoleniowy;4;0 ;;x;;;2;6.15
+24;;;;S3.3;;;;;;;;Uzupełnij!;0.00
+25;;;;S3.4;;;;;;;;Uzupełnij!;0.00
+26;;S4;Finanse;S4.1;Proces obsługi finansowej;4;0 ;x;;;;1;2.75
+27;;;;S4.2;Proces kontrolingu;4;0 ;x;;;;1;4.05
+28;;;;S4.3;Proces budżetowania;4;0 ;x;;;;1;7.20
+29;;;;S4.4;;;;;;;;Uzupełnij!;0.00
+;;;;;;;;;;;;;
+;;;;;;;;"obszar wpisywania ocen nieprzewidywalności
+(""x"" w jednej z 4 kolumn)";;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
