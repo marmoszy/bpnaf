@@ -1,0 +1,151 @@
+﻿;A;B;C;D;E;F;G;H;I;J;K;L;M
+;Procesy poziomu N;;;Procesy poziomu N-1;;Waga procesu;Trend zmiany wagi procesu;Nieprzewidywalność procesów;;;;Poziom nieprzewi-dywalności;Poziom intensywności wiedzy
+;;;;;;;;ustrukturyzowane ;ustrukturyzowane  z nieprzewidywalnymi wyjątkami;nieustrukturyzowane z fragmentami prefiniowanymi;nieustrukturyzowane ;;
+1;Procesy zarządcze;M1;Zarządzanie strategią organizacji;M1.1;Zarządzanie produkcją;4;1;;x;;;2;8.30
+2;;;;M1.2;Zarządzanie zasobami ludzkimi;4;0;;;x;;3;7.20
+3;;;;M1.3;Zarządzanie sprzedażą;5;1;;;x;;3;7.90
+4;Core Processes ;C1;Proces Realizacji zamówienia nowej maszyny;C1.1;Omówienie konceptu projektu z klientem;4;1;;;x;;3;7.90
+5;;;;C1.2;Wycena dla klienta i podpisanie wstępnej umowy;6;1;;;x;;3;6.15
+6;;;;C1.3;Wykonanie projektu;6;2;;;x;;3;9.30
+7;;;;C1.4;Montaż i testowanie urządzenia;6;1;;x;;;2;4.85
+8;;;;C1.5;Procedura odbioru urządzenia;3;0;;x;;;2;0.90
+9;;C2;Proces realizacji zamówienia istniejącego projektu maszyny;C2.1;Przedstawienie oferty dla klienta i podpisanie umowy kupna - sprzedaży ;6;1;;x;;;2;6.50
+10;;;;C2.2;Zamawianie części składowych z bazy plików;6;-1;;x;;;2;4.05
+11;;;;C2.3;Zlecenie produkcji podwykonawcom oraz warsztatowi wewnętrznemu ;5;-1;;x;;;2;4.45
+12;;;;C2.4;Zlecenie montażu urządzenia do warsztatu wewnętrznego;5;1;;x;;;2;4.75
+13;;;;C2.5;Procedura odbioru urządzenia;3;0;;x;;;2;2.15
+14;;C3;Proces przekazania maszyny;C3.1;Wykonanie analizy ryzyka maszyny;2;0;;;x;;3;7.20
+15;;;;C3.2;Utworzenie instrukcji bezpiecznej obsługi urządzenia;3;0;;;x;;3;6.55
+16;;;;C3.3;Utworzenie deklaracji oceny zgodności;6;0;x;;;;1;0.60
+17;;;;C3.4;Utworzenie protokołu odebrania maszyny;5;0;;x;;;2;3.35
+18;;;;C3.5;Szkolenie personelu obsługi urządzenia;4;0;;;x;;3;5.85
+19;;C4;Proces okresowych prac remontowych maszyn u klienta;C4.1;Odebranie zlecenia pracy remontowych przez klienta;2;1;;x;;;2;3.50
+20;;;;C4.2;Naprawa urządzenia;6;0;;;x;;3;9.30
+21;;;;C4.3;Spisanie protokołu prac;2;0;;x;;;2;5.80
+22;;;;C4.4;Wystawienie faktury za wykonane prace;4;0;x;;;;1;0.90
+23;Support Processes;S1;Proces magazynowania;S1.1;Wprowadzenie zlecenia zakupu podzespołu do systemu;3;1;;x;;;2;1.80
+24;;;;S1.2;Zakup podzespołów;6;0;;x;;;2;1.20
+25;;;;S1.3;Przyporządkowanie elementów składowych do projektu;2;2;;x;;;2;5.10
+26;;;;S1.4;Składowanie elementów;3;2;;x;;;2;5.45
+27;;;;S1.5;Opis faktury i wprowadzenie do systemu;2;0;x;;;;1;0.90
+28;;S2;Logistyka;S2.1;Zlecenie transportu firmie zewnętrznej;4;0;;x;;;2;2.45
+29;;;;S2.2;Zlecenie warsztatowi załadunku maszyny;2;0;;x;;;2;6.15
+30;;;;S2.3;Rozładunek w miejscu docelowym maszyny;2;0;;x;;;2;3.75
+31;;;;S2.4;Montaż maszyny w miejscu docelowym, wraz z podłączeniem zasilania;6;0;;x;;;2;5.10
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;1;2;3;4;X;Y
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
+;;;;;;;;;;;;;
