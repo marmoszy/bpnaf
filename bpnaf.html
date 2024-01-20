@@ -536,6 +536,8 @@ It is partly filled by an evaluator.
 			<p>The server component of the framework is dedicated to postprocessing of questionnaire datafiles. It has access to all questionnaires so in deployed system it needs to be password protected. At the moment it allows just for <a href="bpnaf.php">previewing</a> the content of quiestionnire files and go to selected one. 
 			<p>The questionnaire file represents tab separated items hence the preview in the textarea could be copied and pasted to spredsheet software. For example the columns sixth and seventh (F and G when pasting into A) represents the data for BPNAM chart. Be aware that floating point numbers are represented with the dot character as the decimal point separator! </p>
 			<p>The component requires the system to be installed on a web server with php enabled interpreter.</p>
+			<p>Note:</p>
+			<p>The system can also operate when deployed on a static (non-php-enabled) server, what means that it is not allowed to automatically store anything on that server. In such a case the framework operation requires the user to store and load the questionnaires on his machine, what means that after filling the generated questionnaire one needs to save it on local disk. In case of forgotting to save the last session is remembered by the browser. An example of such BPNAF deplyment is on <a href="https://marmoszy.github.io/bpnaf">github.io</a>.</p>
 		</div>
 	</div>		
 </div>  <!-- end of row -->
@@ -1056,7 +1058,7 @@ var svg_S=`
 				document.getElementById('f7').action = 
 					'bpnaf5.html?ex='+encodeURIComponent(s.replaceAll('\n','|'))+"&lang="+lang;
 			}
-			s2='\nDo you want to open generated process map?\n'+s2+'\n';			
+			s2=s+'\nDo you want to open generated process map?\n'+s2+'\n';			
 		} else {
 			s2='\nDo you want to submit?\n'+s2+'\nLink code:\n'+fname+'\n';
 		}
