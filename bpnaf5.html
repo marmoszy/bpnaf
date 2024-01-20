@@ -1068,7 +1068,7 @@ function report() {
 	s += '<p><center>'+document.getElementById("svg_container").innerHTML+'</center></p></body>';
 	server_save(s,fname);
 	//var tab = window.open('about:blank', '_blank');tab.document.write(s); tab.document.close();
-    if(window.location.protocol.startsWith("file:")) {
+    if(window.location.protocol.startsWith("file:")||document.location.hostname.includes(".github.io")) {
 		download(s,fname);
 	} else {
 		openAsPageInNewTab(s, path + fname); 
