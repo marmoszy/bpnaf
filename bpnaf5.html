@@ -1128,21 +1128,23 @@ function ta_copy(e) {
 
 var bpnaf5={};
 
+function name_from_content(s) {
+	var ss=s.split(/[;\t]/);
+	return bpnafname + "_"+ (ss.length>1?ss[1]:'') + (ss.length>2?(";"+ss[2]):'') + ext;
+}
+
 async function load_file(file) {  // using fetch
 	if(file[0]=='#') {
-		ex=file;
+		fx = name_from_content(file);
+		ex = file;
 	} else {
 		var url = path + file;
 		var response = await fetch(url, {cache:"reload"});
-		var allText = await response.text();
-		if(allText.length>0) {
-			ex=allText;
-			var exex;
-			if(exex) {
-				ex=exex;
-				bpnaf5[file]=ex;
-				localStorage.bpnaf5=JSON.stringify(bpnaf5);
-			}
+		var t = await response.text();
+		if(t.length>0) {
+			ex=t;
+			bpnaf5[file]=ex;
+			localStorage.bpnaf5=JSON.stringify(bpnaf5);
 		}
 	}
 	init(ex);	  	
@@ -1160,7 +1162,7 @@ async function load_file2(file) {  // using fetch
 			ex2=allText;
 			//var exex;
 			if(ex2.length>1) {
-				bpnaf5[file]=ex;2
+				bpnaf5[file]=ex2;
 				localStorage.bpnaf5=JSON.stringify(bpnaf5);
 			}
 		}
@@ -1188,11 +1190,10 @@ function download(data, filename, type) {
 		window.navigator.msSaveOrOpenBlob(file, filename||(bpnafname+ext));
 	else { // Others
 		var a = document.createElement("a");
-		var url = URL.createObjectURL(file);
-		a.href = url; a.download = filename||(bpnafname+ext);
-		console.log(file);
-		console.log(a);
+		a.href = URL.createObjectURL(file); 
+		a.download = filename||(bpnafname+ext);
 		document.body.appendChild(a);
+		console.log(a);
 		a.click();
 		setTimeout(function() {
 			document.body.removeChild(a);
