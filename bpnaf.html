@@ -609,8 +609,27 @@ It is partly filled by an evaluator.
 		localStorage.bpnaf5=JSON.stringify(bpnaf5);
 		return(pr);
 	}
+	function to_filename(s) {
+		s=latenize(s);
+		return bpnafname + "_" + s.replaceAll("&","_").replaceAll("\/","^").replaceAll("\\","~").replaceAll("%","`") + ext;
+	}
+	function from_filename(s) {
+		return s.slice(bpnafname.length+1,-ext.length).replaceAll("_","&").replaceAll("^","\/").replaceAll("~","\\").replaceAll("`","%");
+	}
+	function latenize(s) {
+		var l1="ąćęłóńśźżĄĆĘŁÓŃŚŻŹ"; // pl
+		var l2="acelonszzACELONSZZ";
+		for(var i=0; i<l1.length; i++) s=s.replaceAll(l1[i],l2[i]);
+		var l1="áéêíñóúüý¿¡ÁÉÊÍÑÓÚÜÝ"; // es
+		var l2="aeeinouuy?!AEEINOUUY";
+		for(var i=0; i<l1.length; i++) s=s.replaceAll(l1[i],l2[i]);
+		var l1="äößüÄÖẞÜ"; // de
+		var l2="aosuAOSU";
+		for(var i=0; i<l1.length; i++) s=s.replaceAll(l1[i],l2[i]);
+		return(s);
+	}
 	function company_changed(el) {
-		var fname = bpnafname + "_" + el.value.replaceAll("&","_") + ext;
+		var fname = to_filename(el.value); 
 		if(debug) console.log("Company changed: "+fname);
 		if(!window.location.protocol.startsWith("file:")) {
 			load_serverfile(fname).then(s=>{
@@ -669,7 +688,7 @@ It is partly filled by an evaluator.
 					var el2=document.getElementById("CompanyHelpList");
 					for(var i=0;i<ss.length;i++) {
 						var option = document.createElement("option");   // creating new option
-						option.value = ss[i].slice(6,-4).replace("_","&");
+						option.value = from_filename(ss[i]);
 						el2.appendChild(option);
 					}
 				}
@@ -682,7 +701,7 @@ It is partly filled by an evaluator.
 					var el2=document.getElementById("CompanyHelpList");
 					for(var i=0;i<ss.length;i++) {
 						var option = document.createElement("option");   // creating new option
-						option.value = ss[i].slice(6,-4).replace("_","&");
+						option.value = from_filename(ss[i]);
 						el2.appendChild(option);
 					}
 				}
@@ -1035,10 +1054,10 @@ var svg_S=`
 		if(company.includes(";")) {
 			company=company.split(/[;\t]/)[0];
 		}
-		company = company!=='' ? company.replaceAll("&","_") : "default";
+		company = company!=='' ? company : "default";
 		var evaluator = document.getElementById("EvaluatorName").value;
 		if(evaluator.length>0) company += ';'+evaluator.replaceAll('&',';');
-		var fname = bpnafname+"_" + company + ext;	
+		var fname = to_filename(company);	
 		var lang=document.getElementById("lang").value;
 		fname += "&lang="+lang;
 		fname = "uu"+btoa(encodeURIComponent("fx="+fname));
@@ -1048,7 +1067,7 @@ var svg_S=`
 		s = mcs_sort(s);
 		document.getElementById('ex7').value=s;
 		
-		var s2 = '\nCompany-Evaluator Code: '+company + '\nEvaluator: '+evaluator + '\nLanguage: '+lang +'\n'; //ss.join('\n');
+		var s2 = '\nCompany-Evaluator Code: '+to_filename(company).slice(6,-4) + '\nEvaluator: '+evaluator + '\nLanguage: '+lang +'\n'; //ss.join('\n');
 		if(window.location.protocol==="file:" || document.location.hostname.includes(".github.io")) {
 			if(document.location.hostname.includes(".github.io")) { 
 				document.getElementById('f7').method = "get";
