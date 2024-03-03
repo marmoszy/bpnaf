@@ -1,0 +1,2091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>BPNAF v1.4</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  
+<style>
+.atextarea {
+	display: block;
+	overflow: hidden;
+	resize: vertical;
+	min-height: 60px;
+	line-height: 20px;
+}
+.atextarea[placeholder]:empty:before {
+	content: attr(placeholder);
+	color: $888; 
+}
+a {
+	text-decoration: none;
+}
+th {
+	hyphens: auto
+}
+:checked+span { 
+	color: blue;
+	//font-weight: bold; 
+}
+.modal:nth-of-type(even) {
+	z-index: 1062 !important;
+}
+.modal-backdrop.show:nth-of-type(even) {
+	z-index: 1061 !important;
+}
+input[type=file]::file-selector-button {
+/*  background-color: #cceeff; */
+}
+</style>
+
+<script src="bpnaf.js"></script>
+<script>
+// #4285f4 #ea4335 #fbbc05 #34a853
+	
+/* ----- global data ------ */
+var example1=`
+#;Przykładowa2 SA;Marek Oceniający;;;;;0;0.3;0.65;1
+M1.1;;Analiza rynkowa
+M1.2;;Rozwój strategii oraz wizji
+M2.1;;Monitorowanie i kontrola
+M2.2;;Zaprojektowanie usprawnień produktów
+C1.1;;Proces pozyskania klienta
+C1.2;;Proces tworzenia oferty
+C1.3;;Finalizacja
+C2.1;;Proces planowania projektowego
+C2.2;;Proces projektowania oraz produkcji oprogramowania
+C2.3;;Proces implementacji oprogramowania
+C3.1;;Monitoring
+C3.2;;Aktualizacje okresowe
+C3.3;;Naprawy oraz poprawki
+S1.1;;Rekrutacja
+S1.2;;Wprowadzenie do pracy
+S1.3;;Zmiany (Awanse, zmiana stanowiska, itp.)
+S1.4;;Wynagrodzenia oraz kontrakty
+S2.1;;Obsługa faktur
+S2.2;;Rozliczenia księgowe
+S2.3;;Dokumentacja księgowa
+S2.4;;Rozrachunki wg zamówień i konktraktów
+S3.1;;Tworzenie terminarzu projektu
+S3.2;;Oszacowanie oraz opracowanie kosztorysu
+S3.3;;Zdefiniowanie zakresu projektu
+S3.4;;Przydzielenie odpowiednich zasobów ludzkich
+S4.1;;Proces zamawainia nowego sprzętu IT
+S4.2;;Naprawda sprzętu IT
+S4.3;;Utrzymanie systemów wenątrz-firmowych
+S4.4;;Dystrubucja oraz zarządzanie sprzętem IT (Hardware oraz urządzenia pomocne)
+`;
+var example2=`
+#;Sample Inc.;Marek Evaluator;;;;;0;0.3;0.65;1
+M2.1;;Provision of the service;4;1;1;
+M2.2;;Analysis of results;2;5;2;
+M2.3;;Defining customer needs;6;2;3;
+M2.4;;The result of the analysis;5;1;3;
+M2.5;;Defining service changes;5;1;3;
+M2.6;;Implementation of changes;5;1;3;
+M2.7;;Analysis of the correctness of implemented changes;5;1;2;
+M2.8;;Provision of services after changes;2;0;1;
+M2.9;;Providing the service in its current form;2;0;1;
+C1.1;;Defining a customer;4;1;3;
+C1.2;;Obtaining customer contact;6;2;3;
+C1.3;;SIWZ analysis;3;0;1;
+C1.4;;Participation in the tender;3;0;1;
+C1.5;;Tendering;5;1;1;
+C1.6;;Signing a contract;5;1;1;
+C1.7;;The process of providing the service;5;0;2;
+C1.8;;The contract extension;4;0;2;
+C1.9;;Termination of cooperation;1;-2;1
+`;
+var example3=`
+#;Przykładowa1 SA;Marek Oceniający;;;;;0;0.3;0.65;1
+C1.2;;Proces programowania funkcjonalności;6;0;1;;4;4;4;4;4;4;4;2;3;1
+C1.3;;Procesy DevOps;6;0;1;;4;4;3;3;3;2;1;1;1;1
+S1.1;;Proces rekrutacji;4;0;1;;4;4;4;4;4;4;4;3;3;2
+S1.2;;Proces zarządzania urlopami;5;0;1;;1;1;1;1;1;1;1;1;1;2
+S1.3;;Proces zarządzania rozwojem pracowników;5;0;3;;1;1;1;1;1;1;1;1;1;2
+S2.1;;Proces promocji w mediach społecznościowych;4;1;3;;4;4;4;4;4;4;4;4;4;1
+S2.2;;Proces prowadzenia firmowego bloga;4;2;3;;4;4;4;4;4;4;3;3;3;3
+S2.3;;Proces organizacji meetupów;2;1;4;;4;4;4;4;4;4;4;4;4;3
+`
+var example4='#;Firma SA;Marek Oceaniusz|M1.1;;Proces 1|C1.1;;Proces 2|C1.2;;Proces 3|S1.1;;Proces 4';
+
+var example5=`
+#			1.03.2024, 13:03:03	2			0	0.3	0.65	1		0	0	0
+M1.1	Zarządzanie strategiczne	Planowalnie strategii	6	0	3	4.8	0	0	0	0	0	0	0	0	0	0		
+M2.1	Planowanie i monitorowanie	Proces audytu	5	1	2	6.5	0	0	0	0	0	0	0	0	0	0		
+C1.1	Wdrażanie nowych produktów	Proces tworzenia produktów ubezpieczeniowych	6	0	3	8.6	0	0	0	0	0	0	0	0	0	0	HRM\\ITSM\\KM\\BPM	Dobór pracowników kreatywnych, poszukujących wciąż nowej wiedzy i nowych rozwiązań.\\Zapewnienie przcownikom możliwości rozwoju i uprawomocnienie do podejmowania decyzji. \\Wsparcie realizacji procesów przez systemy BPM/iBPM lub ACM zintegrowane z System do zarządzania wiedzą (KMS). \\Zarządanie wiedzą, w tym ocena przydatności posiadanej wiedzy i identyfikacja braków nowej wiedzy.\\Zapewnienie możliwości pozyskiwania wiedzy spoza organizacji ale równocześnie identyfikowania, weryfikacji, gromadzenia i dystrybucji wiedzy tworzonej i wykorzystywanej w organizacji.\\Procesy o b. dużym znaczeniu dla organizacji i o wysokich wymaganiach na wykorzystanie wiedzy
+C1.2		Badanie potrzeb i oczekiwań klientów	6	2	3	5.1	0	0	0	0	0	0	0	0	0	0		
+C2.1	Marketing i sprzedaż	Proces sprzedaży ubezpieczeń	5	0	2	2.8	0	0	0	0	0	0	0	0	0	0	HRM\\ITSM\\KM\\BPM	Dobór pracowników obowiązkowych, pracujących systematycznie i dokładnie, a równocześnie uważnych na wystepujące odstępstwa w realizacji procesów.\\Wsparcie systemem zapewniającym możliwość uporządkowania pracy i monitorowania wszelkiego rodzaju odstępstw (np. workflow/ document management).\\Identyfikacja procesów lub ich fragmentów możliwych do automatyzacji przez RPA.\\Okresowe szkolenia i przeglądy obiegów pracy. Okresowe aktualizowanie repozytorium wiedzy (off line).\\Procesy o b. dużym znaczeniu dla organizacji i o wysokich wymaganiach na wykorzystanie wiedzy
+C2.2		Proces sprzedaży produktów zdrowotnych	5	2	2	3.4	0	0	0	0	0	0	0	0	0	0		
+C2.3		Proces marketingowy	4	1	3	9.0	0	0	0	0	0	0	0	0	0	0		
+C3.1	Produkcja	Proces likwidacji szkód	5	0	2	4.1	0	0	0	0	0	0	0	0	0	0	HRM\\ITSM\\KM\\BPM	Dobór pracowników obowiązkowych, pracujących systematycznie i dokładnie, a równocześnie uważnych na wystepujące odstępstwa w realizacji procesów.\\Okresowe szkolenia i weryfikacja wiedzy pracowników.\\Wsparcie systemem zapewniającym możliwość uporządkowania pracy i monitorowania wszelkiego rodzaju odstępstw (np. workflow/ document management).\\Identyfikacja procesów (np. C3.3) lub ich fragmentów możliwych do automatyzacji przez RPA.\\Okresowe szkolenia i przeglądy obiegów pracy, w tym ocena przydatności skodyfikowanej wiedzy organizacji. Okresowe aktualizowanie repozytorium wiedzy (off line).\\Procesy o dużym znaczeniu dla organizacji i o raczej niskich wymaganiach na wykorzystanie wiedzy. Proces C3.3 w pelni ustrukturyzowany.
+C3.2		Proces obsługi świadczeń zdrowotnych	5	0	2	4.4	0	0	0	0	0	0	0	0	0	0		
+C3.3		Reasekuracja	4	0	1	2.9	0	0	0	0	0	0	0	0	0	0		
+S1.1	Zarządzanie łańcuchem dostaw	Proces zarządzania siecią placówek	4	-1	2	4.4	0	0	0	0	0	0	0	0	0	0		
+S2.1	Zarządzanie jakością	Proces kontroli wewnętrznej	4	0	2	5.2	0	0	0	0	0	0	0	0	0	0		
+S3.1	HR	Proces zarządzania zasobami ludzkimi	5	0	2	7.2	0	0	0	0	0	0	0	0	0	0		
+S3.2		Proces szkoleniowy	4	0	2	6.2	0	0	0	0	0	0	0	0	0	0		
+S4.1	Finanse	Proces obsługi finansowej	4	0	1	2.8	0	0	0	0	0	0	0	0	0	0		
+S4.2		Proces kontrolingu	4	0	1	4.1	0	0	0	0	0	0	0	0	0	0		
+S4.3		Proces budżetowania	4	0	1	7.2	0	0	0	0	0	0	0	0	0	0		
+`
+
+var statements_en=[
+"For the execution of the process, tacit knowledge, including experience, is much more important than codified explicit knowledge."
+,"Implementation of the process requires verification of old and creation of new knowledge."
+,"A long time is required to acquire the knowledge (including experience) needed to implement the process."
+,"The knowledge needed to implement the process becomes obsolete and is replaced in periods comparable (or faster) than the time ,frame of process design and implementation."
+,"The knowledge needed to execute a process is highly unpredictable due to the execution context or the required inputs or required outputs."
+,"A large range of necessary and possible decisions, often complex, related to the implementation of the process."
+,"The person who performs the process has a significant influence on its course and, as a result, the outcome of the process."
+,"The context of the process implementation may have a significant impact on its implementation as well as the results."
+,"A high level of creativity and innovation is required when designing and implementing the process."
+,"Designing and implementing a process requires extensive and high-quality professional relationships (formal and informal), including relationships with stakeholders."
+];
+var statements_pl=[
+ "Dla wykonania procesu znacznie większe znaczenie niż skodyfikowana wiedza jawna ma wiedza ukryta, w tym doświadczenie."
+,"Realizacja procesu wymaga weryfikacji starej i stworzenia nowej wiedzy."
+,"Wymagany jest długi czas zdobywania wiedzy (w tym doświadczenia) potrzebnej do realizacji procesu."
+,"Wiedza potrzebna do realizacji procesu dezaktualizuje się i jest zastępowana w okresach porównywalnych (lub szybciej) niż ramy czasowe projektowania i realizacji procesu."
+,"Wiedza potrzebna do wykonania procesu jest wysoce nieprzewidywalna ze względu na kontekst wykonania lub wymagane dane wejściowe lub wymagane wyniki."
+,"Duży zakres koniecznych i możliwych do podjęcia decyzji, często złożonych, związanych z realizacją procesu."
+,"Wykonawca procesu ma duży wpływ na jego przebieg i w rezultacie wynik procesu."
+,"Kontekst realizacji procesu może mieć istotny wpływ na jego realizację, a także wyniki."
+,"Przy projektowaniu i realizacji procesu wymagany jest wysoki poziom kreatywności i innowacyjności."
+,"Projektowanie oraz realizacja procesu wymaga szerokich i wysokiej jakości relacji zawodowych (formalnych i nieformalnych), w tym relacji z interesariuszami."
+];
+var statements_es=[
+"Para la ejecución del proceso, el conocimiento tácito, incluida la experiencia, es mucho más importante que el conocimiento explícito codificado"
+,"La implementación del proceso requiere la verificación de conocimientos antiguos y la creación de nuevos conocimientos"
+,"Se requiere mucho tiempo para adquirir los conocimientos (incluida la experiencia) necesarios para implementar el proceso"
+,"El conocimiento necesario para implementar el proceso se vuelve obsoleto y se reemplaza en períodos comparables (o más rápidos) que el marco temporal del diseño y la implementación del proceso"
+,"El conocimiento necesario para ejecutar un proceso es altamente impredecible debido al contexto de ejecución o las entradas o salidas requeridas"
+,"Una amplia gama de decisiones necesarias y posibles, a menudo complejas, relacionadas con la implementación del proceso"
+,"La persona que realiza el proceso tiene una influencia significativa en su curso y, en consecuencia, en el resultado del proceso"
+,"El contexto de la implementación del proceso puede tener un impacto significativo en su implementación así como en los resultados."
+,"Se requiere un alto nivel de creatividad e innovación al diseñar e implementar el proceso."
+,"Diseñar e implementar un proceso requiere relaciones profesionales (formales e informales) extensas y de alta calidad, incluidas las relaciones con las partes interesadas"
+];
+var statements_de=[
+"Für die Durchführung des Prozesses ist implizites Wissen, einschließlich Erfahrung, viel wichtiger als kodifiziertes explizites Wissen."
+,"Die Umsetzung des Prozesses erfordert die Überprüfung alten und die Schaffung neuen Wissens."
+,"Es dauert lange, sich das für die Umsetzung des Prozesses erforderliche Wissen (einschließlich Erfahrung) anzueignen."
+,"Das zur Implementierung des Prozesses erforderliche Wissen veraltet und wird in Zeiträumen ersetzt, die vergleichbar (oder schneller) sind als der Zeitrahmen für die Prozessgestaltung und -implementierung."
+,"Das zur Ausführung eines Prozesses erforderliche Wissen ist aufgrund des Ausführungskontexts oder der erforderlichen Eingaben oder erforderlichen Ausgaben höchst unvorhersehbar."
+,"Eine Vielzahl notwendiger und möglicher, oft komplexer Entscheidungen im Zusammenhang mit der Umsetzung des Prozesses."
+,"Die Person, die den Prozess durchführt, hat wesentlichen Einfluss auf dessen Verlauf und damit auf das Ergebnis des Prozesses."
+,"Der Kontext der Prozessimplementierung kann erhebliche Auswirkungen auf die Implementierung und die Ergebnisse haben."
+,"Bei der Konzeption und Umsetzung des Prozesses ist ein hohes Maß an Kreativität und Innovation erforderlich."
+,"Das Entwerfen und Implementieren eines Prozesses erfordert umfassende und qualitativ hochwertige professionelle Beziehungen (formell und informell), einschließlich der Beziehungen zu Stakeholdern."
+]
+
+var statements=statements_pl;
+
+// form state variables
+var ids=[];       // ["M1.1","M1.2","M2.1"]; // process levels
+var categories=[]; 
+var processes=[]; // ["Analiza rynkowa","Rozwój strategii oraz wizji","Monitorowanie i kontrola"];
+var weights=[];
+var trends=[];
+var structured=[];
+var intensity=[];
+var intensities=[];
+var recommendations1=[];
+var recommendations2=[];
+var company="",industry="",compsize="",compcountry="";
+var evaluator="";
+var data="";
+var st_weights=[0, 0.3, 0.65, 1];
+
+var colors=['#e6ffe6','azure','#ffffcc',''];
+var colors2=['#00ff00','#00bfff','yellow',''];
+
+var path='dat/';  // server upload path 'dat/'
+var ext=".tsv";  // this framework file format extension
+var bpnafname="bpnaf"; // data files base name
+var phpname="bpnaf.php" // server component
+var enabled=2;   // enable=0 disable editing (only preview) 
+var lang="pl";
+var bom = new Uint8Array([0xEF, 0xBB, 0xBF]); // '\xef\xbb\xbf'; // utf-8 byte order mark
+var debug=0;  // for console.log
+var qmode = 1;  // number of questionnaires: 1 - default, 3 - for merging two questionnaires (one active, two for preview)
+
+var lang_idx={"en":0,"pl":1,"es":2,"de":3};
+var lang_dict={
+	 "lang_name":["English","Polski","Español","Deutsch"]
+	,"b_save":["Save","Zachowaj","Guardar","Speichern"]
+	,"b_save:title":["Save current state before opening something new"
+		,"Zachowaj przed otwarciem"
+		,"Guarde el estado actual antes de abrir algo nuevo"
+		,"Speichern Sie den aktuellen Status, bevor Sie etwas Neues öffnen"
+	]
+	,"b_copy:title":["Copy table","Kopiuj tabelę","Copiar tabla","Tabelle kopieren"]
+	,"b_report":["Report","Raport","Reportar","Bericht"]
+	,"b_report:title":["Create html report and open it in the new tab"
+		,"Utwórz raport w nowej karcie"
+		,"Cree un informe html y ábralo en la nueva pestaña"
+		,"Erstellen Sie einen HTML-Bericht und öffnen Sie ihn im neuen Tab"
+	]
+//	,"b_cancel":["Cancel","Anuluj","Cancelar","Abbrechen"]
+	,"b_open":["Open","Otwórz","Abrir","Offen"]
+	,"b_open:title":["Create new questionnaire from description in the textarea"
+		,"Utwórz nowy kwestionariusz z opisu w polu edycyjnym"
+		,"Crear un nuevo cuestionario a partir de la descripción en el área de texto"
+		,"Erstellen Sie einen neuen Fragebogen aus der Beschreibung im Textbereich"
+	]
+	,"b_ex1":["Example 1","Przykład 1","Ejemplo 1","Beispiel 1"]
+	,"b_ex2":["Example 2","Przykład 2","Ejemplo 2","Beispiel 2"]
+	,"b_ex3":["Example 3","Przykład 3","Ejemplo 3","Beispiel 3"]
+	,"t_title":["Business Process Nature Assessment Framework"
+		,"Analiza natury procesów biznesowych"
+		,"Evaluación de la Naturaleza de los Procesos de Negocio"
+		,"Rahmenwerk zur Bewertung der Natur von Geschäftsprozessen"
+	]
+/*	,"t_month":["January","styczeń","Enero","Januar"] */
+	,"t_month":["February","luty","Febrero","Februar"]
+	,"t_company":["Company","Firma","Empresa","Firma"]
+	,"t_evaluator":["Evaluator","Oceniający","Evaluador","Bewerter"]
+	,"b_prev":["Prev","Poprzedni","Previo","Vorherige"]
+	,"b_next":["Next","Następny","Próximo","Nächste"]
+	,"h1_":[
+		 ["Process Level","Process Name","Weight","Trend","Structu&shy;red","Structured with ad-hoc exceptions","Unstructured with predefined fragments","Unstruc&shy;tured","Knowledge Intensity"]
+		,["Poziom procesu","Nazwa procesu","Waga","Trend","Ustruktu&shy;ryzowane","Ustruktu&shy;ryzowane z wyjątkami","Nieustruk&shy;turyzowane z fragmentami","Nieustruk&shy;turyzowane","Intensywność wiedzy"]
+		,["Nivel de proceso","Nombre del proceso","Peso","Tendencia","Estructu&shy;rado","Estructu&shy;rado con excepciones","Desestructu&shy;rado con fragmentos","Desestructu&shy;rado","Intensidad del conoci&shy;miento"]
+		,["Prozessebene", "Prozessname", "Gewich&shy;tung", "Trend", "Struktu&shy;riert", "Strukturiert mit Ausnahmen", "Unstruk&shy;turiert mit Fragmenten", "Unstruk&shy;turiert", "Wissen&shy;sintensität"]
+	]
+	,"h2_":[
+		 ["Statement","Do not agree","Partly agree","Mostly agree","Fully agree","Knowledge<br>Intensity"]
+		,["Stwierdzenie","Nie zgadzam się","Zgadzam się częściowo","Zgadzam się w dużej mierze","W pełni się zgadzam","Intensywność<br>wiedzy"]
+		,["Declaración","No estoy de acuerdo","Parcialmente de acuerdo","Mayormente de acuerdo","Totalmente de acuerdo","Conocimiento<br>Intensidad"]
+		,["Aussage", "Stimme nicht zu", "Stimme teilweise zu", "Stimme weitgehend zu", "Stimme voll und ganz zu", "Wissen<br>Intensität"]
+	]
+/*	,"h3_":[
+		 ["Process Level N","Process Level N-1","Weight","Trend"
+			,"Unpredictibility<br>Level","Knowledge<br>Intensity"]
+		,["Poziom procesu N","Poziom procesu N-1","Waga","Trend"
+			,"Poziom<br>nieprzewidy-walności","Intensywność<br>wiedzy"]
+	]
+*/
+	,"h41":["Quarter","Ćwiartka","Cuarto","Quartal"]
+	,"h42":["Process","Proces","Proceso","Verfahren"]
+	,"h43":["Recommendation area","Obszar rekomendacji","Área de recomendación","Empfehlungsbereich"]
+	,"h44":["Recommendation", "Treść rekomendacji", "Recomendación", "Empfehlung"]
+
+	,"weight_$NN:title":["1 - the lowest, ... , 6 - the highest","1 - najmniejsza, ... , 6 - największa","1 - la más baja, ..., 6 - la más alta","1 – der niedrigste, ... , 6 – der höchste"]
+	,"trend_$NN:title":["-2 - decreasing, ... , 2 - increasing","-2 - zmniejszający, ... , 2 - zwiększający","-2 - decreciente, ... , 2 - creciente","-2 - abnehmend, ... , 2 - steigend"]
+	
+	,"predi1":["Low unpredictibilty","Niska nieprzewidywalność","Baja imprevisibilidad","Geringe Unvorhersehbarkeit"]
+	,"predi2":["High unpredictibilty","Wysoka nieprzewidywalność","Alta imprevisibilidad","Hohe Unvorhersehbarkeit"]
+	,"predi3":["High unpredictibilty","Wysoka nieprzewidywalność","Alta imprevisibilidad","Hohe Unvorhersehbarkeit"]
+	,"predi4":["Low unpredictibilty","Niska nieprzewidywalność","Baja imprevisibilidad","Geringe Unvorhersehbarkeit"]
+	,"knowi1":["High knowledge intensity","Wysoka intensywność wiedzy","Alta intensidad de conocimiento","Hohe Wissensintensität"]
+	,"knowi2":["High knowledge intensity","Wysoka intensywność wiedzy","Alta intensidad de conocimiento","Hohe Wissensintensität"]
+	,"knowi3":["Low knowledge intensity","Niska intensywność wiedzy","Baja intensidad de conocimiento","Geringe Wissensintensität"]
+	,"knowi4":["Low knowledge intensity","Niska intensywność wiedzy","Baja intensidad de conocimiento","Geringe Wissensintensität"]
+
+	,"st_$NN.$DD":[statements_en,statements_pl,statements_es,statements_de]
+	,"A1":["Processes Map","Mapa procesów","Mapa de procesos","Prozesskarte"]
+	,"A2":["Processes Table","Tabela procesów","Tabla de procesos","Prozesstabelle"]
+	,"A3":["Processes List","Lista procesów","Lista de procesos","Prozessliste"]
+	,"b_fine":["Finalize","Finalizuj","Finalizar","Abschließen"]
+	,"s_fine":[
+		'After finalizing you will still be abled to edit the questionare in this session but the next session will be in preview mode! Do you want to continue and finalize the questionaire?'
+		,'Po sfinalizowaniu nadal będziesz mógł edytować kwestionariusz w tej sesji, ale następna sesja będzie w trybie podglądu! Czy chcesz kontynuować i sfinalizować ankietę?'
+		,'Después de finalizar, aún podrá editar el cuestionario en esta sesión, ¡pero la próxima sesión estará en modo de vista previa! ¿Quiere continuar y finalizar el cuestionario?'
+		,'Nach der Fertigstellung können Sie den Fragebogen in dieser Sitzung noch bearbeiten, die nächste Sitzung befindet sich jedoch im Vorschaumodus! Möchten Sie fortfahren und den Fragebogen fertigstellen?'
+	]
+};
+
+function get_string(ids) {
+	return lang_dict[ids][lang_idx[lang]];
+}
+
+/* ----- form templates ------ */
+// keys: 
+// $NN - process level (i.e. M1.1, M1.2, ...)
+// $MM - process level when replacing '.' with '_' is needed (i.e. for id in menu)
+// $DD - statement number (i.e. 1,...,10)
+// $TT - text (i.e. process name or statement)
+// $RR - rowspan placeholder <td ...>...</td> or nothing
+  
+var template0a=`
+	<div id="$MM_menu" class="tab-pane fade">
+		<p></p>
+		<div class="container">
+			<h3>$NN <span id="$NN_name2"></span></h3>
+		</div>
+		<div id="$NN_c" class="container">
+			<!-- -->
+		</div>
+    </div>
+`;
+var template0b=`
+	<li class="nav-item"><a href="#bpnam_menu" id="bpnam-tab" class="nav-link" data-bs-toggle="tab">BPNAM</a></li>
+	<li class="nav-item"><a href="#home" id="home-tab" class="nav-link dropdown active" data-bs-toggle="tab">N-1</a></li>
+`
+var template0c =`
+	<li style="background-color:$CC" class="nav-item"><a href="#$MM_menu" id="$NN-tab" class="nav-link" data-bs-toggle="tab">$NN</a></li>
+`;
+//    <li style="background-color:$CC"><a data-toggle="tab" href="#$MM_menu">$NN</a></li>
+
+var template1a=`
+<div class="table-responsive">          
+	<table id="maintab" class="table">
+		<thead>
+			<tr style="text-align:center">
+				<th><input type=button onclick="ta_copy();" value="#" id="b_copy" title="Copy" style="width:24px"/></th>
+				<th id="h1_1" colspan=2>Process Level</th>
+				<th id="h1_2">Process Name</th>
+				<th id="h1_3">Weight</th>
+				<th id="h1_4">Trend</th>
+				<th id="h1_5">Structured</th>
+				<th id="h1_6">Structured with exceptions</th>
+				<th id="h1_7">Unstructured with fragments</th>
+				<th id="h1_8">Unstructured</th>
+				<th id="h1_9">Knowledge Intensity</th>
+			</tr>
+    	</thead>
+    	<tbody>
+`;
+
+var template1aa_en=`
+  <div class="table-responsive">          
+  <table class="table" style="width:90%;border-collapse:collapse" cellpadding="8px">
+    <thead>
+      <tr style="border-bottom: 1pt solid gray;">
+        <th>#</th>
+        <th colspan=2 id="h3_1">Process Level N</th>
+        <th colspan=2 id="h3_2">Process Level N-1</th>
+        <th id="h3_3">Weight</th>
+        <th id="h3_4">Trend</th>
+        <th colspan=5 id="h3_5">Unpredictibility<br>Level</th>
+        <th id="h3_6">Knowledge<br>Intensity</th>
+      </tr>
+    </thead>	
+    <tbody>
+`;
+var template1aa_pl=`
+<div class="table-responsive">          
+	<table class="table" style="width:90%;border-collapse:collapse"  cellpadding="8px">
+		<thead>
+			<tr style="border-bottom: 1pt solid gray;">
+				<th>#</th>
+				<th colspan=2 id="h3_1">Poziom procesu N</th>
+				<th colspan=2 id="h3_2">Poziom procesu N-1</th>
+				<th id="h3_3">Waga</th>
+				<th id="h3_4">Trend</th>
+				<th colspan=5 id="h3_5">Poziom<br>nieprzewidywalności</th>
+				<th id="h3_6">Intensywność<br>wiedzy</th>
+			</tr>
+		</thead>
+		<tbody>
+`;
+var template1aa=template1aa_en;
+
+var template1b=`
+			<tr style="text-align:center">
+				<td rowspan=$RS>$DD</td>
+				$RR
+				<td rowspan=$RS style="border-left: 1pt solid lightgray;background-color:$CC">
+					<a href="javascript:show_tab(\'$NN-tab\');">$NN</a>
+				</td>
+				<td rowspan=$RS style="background-color:$CC;text-align:left" onclick="show_tab(\'$NN-tab\');"><span id="$NN_name">$TT</span></td>
+				<td id="weight_$NN" title="1 - the lowest, ... , 6 - the highest">
+					<select class="form-select form-select-sm" style="width:64px" onchange="update();" id="$NN_w">
+						<option value="0"> </option>
+						<option value="6">6</option>
+						<option value="5">5</option>
+						<option value="4">4</option>
+						<option value="3">3</option>
+						<option value="2">2</option>
+						<option value="1">1</option>
+					</select>
+				</td>
+				<td  id="trend_$NN" title="-2 - decreasing, ... , 2 - increasing">
+					<select class="form-select form-select-sm" style="width:68px" onchange="update();" id="$NN_t">
+						<option value="2"> 2</option>
+						<option value="1"> 1</option>
+						<option value="0" selected> 0</option>
+						<option value="-1">-1</option>
+						<option value="-2">-2</option>
+					</select>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r" value="1" onchange="update();"><span> 1</span></label>
+					</div>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r" value="2" onchange="update();"/><span> 2</span></label>
+					</div>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+				 		<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio"  name="$NN_r" value="3" onchange="update();"><span> 3</span></label>
+					</div>
+				</td>
+				<td style="text-align:center;">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r" value="4" onchange="update();"><span> 4</span></label>
+					</div>
+				</td>
+				<td>
+					<a href="javascript:show_tab(\'$NN-tab\');">
+						<input type=button style="width:48px;min-width:48px;" id="$NN_pts" value=" " onclick="javascript:show_tab(\'$NN-tab\');">
+					</a>
+				</td>
+			</tr>
+`;
+template1b2=`
+			<tr style="text-align:center">
+				<td id="weight_$NN" title="1 - the lowest, ... , 6 - the highest">
+					<select class="form-select form-select-sm" style="width:64px" onchange="update();" id="$NN_w_$MM">
+						<option value="0"> </option>
+						<option value="6">6</option>
+						<option value="5">5</option>
+						<option value="4">4</option>
+						<option value="3">3</option>
+						<option value="2">2</option>
+						<option value="1">1</option>
+					</select>
+				</td>
+				<td  id="trend_$NN" title="-2 - decreasing, ... , 2 - increasing">
+					<select class="form-select form-select-sm" style="width:68px" onchange="update();" id="$NN_t_$MM">
+						<option value="2"> 2</option>
+						<option value="1"> 1</option>
+						<option value="0" selected> 0</option>
+						<option value="-1">-1</option>
+						<option value="-2">-2</option>
+					</select>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r_$MM" value="1" onchange="update();"><span> 1</span></label>
+					</div>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r_$MM" value="2" onchange="update();"/><span> 2</span></label>
+					</div>
+				</td>
+				<td style="text-align:center">
+					<div class="radio">
+				 		<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio"  name="$NN_r_$MM" value="3" onchange="update();"><span> 3</span></label>
+					</div>
+				</td>
+				<td style="text-align:center;">
+					<div class="radio">
+						<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN_r_$MM" value="4" onchange="update();"><span> 4</span></label>
+					</div>
+				</td>
+				<td>
+					<a href="javascript:show_tab(\'$NN-tab\');">
+						<input type=button style="width:48px;min-width:48px;" id="$NN_pts_$MM" value=" " onclick="javascript:show_tab(\'$NN-tab\');">
+					</a>
+				</td>
+			</tr>
+`;
+
+var template1c=`
+		</tbody>
+	</table>
+</div>
+`;
+
+var template1c_finalize=`
+		</tbody>
+	</table>
+	<input type="button" class="btn btn-success" value="BPNAM" onclick="show_tab('bpnam-tab');" style="margin-right:12px;float:left"/>
+
+	<div style="float:right">
+		<button class="btn btn-danger" id="b_fine" onclick="if(confirm(get_string('s_fine'))){enabled=0;}else{enabled=0;} update();" style="margin-left:12px">Finalize</button>
+	</div>
+</div>
+`;
+
+
+var template2a=`
+<div class="table-responsive">          
+	<table class="table">
+		<thead>
+			<tr style="text-align:center">
+				<th></th>
+				<th id="h2_1">Statement</th>
+				<th id="h2_2">Do not agree</th>
+				<th id="h2_3">Partly agree</th>
+				<th id="h2_4">Mostly agree</th>
+				<th id="h2_5">Fully agree</th>
+				<th><span id="h2_6">Knowledge<br>Intensity</span><br>
+					<a href="javascript:show_tab('home');">
+					<input type=button style="width:48px;min-width:48px;" id="$NN_pts2" value=" " onclick="javascript:show_tab('home-tab');"/>
+					</a>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+`;
+
+var template2b=`
+		<tr style="text-align:center">
+			<td rowspan=$RS>$DD</td>
+			<td rowspan=$RS style="text-align:left" id="st_$NN.$DD">$TT</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="1" onchange="update();" ></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="2" onchange="update();"></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="3" onchange="update();"></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD" value="4" onchange="update();"></label>
+				</div>
+			</td>
+			<td>
+				<input type=text size=4 id="$NN.$DD_pts" value=" " disabled>
+			</td>
+		</tr>
+`;
+
+var template2b2=`
+		<tr style="text-align:center">
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="1" onchange="update();" ></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="2" onchange="update();"></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="3" onchange="update();"></label>
+				</div>
+			</td>
+			<td style="text-align:center">
+				<div class="radio">
+					<label class="btn"><input disabled style="border:2px solid #888" class="form-check-input" type="radio" name="$NN.$DD_$MM" value="4" onchange="update();"></label>
+				</div>
+			</td>
+			<td>
+				<input type=text size=4 id="$NN.$DD_pts_$MM" value=" " disabled>
+			</td>
+		</tr>
+`;
+
+var template2c=`	  
+		</tbody>
+	</table>
+
+	<input type="button" class="btn btn-success" value="BPNAM" onclick="show_tab('bpnam-tab');" style="margin-right:12px;float:left"/>
+	<input type="button" class="btn btn-info" value="N-1" onclick="show_tab('home-tab');" style="margin-right:12px;float:left"/>
+	<div style="float:right">
+		<button class="btn btn-warning" id="b_prev" onclick="show_tab(prev_tab('$NN')+'-tab');" style="margin-left:12px">Prev</button>
+		<button class="btn btn-primary" id="b_next" onclick="show_tab(next_tab('$NN')+'-tab');" style="margin-left:12px">Next</button>
+	</div>
+</div>
+`;
+
+var template3=''; // for bpnaf-div initial representation from html code (bpnam & home tabs) see: main()
+
+var template4a=`
+<div class="table-responsive">          
+	<table class="table w-auto">
+		<thead>
+			<tr style="text-align:center">
+				<th></th>
+				<th id="h41">Quarter</th>
+				<th id="h42">Process</th>
+				<th id="h43">Recommandation area</th>
+				<th id="h44" style='width:60%'>Recommendation</th>
+			</tr>
+		</thead>
+		<tbody>
+`
+var template4b=`
+		<tr style="text-align:center">
+			<td>$DD</td>
+			<td id="$NN_q0" style="color:red"></td>
+			<td style="border: 1pt solid lightgray;background-color:$CC">$NN</td>
+			<td style="border: 1pt solid lightgray;text-align:left">
+				<!-- <span id="$NN_q1"  class="atextarea" role="textbox" contenteditable oninput="rc_changed(this)" placeholder="$OO"></span>   -->
+				<textarea id="$NN_q1" class="form-control" rows="3" oninput="rc_changed(this)" placeholder="$OO"></textarea>
+			</td>
+			<td style="text-align:left">
+				<!--  <span id="$NN_q2"  class="atextarea" role="textbox" contenteditable oninput="rc_changed(this)" placeholder="$TT"></span>   -->
+				<textarea id="$NN_q2" class="form-control" rows="3" cols=60 oninput="rc_changed(this)" placeholder="$TT"></textarea> 
+			</td>
+		</tr>
+`
+var template4c=`
+		</tbody>
+	</table>
+</div>
+`
+
+var template4aa_en=`
+  <div class="table-responsive">          
+  <table class="table" style="width:90%;border-collapse:collapse" cellpadding="8px">
+		<thead>
+			<tr style="text-align:center;border-bottom: 1pt solid gray;">
+				<th>#</th>
+				<th id="h41">Quarter</th>
+				<th id="h42">Process</th>
+				<th id="h43">Recommandation area</th>
+				<th id="h44" style="width:60%;">Recommendation</th>
+			</tr>
+		</thead>
+		<tbody>
+`;
+var template4aa_pl=`
+  <div class="table-responsive">          
+  <table class="table" style="width:90%;border-collapse:collapse" cellpadding="8px">
+		<thead>
+			<tr style="text-align:center;border-bottom: 1pt solid gray;">
+				<th>#</th>
+				<th id="h41">Ćwiartka</th>
+				<th id="h42">Proces</th>
+				<th id="h43" >Obszar rekomendacji</th>
+				<th id="h44" style="width:60%">Rekomendacja</th>
+			</tr>
+		</thead>
+		<tbody>
+`;
+var template4aa=template4aa_en;
+
+
+/* ---- functions ------- */
+function rc_changed(el) {
+	idn=el.id.split('_');           /* {pid}_q{n} */
+	var pid=idn[0], n=idn[1][1];
+	for(j=0;j<ids.length;j++) {
+		if(ids[j]==pid) {
+			if(n=='1') recommendations1[j]=el.value;
+			else if(n=='2') recommendations2[j]=el.value;
+		}
+	}
+	el.setAttribute('style','height:'+(el.scrollHeight+2)+'px');
+	update();
+}
+
+function svg_createpoint(svg,id,s,color,r,color2,title) { // building svg circle with coords in a string s
+	var el=document.getElementById(id);
+	if(!el) {
+		el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+		el.setAttribute('fill',color);
+		el.setAttribute('stroke-width',1);
+		el.setAttribute('stroke',color2||'darkblue');
+		el.setAttribute('id',id);		
+		el.setAttribute("r",r||6);				
+		svg.appendChild(el);
+	}
+	var ss=s.split(",");
+	el.setAttribute("cx",ss[0]);				
+	el.setAttribute("cy",ss[1]);
+	el.innerHTML = "<title>"+(title || '')+"</title>";				
+
+	var el=document.getElementById(id+"_title");
+	if(!el) {
+		el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+		el.setAttribute('stroke','black');
+		el.setAttribute('fill','black');
+		//el.setAttribute('stroke-width',1);
+		el.setAttribute('id',id+"_title");		
+		svg.appendChild(el);
+	}
+	el.setAttribute("x",parseFloat(ss[0])+5);				
+	el.setAttribute("y",parseFloat(ss[1])-5);				
+	el.innerHTML=id;
+}
+
+function svg_createrect(svg,id,s,color,t,t2) { // building svg rect with coords in a string s for histogram bar
+	var el=document.getElementById(id);
+	if(!el) {
+		el = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+		el.setAttribute('stroke','darkblue');
+		el.setAttribute('fill',color);
+		el.setAttribute('fill-opacity',0.6);
+		el.setAttribute('stroke-width',1);
+		el.setAttribute('id',id);
+		svg.appendChild(el);
+	}
+	var ss=s.split(",");
+	el.setAttribute("x",ss[0]);
+	el.setAttribute("y",ss[1]);
+	el.setAttribute("width",ss[2]);
+	el.setAttribute("height",ss[3]);
+	el.innerHTML="<title>"+(t2||'')+"</title>";
+
+	var el=document.getElementById(id+"_title");
+	if(!el) {
+		el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+		//el.setAttribute('stroke','black');
+		el.setAttribute('fill','black');
+		//el.setAttribute('stroke-width',1);
+		el.setAttribute('id',id+"_title");		
+		svg.appendChild(el);
+	}
+
+	var tx=parseFloat(ss[0])+parseFloat(ss[2])/2-20;
+	var ty=parseFloat(ss[1])+((color=='none')||(color=='AliceBlue')||(color=='LavenderBlush')?-5:15);
+	el.setAttribute("x",tx);				
+	el.setAttribute("y",ty);				
+	el.innerHTML=t||"";
+	
+}
+
+var xy=[];
+var A,B,C,D;
+
+function update() {
+	xy=[];
+	A=[0,0,0,0];B=[0,0,0,0];C=[0,0,0,0];D=[0,0,0,0];
+	
+	var el=document.getElementById("company");
+	if(el) el.innerHTML=company;
+
+	var el=document.getElementById("evaluator");
+	if(el) el.innerHTML=evaluator;
+
+	data = new Date().toLocaleString();
+	var el=document.getElementById("data");
+	if(el) el.innerHTML=data;
+	
+	var bpnam=document.getElementById("bpnam");
+	
+	for(var j=0;j<ids.length;j++) {  // for all processes
+		el=document.getElementById(ids[j]+"_w");  // weigths update
+		el.style.color = (el.value>4) ? 'blue' : '';
+		weights[j] = el.value; 
+		el=document.getElementById(ids[j]+"_t");  // trends update
+		el.style.color = (el.value<=-1) ? 'red' : (el.value<=-1)? '' : '';
+		trends[j] =el.value;
+		
+		var y='';
+		for(var i=1;i<=statements.length;i++) {    // calculating points
+			var n=0;
+			var el=document.getElementsByName(ids[j]+"."+i);  // detection of checked radio
+			for(var k=0;k<el.length;k++) {
+				if(el[k].checked) {
+					n=parseInt(el[k].value);
+					break;
+				}
+			}
+			intensities[j][i-1]=n;  // index from 0!!!
+			var el2=document.getElementById(ids[j]+'.'+i+"_pts");
+			if(el2) {
+				el2.value=n>0?parseFloat(st_weights[n-1]).toFixed(2):'';
+				yo = parseFloat(el2.value);
+				if(isFinite(yo)) y = (y===''?yo:y+yo);
+			}
+		}
+		if(y!=='') intensity[j]=y.toFixed(2);
+		var el1=document.getElementById(ids[j]+"_pts");   // updating points
+		if(el1) el1.value= (y!==''?y.toFixed(2):intensity[j]);
+		var el2=document.getElementById(ids[j]+"_pts2");   // updating points
+		if(el2) el2.value= (y!==''?y.toFixed(2):'');
+		
+   		var el3=document.getElementById(ids[j]+"_name");  // copying process names
+   		var el4=document.getElementById(ids[j]+"_name2");
+		if(el3 && el4) el4.innerHTML=el3.innerHTML; else {if(debug) console.log("Error:\n"+el3+'\n'+el4);}
+		
+		var radios = document.getElementsByName(ids[j]+"_r");  // radios value for bpnam
+		if(radios) {
+			for (var i = 0, length = radios.length; i < length; i++) {
+			  if (radios[i].checked) {
+				//if(debug) console.log(radios[i].value);
+				var x=parseFloat(radios[i].value);
+				if(el1) {
+					var y=parseFloat(el1.value);
+					if(!isFinite(y)) y=0; // force drawing on 0 axis MM 28-12-20223
+					if(isFinite(y)) {
+						xy.push([x,y,j]);
+						var s=''+(100*x)+','+(500-50*y);
+						// if(debug) console.log(ids[j]+": ("+x+","+y+") "+s);
+						var c1 = ids[j][0]=='M'?colors2[0]:ids[j][0]=='C'?colors2[1]:colors2[2];
+						var r = weights[j]>4 ? 6 : weights[j]>2 ? 5 : 4;
+						var c2 = trends[j]>0 ? 'darkblue' : trends[j]<0 ? 'red' : 'darkblue';
+						var s2 = ids[j] + " " + processes[j]
+								+"\n(w:"+weights[j]+", t:"+trends[j]+", s:"+x+", i:"+y+")";
+						//if(debug) console.log(ids[j]+" "+c2);
+						svg_createpoint(bpnam,""+ids[j],s,c1,r,c2,s2);
+					}	
+				}
+				structured[j]=x;
+			    //break;
+			  }
+			}		
+		}
+	}
+
+    var id='bpnam2';
+	var bpnam2=document.getElementById(id);
+
+	function draw_trend(xy,ename) {
+		if(xy.length<2) return;
+		var xo=0,yo=0,a=0,b=0,x2=0;
+		for(var i=0;i<xy.length;i++) {
+			xo+=xy[i][0];yo+=xy[i][1];
+		}
+		xo/=xy.length; yo/=xy.length;
+		for(var i=0;i<xy.length;i++) {
+			a+=(xy[i][0]-xo)*(xy[i][1]-yo);x2+=(xy[i][0]-xo)*(xy[i][0]-xo);
+		}
+		a/=x2;b=yo-a*xo;
+		var el=document.getElementById(ename);
+		if(el) {
+			var x1=1,y1=a*x1+b,x2=4,y2=a*x2+b;
+			if(debug) console.log("L="+x1+" "+y1+" "+x2+" "+y2)
+			el.setAttribute("x1",100*x1);
+			el.setAttribute("y1",500-50*y1);
+			el.setAttribute("x2",100*x2);
+			el.setAttribute("y2",500-50*y2);
+		}
+		//if(debug) console.log("a="+a+" b="+b);
+	}
+	
+	if(xy.length>1) {
+		if(debug) console.log("xy: "+xy);
+		draw_trend(xy,"trend1");
+		
+		var xy2=[];
+		for(var i=0;i<xy.length;i++){
+			for(var j=0;j<parseInt(weights[xy[i][2]]);j++) { // until weight value
+				xy2.push(xy[i]);
+			}
+		}
+		if(debug) console.log("xy2: "+xy2);		
+		draw_trend(xy2,"trend2");
+
+		var xy3=[];
+		for(var i=0;i<xy.length;i++) {
+			var n=parseInt(weights[xy[i][2]])+parseInt(trends[xy[i][2]]);
+			//if(debug) console.log(n);
+			for(var j=0;j<n;j++) { // until trended weight value
+				xy3.push(xy[i]);
+			}
+		}
+		if(debug) console.log("xy3: "+xy3);
+		draw_trend(xy3,"trend3");
+	}	
+	for(var i=0;i<xy.length;i++) {
+		var c = ids[xy[i][2]][0];
+	    var inc = function (AA,c) {AA[0]++; if(c=='M') AA[1]++; else if(c=='C') AA[2]++; else AA[3]++;};
+		if(xy[i][0]<=2) {
+			if(xy[i][1]<4) {inc(A,c);} 
+			else {inc(B,c);} 
+		} else {
+			if(xy[i][1]<4) {inc(C,c);} 
+			else {inc(D,c);}
+		}
+	}	
+	var v0,v1,v2,v3,S=A[0]+B[0]+C[0]+D[0];
+	if(S>0) {		
+	//v0=(B[0]+D[0])/S*500; svg_createrect(bpnam2,id+"_BD","125,"+(500-v0)+",250,"+(v0),'none',(v0/5).toFixed(2)+'%');		
+	v0=(A[0]+B[0])/S*500; svg_createrect(bpnam2,id+"_AB","25,"+(500-v0)+",150,"+(v0),'AliceBlue',(v0/5).toFixed(2)+'%','A + B');
+	v0=(C[0]+D[0])/S*500; svg_createrect(bpnam2,id+"_CD","225,"+(500-v0)+",150,"+(v0),'LavenderBlush',(v0/5).toFixed(2)+'%','C + D');
+		
+	v0=A[0]/S*500; svg_createrect(bpnam2,id+"_A","25,"+(500-v0)+",50,"+(v0),'none',(v0/5).toFixed(2)+'%');
+	v1=A[1]/S*500; svg_createrect(bpnam2,id+"_AM","25,"+(500-v1)+",50,"+(v1),colors2[0],v1>20?(v1/5).toFixed(2)+'%':'');
+	v2=A[2]/S*500; svg_createrect(bpnam2,id+"_AC","25,"+(500-v2-v1)+",50,"+(v2),colors2[1],v2>20?(v2/5).toFixed(2)+'%':'');
+	v3=A[3]/S*500; svg_createrect(bpnam2,id+"_AS","25,"+(500-v3-v2-v1)+",50,"+(v3),colors2[2],v3>20?(v3/5).toFixed(2)+'%':'');
+
+	v0=B[0]/S*500; svg_createrect(bpnam2,id+"_B","125,"+(500-v0)+",50,"+(v0),'none',(v0/5).toFixed(2)+'%');
+	v1=B[1]/S*500; svg_createrect(bpnam2,id+"_BM","125,"+(500-v1)+",50,"+(v1),colors2[0],v1>20?(v1/5).toFixed(2)+'%':'');
+	v2=B[2]/S*500; svg_createrect(bpnam2,id+"_BC","125,"+(500-v2-v1)+",50,"+(v2),colors2[1],v2>20?(v2/5).toFixed(2)+'%':'');
+	v3=B[3]/S*500; svg_createrect(bpnam2,id+"_BS","125,"+(500-v3-v2-v1)+",50,"+(v3),colors2[2],v3>20?(v3/5).toFixed(2)+'%':'');
+
+	v0=C[0]/S*500; svg_createrect(bpnam2,id+"_C","225,"+(500-v0)+",50,"+(v0),'none',(v0/5).toFixed(2)+'%');
+	v1=C[1]/S*500; svg_createrect(bpnam2,id+"_CM","225,"+(500-v1)+",50,"+(v1),colors2[0],v1>20?(v1/5).toFixed(2)+'%':'');
+	v2=C[2]/S*500; svg_createrect(bpnam2,id+"_CC","225,"+(500-v2-v1)+",50,"+(v2),colors2[1],v2>20?(v2/5).toFixed(2)+'%':'');
+	v3=C[3]/S*500; svg_createrect(bpnam2,id+"_CS","225,"+(500-v3-v2-v1)+",50,"+(v3),colors2[2],v3>20?(v3/5).toFixed(2)+'%':'');
+
+	v0=D[0]/S*500; svg_createrect(bpnam2,id+"_D","325,"+(500-v0)+",50,"+(v0),'none',(v0/5).toFixed(2)+'%');
+	v1=D[1]/S*500; svg_createrect(bpnam2,id+"_DM","325,"+(500-v1)+",50,"+(v1),colors2[0],v1>20?(v1/5).toFixed(2)+'%':'');
+	v2=D[2]/S*500; svg_createrect(bpnam2,id+"_DC","325,"+(500-v2-v1)+",50,"+(v2),colors2[1],v2>20?(v2/5).toFixed(2)+'%':'');
+	v3=D[3]/S*500; svg_createrect(bpnam2,id+"_DS","325,"+(500-v3-v2-v1)+",50,"+(v3),colors2[2],v3>20?(v3/5).toFixed(2)+'%':'');
+	}
+	
+	for(var j=0;j<ids.length;j++) {  // for all processes
+		el=document.getElementById(ids[j]+"_q0");  // quarter update
+		if(el) {
+			el.innerHTML=quarter(structured[j],intensity[j]);
+		} 
+		el=document.getElementById(ids[j]+"_q1");  // recommendation area
+		if(el) {
+			el.value=recommendations1[j];
+		} 
+		el=document.getElementById(ids[j]+"_q2");  // recommendation
+		if(el) {
+			el.value=recommendations2[j];
+		} 
+	}	
+	
+	store_state();
+}
+
+function convert_csv(s,fname) {
+	var s2='#;'+(fname||'')+'\n';
+	var ss=s.replaceAll('|','\n').split('\n');
+	for(var i=0;i<ss.length;i++) {
+		if(ss[i].indexOf('"')!=-1) {
+			ss[i] += ss[i+1];         // connect two lines if enter between quotes
+			i++;
+		}
+	}
+	for(var i=0;i<ss.length;i++) {
+		ss[i] = ss[i].replace(/(\r\n|\n|\r)/gm, "");
+		if(ss[i].length>1) {
+			var ss2=ss[i].split(/[;\t]/);
+			for(var j=ss2.length;j<14;j++) {
+				ss2.push("");
+			}
+			if(!isNaN(parseInt(ss2[0]))) {
+				ss2[5]=ss2[5].replace(/^\"+|\"+$/g, ''); // remove if in quotes
+				var n;
+				for(n=1;n<=4;n++) {
+					if(ss2[7+n].length>0) break;
+				}
+				s2+=ss2[4]+";"+ss2[3]+";"+ss2[5]+";"+ss2[6].trim()+";"+ss2[7].trim()+";"+(n>4?"0":n)+';'+ss2[13]+'\n';
+			}
+		}
+	}
+	if(debug) console.log(s2);
+	return(s2);
+}
+
+function read_processes(s) {
+	s=s.trimStart();
+	if(s[0]!='#') s=convert_csv(s);
+	var ss=s.replaceAll('|','\n').split('\n');
+	var vid=[],vcat=[];vpr=[];vws=[];vts=[];vx=[],vi=[],vst=[],com="",ev="",d="",w=[],ind="",csize="",cc="";rc1=[];rc2=[];
+	for(var i=0;i<ss.length;i++) {
+		ss[i] = ss[i].replace(/(\r\n|\n|\r)/gm, "");
+		if(ss[i].length>1) {
+			ss2=ss[i].split(/[;\t]/);
+			if(ss2[0][0]=='#') {
+				var n=0;
+				n++; com = ss2.length>n?ss2[n]:"";
+				n++; ev = ss2.length>n?ss2[n]:"";  qmode = ev.includes('&')?3:1;
+				n++; d = ss2.length>n && ss2[n].length>1 ? ss2[n] : new Date().toLocaleString();
+				n++; e = ss2.length>n && ss2[n].length>0 ? parseInt(ss2[n]) : 2;  /* enabled by default */
+				n++; // empty field
+				n++; // empty field
+				for(var j=0;j<4;j++) {
+					n++; w.push(ss2.length>n?ss2[n]:[0,0.3,0.65,1][j]);
+				}
+				n++; // empty field
+				n++; ind=ss2.length>n && ss2[n].length>0 ?ss2[n]:0;
+				n++; csize=ss2.length>n && ss2[n].length>0 ?ss2[n]:0;
+				n++; cc=ss2.length>n && ss2[n].length>0 ?ss2[n]:0;
+				continue;
+			}
+			var n=0; vid.push(ss2[n]);   // ids
+			n++; vcat.push(ss2.length>n?ss2[n]:'');  //  categories !!!
+			n++; vpr.push(ss2.length>n?ss2[n]:'');   //  processes
+			n++; vws.push(ss2.length>n?ss2[n]:1);  // weights
+		    n++; vts.push(ss2.length>n?ss2[n]:0);  // trends
+		    n++; vx.push(ss2.length>n?ss2[n]:0);   // structured
+			n++; vi.push(ss2.length>n?ss2[n]:'');   // empty intensity
+			var t=[];  // reading statments radios
+			for(var j=0;j<statements.length;j++) {  // intensitties
+				n++; t.push(ss2.length>n?ss2[n]:0);  
+			}
+			vst.push(t);
+			n++; rc1.push(ss2.length>n?ss2[n].replaceAll('\\','\n'):'');   // a recommnedation area
+			n++; rc2.push(ss2.length>n?ss2[n].replaceAll('\\','\n'):'');   // a recommendation
+		}
+	}
+	company=com; evaluator=ev; data=d; enabled=e; st_weights=w; industry=ind; compsize=csize; compcountry=cc;
+	ids=vid; categories=vcat; processes=vpr; weights=vws; trends=vts; structured=vx; 
+	intensity=vi; intensities=vst; recommendations1=rc1; recommendations2=rc2;
+}
+
+function create_forms(flag) {
+
+// --- 1. creating menu content ----
+	var el = document.getElementById("bpnaf-div");
+	var ss = template3; 
+	for(var i=0;i<ids.length;i++) {
+		var id2=ids[i].replace(".","_");
+		ss += template0a.replaceAll("$MM",id2).replaceAll("$NN",ids[i]);
+    }
+	if(el) el.innerHTML = ss;
+
+// --- 2. creating menu list ----
+	var ss = template0b;   // first two (BPNAM & N-1)
+	for(var i=0;i<ids.length;i++) { 
+		var t = template0c;
+		ss += t.replaceAll("$MM",ids[i].replace(".","_")).replaceAll("$NN",ids[i])
+		       .replaceAll("$CC",ids[i][0]=='M'?colors[0]:ids[i][0]=='C'?colors[1]:ids[i][0]=='S'?colors[2]:'');
+    }
+	var el = document.getElementById("bpnaf-ul");
+	if(el) el.innerHTML = ss;
+
+// --- 3. creating processes form----
+	var cat_ids={};
+	for(var i=0;i<ids.length;i++) {
+		var cat_id=ids[i].split('.')[0];
+		if(cat_id in cat_ids) cat_ids[cat_id]+=1; 
+		else cat_ids[cat_id]=1; 
+	}
+	var ss = '';
+	for(var i=0;i<ids.length;i++) { 
+		var cat_id=ids[i].split('.')[0];
+		var s='';
+		if(cat_ids[cat_id]>0) {
+			s = "<td style='border-left: 1pt solid lightgray;vertical-align:middle;color:blue;background-color:$CC' rowspan="+
+				(qmode*cat_ids[cat_id])+">"+cat_id+"</td>";
+			cat_ids[cat_id]=0;
+		}
+		var t = template1b.replaceAll("$RR",s).replaceAll("$RS",qmode); 
+		for(var j=1; j<qmode; j++) t += template1b2.replaceAll("$RR",s).replaceAll("$MM",j+1);
+		ss += t.replaceAll("$NN",ids[i]).replace("$DD",(i+1)).replace("$TT",processes[i])
+				.replaceAll("$MM",ids[i].replace(".","_"))
+				.replaceAll("$CC",ids[i][0]=='M'?colors[0]:ids[i][0]=='C'?colors[1]:ids[i][0]=='S'?colors[2]:'');
+    }
+	var el = document.getElementById('home'+'_c');
+	if(el) el.innerHTML = template1a + ss + (enabled ? template1c_finalize : template1c);
+	for(var i=0;i<ids.length;i++) {
+		el=document.getElementById(ids[i]+"_w");  // weigths init 
+		for(var j=0;j<el.length;j++) {
+			if(el.options[j].value==weights[i]) {
+				el.options[j].selected=true;
+				break;
+			}
+		}
+		if(!flag||flag==="0") el.disabled=true;
+		el=document.getElementById(ids[i]+"_t");  // trends init
+		for(var j=0;j<el.length;j++) {
+			if(el.options[j].value==trends[i]) {
+				el.options[j].selected=true;
+				break;
+			}
+		}
+		if(!flag||flag==="0") el.disabled=true;
+		el=document.getElementsByName(ids[i]+"_r");  // init radios from structured array
+		for(var j=0;j<el.length;j++) {
+			if(el[j].value==structured[i]) {
+				el[j].checked=true;
+			}
+			if(!flag||flag==="0") el[j].disabled=true;
+		}
+    }
+// --- 4. creating knowledge intensity forms ----
+	for(var i=0;i<ids.length;i++) {
+		var id=ids[i];
+		//if(debug) console.log("creating: "+id);
+		var s = template2a.replaceAll("$NN",id).replaceAll("$DD",(j+1));
+		
+		for(var j=0;j<statements.length;j++) {
+			s += template2b.replaceAll("$NN",id).replaceAll("$DD",(j+1)).replace("$TT",statements[j])
+			     .replaceAll("$RS",qmode); 
+			for(var k=1; k<qmode; k++) s += template2b2.replaceAll("$NN",id).replaceAll("$DD",(j+1)).replaceAll("$MM",k+1);
+	    }
+		var el = document.getElementById(id+'_c');
+		if(el) el.innerHTML = s+template2c.replaceAll("$NN",id);
+	}
+
+	for(var i=0;i<ids.length;i++) { // init radios from intensities matrix
+		for(var j=0;j<statements.length;j++) {
+			el=document.getElementsByName(ids[i]+"."+(j+1));  
+				for(var k=0;k<el.length;k++) {
+				if(el[k].value==intensities[i][j]) {
+					el[k].checked=true;
+				}
+				if(!flag||flag==="0") el[k].disabled=true;			
+			}
+		}
+	}
+// --- 5. filling additional elements when multiple questionnaires mode 	
+	if(qmode>1) { // assumes that more radio buttons are already created		
+		var ss= fx!=null ? fx.split(";"):[];
+		var fnames=[];
+		for(var i=1; i<ss.length; i++) { // build filenames of quiestionnaires to load
+			var fname = ss[0] + ';' + ss[i];
+			if(!fname.endsWith(ext)) fname += ext;
+			fnames.push(fname); 
+		}
+		console.log(fnames);
+		for(var k=0; k<fnames.length; k++) { // load and update
+			get_update2(fnames[k],k+2,update2);
+		}	
+	}
+// --- 6. recommendation table	
+	el=document.getElementById("rc_container");
+	if(el) {
+		var s=template4a;		
+		for(var i=0;i<ids.length;i++) {  // for all processes
+			var c = ids[i][0]; c = (c=='M'?0:c=='C'?1:c=='S'?2:3);
+			var q = quarter(structured[i],intensity[i]);
+			var ABCD={'A':4,'B':1,'C':3,'D':2};
+			var t=q!=''?ABCD[q]:0;
+			var tt=t!=0?lang_dict['predi'+t][lang_idx[lang]]+'. '+lang_dict['knowi'+t][lang_idx[lang]]+'.':''
+			s+=template4b.replaceAll("$DD",(i+1)).replaceAll("$NN",ids[i]).replaceAll("$CC",colors[c])
+			    .replaceAll("$OO",processes[i]).replaceAll("$TT",tt);
+		}
+		s+=template4c;
+		
+		el.innerHTML = s;
+	}
+}
+
+function quarter(x,y) {
+	var q='';
+	if(x>0) { if(x<=2) {if(y<4) {q='A';} else {q='B';} } else { if(y<4) {q='C';} else {q='D';} } }
+	return q;
+}
+
+function get_update2(fname,k,fun) {
+	fetch(path+fname,{cache:"reload"})
+	.then((response)=>response.text())
+	.then((text)=>{
+		console.log("get_update2: "+fname+" "+k);
+		fun(text,k);
+	});
+}
+
+function update2(s,k) { // s -file content, k - data number ; uses global ids
+	var state=state_tostring();
+	read_processes(s);
+	for(var i=0;i<ids.length;i++) {
+		el=document.getElementById(ids[i]+"_w_"+(k));  // weigths init
+		el.disabled=true;
+		for(var j=0;j<el.length;j++) {
+			if(el.options[j].value==weights[i]) {
+				el.options[j].selected=true;
+				break;
+			}
+		}
+		el=document.getElementById(ids[i]+"_t_"+(k));  // trends init
+		el.disabled=true;
+		for(var j=0;j<el.length;j++) {
+			if(el.options[j].value==trends[i]) {
+				el.options[j].selected=true;
+				break;
+			}
+		}
+		el=document.getElementsByName(ids[i]+"_r_"+(k));  // init radios from structured array
+		for(var j=0;j<el.length;j++) {
+			if(el[j].value==structured[i]) {
+				el[j].checked=true;
+			}
+			el[j].disabled=true;
+		}
+		el=document.getElementById(ids[i]+"_pts_"+(k));  // knowledge intensity points
+		el.disabled=true;
+		el.value=intensity[i];
+		for(var j=1;j<=statements.length;j++) {    // calculating points
+			var el=document.getElementsByName(ids[i]+"."+j+"_"+k);  // detection of checked radio
+			for(var jj=0;jj<el.length;jj++) {
+				if(el[jj].value==intensities[i][j-1]) { // index from 0!!!)
+					el[jj].checked=true;
+					break;
+				}
+			}
+			var el2=document.getElementById(ids[i]+'.'+j+"_pts"+"_"+k);
+			if(el2) {
+				el2.value = intensities[i][j-1]>0 ? st_weights[intensities[i][j-1]-1] : '';
+			}
+		}		
+	}
+	read_processes(state);
+}
+
+//var cat_ids={};
+
+function report() {
+	var fname = (fx==null?(bpnafname+"_default"):fx);
+	fname =fname.split('.')[0] + ".html";
+	var s = '<title>'+fname.split('.')[0]+'</title><body style="padding:20px 20px 20px 10px">';
+	s += '<p><center>'+document.getElementById("header").outerHTML+'</center><br><br></p>';
+	//s += document.getElementById('home'+'_c').innerHTML;
+	s += '<p><center>'+ template1aa;
+	var cat_ids={};
+	for(var i=0;i<ids.length;i++) {
+		var cat_id=ids[i].split('.')[0];
+		if(cat_id in cat_ids) cat_ids[cat_id]+=1; 
+		else cat_ids[cat_id]=1; 
+	}
+	for(var i=0;i<ids.length;i++) {
+		var c=ids[i][0];
+		var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
+
+		s+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
+		s+="<td style='text-align:right;'>"+(i+1)+"</td>";
+		var cat_id=ids[i].split('.')[0];
+		if(cat_ids[cat_id]>0) {
+			s+="<td style='border-left: 1pt solid lightgray;color:blue;" + cc + "'rowspan="+
+				(cat_ids[cat_id])+">"+cat_id+"</td>";
+			s+="<td style='border-right: 1pt solid lightgray;color:blue;text-align:left;" +cc + "'rowspan="+    				(cat_ids[cat_id])+">"+categories[i]+"</td>";
+			cat_ids[cat_id]=0; // s+="<td></td>";
+		}
+		// s+="<td>"+categories[i]+"</td>";		
+		s+="<td style='color:blue;"+cc+"'>"+(ids[i])+"</td>";
+		s+="<td style='text-align:left;"+cc+"'>"+(processes[i])+"</td>";
+		s+="<td>"+(weights[i])+"</td>";
+		s+="<td>"+(trends[i])+"</td>";
+		s+="<td>"+(structured[i]==1?"x":"")+"</td>";
+		s+="<td>"+(structured[i]==2?"x":"")+"</td>";
+		s+="<td>"+(structured[i]==3?"x":"")+"</td>";
+		s+="<td>"+(structured[i]==4?"x":"")+"</td>";		
+		s+="<td>"+(structured[i])+"</td>";
+		s+="<td>"+(intensity[i])+"</td>";
+		s+="</tr>";
+	}
+	s += template1c + '</center><br><br></p>';
+	s += '<p><center>'+document.getElementById("svg_container").innerHTML+'</center></p>'
+	s += '<p><center>';
+	//s += document.getElementById("rc_container").innerHTML;
+	s += template4aa;
+	for(i=0;i<ids.length;i++) {
+		var c=ids[i][0];
+		var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
+		s+="<tr>";
+		s+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
+		s+=" <td style='text-align:right;'>"+(i+1)+"</td>";
+		s+=" <td style='color:red'>"+quarter(structured[i],intensities[i])+"</td>";
+		s+=" <td style='color:blue;"+cc+"'>"+ids[i]+"</td>";
+		s+=" <td style='text-align:left'>"+recommendations1[i]+"</td>";
+		s+=" <td style='text-align:left'>"+recommendations2[i]+"</td>";
+		s+="</tr>"
+	}
+	s += template4c;
+	s+='</center></p>';
+	s += '</body>';
+	server_save(s,fname);
+	//var tab = window.open('about:blank', '_blank');tab.document.write(s); tab.document.close();
+    if(window.location.protocol.startsWith("file:")||document.location.hostname.includes(".github.io")) {
+		download(s,fname);
+	} else {
+		openAsPageInNewTab(s, path + fname); 
+	}
+}
+
+function openAsPageInNewTab(pageContent,href) {
+	let encoded = encodeURIComponent(pageContent); 
+	let a = document.createElement(`a`);
+	a.target = `_blank`;
+	a.href = href || `data:text/html;charset=utf-8,${encoded}`;
+//	if(confirm('Do yo want to open: '+ a.href + ' ?')) {
+		a.style.display = `none`;
+		document.body.appendChild(a); // We need to do this,
+		a.click();                    // so that we can do this,
+		document.body.removeChild(a); // after which we do this.
+//	}
+}
+
+function state_tostring(flag) {
+	flag = flag||0;
+	var f1pl='=SUMA(INDEKS(PRZESUNIĘCIE(ADR.POŚR(ADRES(WIERSZ();NR.KOLUMNY()));';
+	var f2pl=';-14;1;5);1+N(JEŻELI({1};PRZESUNIĘCIE(ADR.POŚR(ADRES(WIERSZ();NR.KOLUMNY()));0;-13;1;10)))))'; 
+	var f1en='=SUM(INDEX(OFFSET(INDIRECT(ADDRESS(ROW(),COLUMN())),';
+	var f2en=',-14,1,5);1+N(IF({1},OFFSET(INDIRECT(ADDRESS(ROW(),COLUMN())),0,-13,1,10)))))'; 
+	var s='#'+'\t'+company+'\t'+evaluator+'\t'+data+'\t'+enabled+'\t\t';  // header + 2 empty
+	for(var i=0;i<st_weights.length;i++) { // all weights
+		s+='\t'+(flag?'='+(100*st_weights[i]).toFixed()+"/100":st_weights[i]);  	
+	} 
+	s+='\t\t'+industry+'\t'+compsize+'\t'+compcountry+'\n';  // 2 empty + company info
+	for(var i=0;i<ids.length;i++) {  // for all processes
+		s+= ids[i]+'\t'+categories[i]+'\t'+processes[i]+'\t'
+		+weights[i]+'\t'+trends[i]+'\t'+structured[i]+'\t'+(flag?"="+(100*intensity[i]).toFixed()+"/100":intensity[i]);  //  
+		for(var j=0;j<intensities[i].length;j++) {  // all intensities
+			s+='\t'+intensities[i][j];  				
+		}
+		s+= '\t'+recommendations1[i].replaceAll('\n','\\')+'\t'+recommendations2[i].replaceAll('\n','\\');
+		if(flag) s+='\t\t'+(lang=="pl"?f1pl:f1en)+(-1*(i+1))+(lang=="pl"?f2pl:f2en);
+		s+='\n';
+	}
+	return(s);
+}
+
+//document.oncopy = function(e) {
+function ta_copy(e) {
+	var ta = document.getElementById('ta');
+	//var ta = document.createElement("textarea");
+	if(ta) {
+		//document.body.appendChild(ta);
+		ta.value =  state_tostring(1); // document.getElementById("svg").outerHTML;
+		ta.focus();
+		ta.select();
+		document.execCommand('copy');
+		//document.body.removeChild(ta);
+	}	
+//  navigator.clipboard.writeText(state_tostring());
+}
+
+var bpnaf5={};
+
+function name_from_content(s) {
+	var ss=s.split(/[;\t]/);
+	return bpnafname + "_"+ (ss.length>1?ss[1]:'') + (ss.length>2?(";"+ss[2]):'') + ext;
+}
+
+async function load_file(file) {  // using fetch
+	if(file[0]=='#') {
+		fx = name_from_content(file);
+		ex = file;
+	} else {
+		var url = path + file;
+		var response = await fetch(url, {cache:"reload"});
+		var t = await response.text();
+		if(t.length>0) {
+			ex=t;
+			bpnaf5[file]=ex;
+			localStorage.bpnaf5=JSON.stringify(bpnaf5);
+		}
+	}
+	init(ex);	  	
+}
+
+async function load_file2(file) {  // using fetch
+	var ex2="";
+	if(file[0]=='#') {
+		ex2=file;
+	} else {
+		var url = path + file;
+		var response = await fetch(url, {cache:"reload"});
+		var allText = await response.text();
+		if(allText.length>0) {
+			ex2=allText;
+			//var exex;
+			if(ex2.length>1) {
+				bpnaf5[file]=ex2;
+				localStorage.bpnaf5=JSON.stringify(bpnaf5);
+			}
+		}
+	}
+	return(ex2);
+}
+
+function server_save(data,fname) {
+	const formData = new FormData();
+	var f=fname||(bpnafname+ext);
+	bpnaf5[f]=data;
+	localStorage.bpnaf5=JSON.stringify(bpnaf5);
+	formData.append("fx_name", f);
+	formData.append("fx", data);
+	var url = phpname;
+	if(debug) console.log("server_save with fetch:"+url+" "+f+" : "+data);
+	fetch(url, {method:"POST",body: formData} )
+		.then(result => {if(debug) console.log("Completed with result:", result);})
+		.catch(err => { if(debug) console.error(err);});
+}
+
+function download(data, filename, type) {
+	var file = new Blob([/*bom,*/ /*"\ufeff",*/ data], {type: type||"plain/text;charset=utf-8"});
+	if (window.navigator.msSaveOrOpenBlob) // IE10+
+		window.navigator.msSaveOrOpenBlob(file, filename||(bpnafname+ext));
+	else { // Others
+		var a = document.createElement("a");
+		a.href = URL.createObjectURL(file); 
+		a.download = filename||(bpnafname+ext);
+		document.body.appendChild(a);
+		console.log(a);
+		a.click();
+		setTimeout(function() {
+			document.body.removeChild(a);
+			window.URL.revokeObjectURL(url);  
+		}, 0); 
+	}
+}
+
+function readTextarea(id) {
+	var ta=document.getElementById(id);
+	if(ta) {
+		read_processes(ta.value);
+	}
+}
+
+function readFile(e) {  // local file reader
+	var file = e.files[0];
+	if (!file) return;
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		var s=e.target.result;
+		if(s.startsWith(bom)) s=s.substring(bom.length);
+		if(s[0]!='#') s=convert_csv(s,file.name.slice(0,-4));
+		fx=bpnafname+"_"+"Default"+ext;
+// ----- Warning: this allows storing local files on the server !!!
+		var ss=s.split(/[;\t]/);  
+		fx = bpnafname.toUpperCase()+"_"+(ss.length>1 ? ss[1] : '') + (ss.length>2 ? (';'+ss[2]) :'')+ext;
+// -----
+		if(debug) console.log(fx);
+		document.getElementById("ta1").value=s;
+		update_table(s);
+		update_map(s);
+	};
+	if(debug) console.log("readFile: "+file.name);
+	if(file.name.endsWith(".tsv")||file.name.endsWith(".csv")) {
+		if(file.name.endsWith(".csv")) {
+			fx = file.name.split(".")[0]+".tsv";
+			if(debug) console.log("readFile: "+file.name+" -> "+fx);
+		}
+		reader.readAsText(file);
+	} else {
+		alert("Not acceptable file extension: "+file.name);
+	}
+}
+
+function show_tab(id) {
+	var el = document.getElementById(id);
+	if(debug) console.log("show_tab: "+id);
+	if(el) bootstrap.Tab.getOrCreateInstance(el).show(); // bootstrap 5
+	document.getElementById("banner").scrollIntoView();
+}
+function prev_tab(id) {
+	for(var i=0;i<ids.length;i++) {
+		if(ids[i]==id) break;
+	}
+	return(i==0?'home':ids[i-1]);
+}
+function next_tab(id) {
+	for(var i=0;i<ids.length;i++) {
+		if(ids[i]==id) break;
+	}
+	if(debug) console.log(i + " | "+ ids.length + " | "+(i>=ids.length-1?'home':ids[i+1]));
+	return(i>=ids.length-1?'home':ids[i+1]);
+}
+
+// fx=uuZnglM0RicG5hZl9DQ0MudHN2
+// fx=uuZnglM0RicG5hZl9DQ0MudHN2JTI2bGFuZyUzRGVz
+// fx=uuZnglM0RicG5hZl9DQ0MudHN2JTI2bGFuZyUzRHBs
+
+function url_params() { // overwrite globals from url params
+	var s = decodeURIComponent(window.location.search.substring(1));
+	if(debug) console.log(s);
+	if(s.startsWith("fx=uu")) {
+		s=decodeURIComponent(atob(s.substring(5)));
+		if(debug) console.log(s);
+	}
+	if(debug) console.log("fx=uu"+btoa(encodeURIComponent(s)));
+	if(s.length>1) {
+		var ss = s.split('&');
+		for (var i = 0; i < ss.length; i++) {
+			var sss = ss[i].split('=');
+			if(debug) console.log(sss[0]+'->'+sss[1]);
+			if(sss[0]==="ex") {
+				sss[1] = decodeURIComponent(sss[1]);
+				if(sss[1][0]=='#') {
+					window[sss[0]] = sss[1];
+				} else { 
+					try { window[sss[0]] = eval(sss[1]); }
+					catch (err) {if(debug) console.log(err.message);}; 
+				}
+			} else { 
+				window[sss[0]] = sss[1];
+			}
+    	}
+	}
+}
+
+function store_state() { 
+	var ss=state_tostring();
+	localStorage.bpnaf=ss;
+	server_save(ss,fx);
+	//localStorage.bpnaf5=JSON.stringify(bpnaf5);
+	document.getElementById("ta1").value=ss;
+	update_table(ss);
+	update_map(ss);
+}
+
+function restore_state() { 
+	//bpnaf5=(localStorage.bpnaf5!=null)?JSON.parse(localStorage.bpnaf5):{};
+	ex=localStorage.bpnaf;
+	if(ex) read_processes(ex);
+	if(ids.length==0) ex=null;
+}
+
+var ex=null;
+var fx=null;
+
+/*
+function exfun(n,s) {
+	var s=eval([s,'example1','example2','example3','example4','example5'][n]);
+	ex=s;
+}
+*/
+
+function exfun(n,s) {
+	ex = (n==0?s:eval(['example1','example2','example3','example4','example5'][n-1]));
+	init(ex);
+}
+
+function lang_changed(s) {
+	//alert("lang_changed:"+s+" "+lang);
+	lang=s;  // set global var lang 
+	document.getElementById("lang").value=lang;
+	for(var key in lang_idx) {
+		document.getElementById(key).style["color"]="black";		
+	}
+	document.getElementById(lang).style["color"]="blue";//"#9e7ba8";
+	template1aa = (s==="pl") ? template1aa_pl : template1aa_en;
+	template4aa = (s==="pl") ? template4aa_pl : template4aa_en;
+
+	var idx=lang_idx[lang];
+	for(var key in lang_dict) {
+		var k=lang_dict[key];
+		var s1=k[idx<k.length?idx:0];
+try {
+		if(Array.isArray(s1)) {
+			for(var j=0;j<s1.length;j++) {
+				if(key.includes("$NN")) {
+					for(var k=0;k<ids.length;k++) {
+						var key2 = key.replace("$NN",ids[k]).replace("$DD",(j+1));
+						var kk = key2.split(':');
+						if(kk.length>1) {
+							document.getElementById(kk[0])[kk[1]]=s1[j];
+						} else {
+							document.getElementById(key2).innerHTML=s1[j];
+						}
+						//document.getElementById(key2).innerHTML=s1[j];
+					}
+				} else {
+					document.getElementById(key+(j+1)).innerHTML=s1[j];
+				}
+			}
+		} else {
+			var kk = key.split(':');
+			if(kk.length>1) {
+				if(kk[0].includes("$NN")) {
+					for(var k=0;k<ids.length;k++) {
+						var key = kk[0].replace("$NN",ids[k]);
+						document.getElementById(key)[kk[1]]=s1;
+					}
+				} else {
+					document.getElementById(kk[0])[kk[1]]=s1;
+				}
+			} else {
+				document.getElementById(key).innerHTML=s1;
+			}
+		}
+} catch(err) {if(debug) console.log(err.message + "\nerror ->" + key+" "+s1);}
+	}
+
+}
+function init(s) {
+	read_processes(s);
+	create_forms(enabled);
+	lang_changed(lang);
+	update();	
+}
+function pre_init() {
+	if(template3==='') {
+		template3=document.getElementById("bpnaf-div").innerHTML; // storing html prepared container!	
+	}
+	try {bpnaf5=JSON.parse(localStorage.bpnaf5);} catch(err) {}
+}
+function main() {
+	pre_init();
+	url_params(); // try using example name from url and evaluate
+	if(ex==null) restore_state(); // try from localStorage
+	if(ex==null) ex=example3; // set default example
+	if(fx!=null) {
+		load_file(fx);  // with init(ex)!
+	} else {
+		init(ex);
+	}
+}	
+
+</script>
+	
+</head>
+<body onload="main();">
+	
+<div class="container">
+<!--
+	<center>
+		<h2 id="banner">
+			<a id="t_title" href="#" data-bs-toggle="modal" data-bs-target="#modal1">
+				Business Process Nature Assessment Framework
+			</a>
+		</h2> 
+	</center>
+-->	
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+		<button class="navbar-toggler" type="button"
+			data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+			aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarMenu">
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+				<li class="nav-item"><a class="nav-link" aria-current="page" href="javascript:lang_changed('en');" id="en">EN</a></li>
+				<li class="nav-item"><a class="nav-link  active" href="javascript:lang_changed('pl');" id="pl">PL</a></li>
+				<li class="nav-item"><a class="nav-link" href="javascript:lang_changed('es');" id="es">ES</a></li>
+				<li class="nav-item"><a class="nav-link" href="javascript:lang_changed('de');" id="de">DE</a></li>
+			</ul>
+		</div>
+    </div>
+  </nav>
+
+
+<div class="mt-4 p-5 bg-gradient1 bg-light1" style="background-color1:#9e7ba8;margin-top:0!important;background-image:linear-gradient(to top, #e6ffe6,white,white,#b7d9fE)">
+	<center>
+		<h1 id="banner">
+			<a id="t_title" href="#" data-bs-toggle="modal" data-bs-target="#modal1" class="text-white1">
+				Business Process Nature Assessment Framework
+			</a>
+		</h1>
+	</center>
+</div>
+	
+	<p>
+		<table id="header" style="width:100%">
+			<tr>	
+			<td style="text-align:left"><span id="t_company">Company</span>: <span id="company"></span></td>
+			<td style="width:12px"> </td>
+			<td style="text-align:center"><span id="t_evaluator">Evaluator</span>: <span id="evaluator"></span></td>
+			<td style="width:12px"> </td>
+			<td style="text-align:right"><span id="data"></span></td>
+			</tr>
+			<tr>
+			</tr>
+		</table>
+	</p>
+</div>
+
+<div class="container">
+	<ul id="bpnaf-ul" class="nav nav-tabs">
+<!-- template for processes tab
+		<li class="nav-item"><a href="#bpnam_menu" id="bpnam-tab" class="nav-link" data-bs-toggle="tab">BPNAM</a></li>
+		<li class="nav-item"><a href="#home" id="home-tab" class="nav-link active" data-bs-toggle="tab">N-1</a></li>
+		<li class="nav-item"><a href="#M1_1_menu" id="M1.1-tab" class="nav-link" data-bs-toggle="tab">M1.1</a></li>
+-->
+	</ul>
+</div>
+
+<p>
+</p>
+
+<div id="bpnaf-div" class="tab-content">
+
+<!--- 0 ----------------------------------------- --->
+
+	<div id="home" class="tab-pane fade in show active">
+		<div id="home_c" class="container">
+		</div>
+		
+	</div>
+
+<!-- 1 --------------------------------------- --->	
+			
+	<div id="bpnam_menu" class="tab-pane fade">
+		<div id="svg_container" class="container">
+
+<script>
+function svg_copy(e) {
+	var ta = document.getElementById('ta');
+	if(ta) {
+		ta.value = e.outerHTML;
+		ta.select();
+		document.execCommand('copy');
+	}
+}
+</script>
+
+<svg oncopy="svg_copy(this);" id="svg1" xmlns="http://www.w3.org/2000/svg" width="460" height="560" font-family="Times" font-size=14>
+ <g id="bpnam" transform="translate(20,30)">
+ <rect width=400 height=500 style="fill:none;stroke:lightgray;stroke-width:1" />
+
+ <rect x=0 y=0 width=200 height=500 style="fill:AliceBlue;stroke:none;opacity:0.3" />
+ <rect x=200 y=0 width=200 height=500 style="fill:LavenderBlush;stroke:none;opacity:0.3" />
+
+ <line id="trend1" x1="0" y1="0" x2="0" y2="0" stroke-dasharray="10,10" style="fill:none;stroke:cornflowerblue;stroke-width:1" />
+ <line id="trend2" x1="0" y1="0" x2="0" y2="0" stroke-dasharray="12,10" style="fill:none;stroke:green;stroke-width:1" />
+ <line id="trend3" x1="0" y1="0" x2="0" y2="0" stroke-dasharray="8,10" style="fill:none;stroke:coral;stroke-width:1" />
+ 
+ <line x1="100" y1="0" x2="100" y2="500" style="fill:none;stroke:orange;stroke-width:1" />
+ <line x1="200" y1="0" x2="200" y2="500" style="fill:none;stroke:orange;stroke-width:1" />
+ <line x1="300" y1="0" x2="300" y2="500" style="fill:none;stroke:orange;stroke-width:1" />
+ <line x1="400" y1="0" x2="400" y2="500" style="fill:none;stroke:orange;stroke-width:1" />
+
+ <line x1="0" y1="100" x2="400" y2="100" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="200" x2="400" y2="200" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="300" x2="400" y2="300" style="fill:none;stroke:gray;stroke-width:1" />
+ <line x1="0" y1="400" x2="400" y2="400" style="fill:none;stroke:lightgray;stroke-width:1" />
+
+ <line x1="0" y1="50" x2="400" y2="50" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="150" x2="400" y2="150" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="250" x2="400" y2="250" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="350" x2="400" y2="350" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="450" x2="400" y2="450" style="fill:none;stroke:lightgray;stroke-width:1" />
+
+ <text x="185" y="295" fill="red">B</text>
+ <text x="185" y="315" fill="red">A</text>
+ <text x="205" y="295" fill="red">D</text>
+ <text x="205" y="315" fill="red">C</text>
+ 
+ <text x="97" y="518" fill="black">1</text>
+ <text x="197" y="518" fill="black">2</text>
+ <text x="297" y="518" fill="black">3</text>
+ <text x="397" y="518" fill="black">4</text>
+ 
+ <text x="-12" y="503" fill="black">0</text>
+ <text x="-12" y="403" fill="black">2</text>
+ <text x="-12" y="303" fill="black">4</text>
+ <text x="-12" y="203" fill="black">6</text>
+ <text x="-12" y="103" fill="black">8</text>
+ <text x="-20" y="3" fill="black">10</text>
+
+ <text x="15" y="18" fill="gray" id="predi1">Low unpredictibilty</text>
+ <text x="15" y="38" fill="gray"id="knowi1">High knowledge intensity</text>
+
+ <text x="215" y="18" fill="gray" id="predi2">High unpredictibilty</text>
+ <text x="215" y="38" fill="gray" id="knowi2">High knowledge intensity</text>
+
+ <text x="215" y="318" fill="gray" id="predi3">High unpredictibilty</text>
+ <text x="215" y="338" fill="gray" id="knowi3">Low knowledge intensity</text>
+
+ <text x="15" y="318" fill="gray" id="predi4">Low unpredictibilty</text>
+ <text x="15" y="338" fill="gray" id="knowi4">Low knowledge intensity</text>
+
+ </g>
+</svg>
+
+<svg  oncopy="svg_copy(this);" id="svg2" xmlns="http://www.w3.org/2000/svg" width="430" height="560" font-family="Times" font-size=14>
+ <g id="bpnam2" transform="translate(30,30)">
+ <rect width=400 height=500 style="fill:none;stroke:lightgray;stroke-width:1" />
+
+ <line x1="100" y1="0" x2="100" y2="500" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="200" y1="0" x2="200" y2="500" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="300" y1="0" x2="300" y2="500" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="400" y1="0" x2="400" y2="500" style="fill:none;stroke:lightgray;stroke-width:1" />
+
+ <line x1="0" y1="100" x2="400" y2="100" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="200" x2="400" y2="200" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="300" x2="400" y2="300" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="400" x2="400" y2="400" style="fill:none;stroke:lightgray;stroke-width:1" />
+
+ <line x1="0" y1="50" x2="400" y2="50" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="150" x2="400" y2="150" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="250" x2="400" y2="250" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="350" x2="400" y2="350" style="fill:none;stroke:lightgray;stroke-width:1" />
+ <line x1="0" y1="450" x2="400" y2="450" style="fill:none;stroke:lightgray;stroke-width:1" />
+
+ <text x="47" y="518" fill="red">A</text>
+ <text x="147" y="518" fill="red">B</text>
+ <text x="247" y="518" fill="red">C</text>
+ <text x="347" y="518" fill="red">D</text>
+
+ <text x="-22" y="503" fill="black">0%</text>
+ <text x="-28" y="403" fill="black">20%</text>
+ <text x="-28" y="303" fill="black">40%</text>
+ <text x="-28" y="203" fill="black">60%</text>
+ <text x="-28" y="103" fill="black">80%</text>
+ <text x="-32" y="3" fill="black">100%</text>
+  
+</g>
+</svg>
+
+		</div> 
+		<br><br>
+		<div id="rc_container" class="container">
+		
+		</div>    
+	</div>
+
+<!-- 2 - .... ---------------------------------->	
+
+<!--
+    <div id="M1_1_menu" class="tab-pane fade">
+      <h3>M1.1 <span id="M1.1_name2"></span></h3>
+      <div id="M1.1_c" class="container"></div>
+    </div>
+	
+    <div id="M1_2_menu" class="tab-pane fade">
+      <h3>M1.2 <span id="M1.2_name2"></span></h3>
+      <div id="M1.2_c" class="container"></div>
+    </div>
+
+    <div id="M2_1_menu" class="tab-pane fade">
+      <h3>M2.1 <span id="M2.1_name2"></span></h3>
+      <div id="M2.1_c" class="container"></div>
+    </div>
+-->
+	
+<!-- --------------------------------------- --->	
+
+</div>
+
+<!-- Button trigger modal -->
+<!--<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Launch demo modal
+</button>
+-->
+<textarea id="ta" style="opacity: 0;position: absolute;z-index: -9999;pointer-events: none;">
+</textarea>
+
+<!-- Modals -->
+
+<div class="modal fade" id="modal1" tabindex="-1" aria-labelledby="modal1" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h6 class="modal-title" id="modal1_label">BPNAF v1.4 - MM <span id="t_month">February</span> 2024</h6> 
+				&nbsp;&nbsp;
+				<select class="form-select form-select-sm" id="lang" style="width:64px;display:right" onchange="lang_changed(this.value);">
+					<option value="en">en</option>
+					<option value="pl">pl</option>
+					<option value="es">es</option>
+					<option value="de">de</option>
+				</select>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="b_ex1"  style="width:32%;text-align:left" onclick="exfun(1);" title="Load example1">Example 1</button>
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="b_ex2"  style="width:32%;text-align:left" onclick="exfun(5);" title="Load example2">Example 2</button>
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="b_ex3"  style="width:32%;text-align:left" onclick="exfun(3);" title="Load example3">Example 3</button>
+			</div>
+			<div class="modal-footer">
+				<input title="Load tsv or csv file content to the textarea" class="form-control" type="file" id="formFile" onchange="readFile(this);" style="width:100%"/>
+<!--				
+				<textarea title="Content to be opened" class="form-control" id="ta1" rows=4 cols=80 wrap="off" style="width:100%;white-space:pre;font-family:Consolas,monospace;"
+>#;CompanyName;EvaluatorName
+M1.1;;Process1
+C1.1;;Process2
+S1.1;;Process3
+</textarea>
+-->
+<script>
+	function mcs_sort(s) {
+		var ss=s.split('\n'); // sorting MCS
+		if(ss.length<=2) {
+			return(s);
+		}
+		var s1=ss.shift();  // first is header line
+		var sn=ss.pop();    // last is empty line
+		for(var i=ss.length-1;i>=0;i--) {
+			if(ss[i].length>0 && ss[i][0] !='#') {
+				if(ss[i][0]=='C') ss[i]='N'+ss[i].substring(1);
+			} else {
+				ss.splice(i,1);
+			}
+		}
+		ss=ss.sort();
+		for(var i=0;i<ss.length;i++) {
+			if(ss[i][0]=='N') ss[i]='C'+ss[i].substring(1);
+		}
+		ss.unshift(s1);
+		ss.push(sn);
+		s=ss.join('\n');
+		return(s);	
+	}
+	function update_table(s) {
+		var el = document.getElementById("ProcessTab"); // span element
+		if(el) {
+			el.innerHTML=to_table(s);
+		} 
+	}
+	function to_table(s,n) {
+		//var colors=['#e6ffe6','azure','#ffffcc'];
+		s = mcs_sort(s);
+		var [ids,processes,categories]=to_ids(s);
+		var cat_ids=catids(ids);
+		var s2='';
+		for(var i=0;i<ids.length;i++) {
+			var c=ids[i][0];
+			var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
+			s2+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
+			s2+="<td style='text-align:right;padding:6px;'>"+(i+1)+"</td>";
+			var cat_id=ids[i].split('.')[0];
+			if(cat_ids[cat_id]>0) {
+				s2+="<td style='border-left: 1pt solid lightgray;color:blue;padding:6px;" + cc + "'rowspan="+
+					(cat_ids[cat_id])+">"+cat_id+"</td>";
+				s2+="<td style='border-right: 1pt solid lightgray;color:blue;text-align:left;padding:6px;" +cc + "'rowspan="+    				(cat_ids[cat_id])+">"+ (categories[i]) +"</td>";
+				cat_ids[cat_id]=0; // s+="<td></td>";
+			}
+			// s+="<td>"+categories[i]+"</td>";		
+			s2+="<td style='color:blue;padding:6px;"+cc+"'>"+(ids[i])+"</td>";
+			s2+="<td style='text-align:left;padding:6px;"+cc+"'>"+ (processes[i]) +"</td>";
+			s2+="</tr>";
+		}
+		s2 = '<table style="border:1px solid lightgray;">'+s2+"</table>";
+		return(s2);		
+	}
+var svg_M=`
+	<span>
+		<svg width="100" height="100" viewbox="0 0 100 100">
+			<path d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#e6ffe6">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;
+var svg_C=`
+	<span>
+		<svg width=100 height=100 viewbox="0 0 100 100">
+			<path transform="translate(50,50) rotate(-90) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="azure">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;
+var svg_S=`
+	<span>
+		<svg width=100 height=100 viewbox="0 0 100 100">
+			<path transform="translate(50,50) rotate(-180) translate(-50,-50)" d="M 1 1 L 50 15 L 99 1 L 99 85 L 50 99 L 1 85 Z" stroke="blue" stroke-width="2" fill="#ffffcc">
+				<title>$TT</title> 
+			</path>
+			<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="darkblue">$NN ($MM)</text>
+		</svg>
+	</span>
+`;		
+	function update_map(s) {
+		var el = document.getElementById("ProcessMap"); // span element
+		if(el) {
+			el.innerHTML=to_map(s);
+		} 
+	}
+	function catids(ids) {
+		var cat_ids={};
+		for(var i=0;i<ids.length;i++) {
+			var cat_id=ids[i].split('.')[0];
+			if(cat_id in cat_ids) {
+				cat_ids[cat_id]+=1; 
+			} else {
+				cat_ids[cat_id]=1;
+			}
+		}
+		return(cat_ids);
+	}
+	function to_ids(s) {
+		s = mcs_sort(s);
+		var ids=[],processes=[],categories=[];
+		ss=s.split("\n");
+		for(i=0;i<ss.length;i++) {
+			ss1=ss[i].split(/[;\t]/);
+			if('MCS'.includes(ss1[0][0])) {
+				ids.push(ss1[0]);
+				processes.push(ss1.length>2?ss1[2]:'');
+				categories.push(ss1.length>1?ss1[1]:'');
+			} 
+		}
+		return([ids,processes,categories]);
+	}
+	function to_map(s) {
+		var [ids,processes,categories]=to_ids(s);
+		var cat_ids=catids(ids);
+		var ssm='',ssc='',sss='';
+		for(id in cat_ids) {
+			var cid=ids.indexOf(id+".1");
+			if(id[0]=='M') ssm += svg_M.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+			if(id[0]=='C') ssc += svg_C.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+			if(id[0]=='S') sss += svg_S.replaceAll("$NN",id).replaceAll("$MM",cat_ids[id]).replaceAll("$TT",categories[cid]); 
+		}
+		var ss='<table width="100%" style="text-align:center">';
+		ss +="<tr><td style='height:100px'>"+ssm+"</td></tr>"
+			+"<tr><td style='height:100px'>"+ssc+"</td></tr>"
+			+"<tr><td style='height:100px'>"+sss+"</td></tr>";
+		ss +="</table>";
+		return(ss);
+	}
+</script>
+<div class="row" style="padding:0">				
+	<div class="container" style="padding:0">
+		<ul id="tabA" class="nav nav-tabs" style="padding:0">
+			<li class="nav-item">
+				<a href="#tabA1" id="A1" class="nav-link" data-bs-toggle="tab" style="padding-left:10px;padding-right:10px">
+					Processes Map
+				</a>
+			</li>
+			<li class="nav-item">
+				<a href="#tabA2" id="A2" class="nav-link" data-bs-toggle="tab" style="padding-left:10px;padding-right:10px">
+					Processes Table
+				</a>
+			</li>
+			<li class="nav-item">
+				<a href="#tabA3" id="A3" class="nav-link active" data-bs-toggle="tab" style="padding-left:10px;padding-right:10px">
+					Processes File
+				</a>
+			</li>
+		</ul>
+	</div>
+	<p></p>
+	<div id="tabsA_c" class="tab-content" style="padding:0">
+		<div id="tabA1" class="tab-pane fade in show">
+			<div id="tabA1_c" class="container">
+					<div id="ProcessMap" style="height:180px;overflow:auto">
+					
+					</div>			
+			</div>
+		</div>
+		<div id="tabA2" class="tab-pane fade in show">
+			<div id="tabA2_c" class="container">
+					<div id="ProcessTab" style="height:180px;overflow:auto">
+					
+					</div>			
+			</div>
+		</div>
+		<div id="tabA3" class="tab-pane fade in show active">
+			<div id="tabA3_c" class="container">
+					<div style="height:180px">
+						<textarea id='ta1' wrap="off" rows=6 style="width:100%;font-family:Consolas,monospace" onchange="if(this.value[0]!='#')this.value=convert_csv(this.value);update_table(this.value);update_map(this.value);" ></textarea>
+					</div>			
+			</div>
+		</div>
+	</div>
+</div>
+<p></p>
+
+				<span class="me-auto"><button title="Save current state before opening something new" type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="var s=state_tostring();download(s,fx);server_save(s,fx);" id="b_save">Save</button></span>
+				<span class="me-auto"><button title="Create html report and open it in the new tab" type="button" class="btn btn-info" data-bs-dismiss="modal" onclick="report();" id="b_report">Report</button></span>
+<!--				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="b_cancel">Cancel</button> -->
+				<button title="Create new questionnaire from description in the textarea" type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="exfun(0,document.getElementById('ta1').value);" id="b_open">Open</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="modal fade" id="modal2" data-bs-backdrop="static" tabindex="-1" aria-labelledby="modal2" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="modal2_label">Open file:</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="mb-12">
+					<input class="form-control" type="file" id="formFile" onchange="readFile(this);">
+					<textarea class="form-control" id="ta2" rows=10 cols=80 style="width:100%;white-space:pre;"></textarea>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" onclick="readTextarea('ta2');" class="btn btn-primary" data-bs-dismiss="modal">Open</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="modal3" data-bs-backdrop="static" tabindex="-1" aria-labelledby="modal3" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+<div id="lang_name">
+English
+</div>			
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>
