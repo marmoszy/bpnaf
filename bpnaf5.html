@@ -244,7 +244,8 @@ var lang_dict={
 		,"Evaluación de la Naturaleza de los Procesos de Negocio"
 		,"Rahmenwerk zur Bewertung der Natur von Geschäftsprozessen"
 	]
-	,"t_month":["January","styczeń","Enero","Januar"]
+/*	,"t_month":["January","styczeń","Enero","Januar"] */
+	,"t_month":["February","luty","Febrero","Februar"]
 	,"t_company":["Company","Firma","Empresa","Firma"]
 	,"t_evaluator":["Evaluator","Oceniający","Evaluador","Bewerter"]
 	,"b_prev":["Prev","Poprzedni","Previo","Vorherige"]
@@ -919,7 +920,7 @@ function update() {
 	v3=D[3]/S*500; svg_createrect(bpnam2,id+"_DS","325,"+(500-v3-v2-v1)+",50,"+(v3),colors2[2],v3>20?(v3/5).toFixed(2)+'%':'');
 	}
 	
-	for(var j=0;j<ids.length;j++) {  // for all processes
+	for(var j=0;j<ids.length;j++) {  // Quarter recommendations for all processes
 		el=document.getElementById(ids[j]+"_q0");  // quarter update
 		if(el) {
 			el.innerHTML=quarter(structured[j],intensity[j]);
@@ -931,6 +932,7 @@ function update() {
 		el=document.getElementById(ids[j]+"_q2");  // recommendation
 		if(el) {
 			el.value=recommendations2[j];
+			el.placeholder=default_recommendation(j);
 		} 
 	}	
 	
@@ -1130,10 +1132,7 @@ function create_forms(flag) {
 		var s=template4a;		
 		for(var i=0;i<ids.length;i++) {  // for all processes
 			var c = ids[i][0]; c = (c=='M'?0:c=='C'?1:c=='S'?2:3);
-			var q = quarter(structured[i],intensity[i]);
-			var ABCD={'A':4,'B':1,'C':3,'D':2};
-			var t=q!=''?ABCD[q]:0;
-			var tt=t!=0?lang_dict['predi'+t][lang_idx[lang]]+'. '+lang_dict['knowi'+t][lang_idx[lang]]+'.':''
+			tt=default_recommendation(i);
 			s+=template4b.replaceAll("$DD",(i+1)).replaceAll("$NN",ids[i]).replaceAll("$CC",colors[c])
 			    .replaceAll("$OO",processes[i]).replaceAll("$TT",tt);
 		}
@@ -1147,6 +1146,12 @@ function quarter(x,y) {
 	var q='';
 	if(x>0) { if(x<=2) {if(y<4) {q='A';} else {q='B';} } else { if(y<4) {q='C';} else {q='D';} } }
 	return q;
+}
+function default_recommendation(i) {
+	var q = quarter(structured[i],intensity[i]);
+	var ABCD={'A':4,'B':1,'C':3,'D':2};
+	var t=q!=''?ABCD[q]:0;
+	return t!=0?lang_dict['predi'+t][lang_idx[lang]]+'. '+lang_dict['knowi'+t][lang_idx[lang]]+'.':''
 }
 
 function get_update2(fname,k,fun) {
@@ -1836,7 +1841,7 @@ function svg_copy(e) {
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h6 class="modal-title" id="modal1_label">BPNAF v1.2 - MM <span id="t_month">January</span> 2024</h6> 
+				<h6 class="modal-title" id="modal1_label">BPNAF v1.4 - MM <span id="t_month">February</span> 2024</h6> 
 				&nbsp;&nbsp;
 				<select class="form-select form-select-sm" id="lang" style="width:64px;display:right" onchange="lang_changed(this.value);">
 					<option value="en">en</option>
