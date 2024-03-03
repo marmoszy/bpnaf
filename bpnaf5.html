@@ -113,7 +113,7 @@ S2.3;;Proces organizacji meetupów;2;1;4;;4;4;4;4;4;4;4;4;4;3
 var example4='#;Firma SA;Marek Oceaniusz|M1.1;;Proces 1|C1.1;;Proces 2|C1.2;;Proces 3|S1.1;;Proces 4';
 
 var example5=`
-#			1.03.2024, 13:03:03	2			0	0.3	0.65	1		0	0	0
+#			3.03.2024, 20:21:34	2			0	0.3	0.65	1		0	0	0				Dobór pracowników i metod rozwoju pracowników zgodnie z charakterem procesów. \\Wdrożenie Systemu BPM/iBPM integrującego różne źródła danych. Identyfikacja procesów lub ich fragmentów możliwych do automatyzacji przez RPA.\\Zarządzanie wiedzą z wykorzystaniem Systemu KMS repozytoriów wiedzy zasilanych danymi on line i offline.\\
 M1.1	Zarządzanie strategiczne	Planowalnie strategii	6	0	3	4.8	0	0	0	0	0	0	0	0	0	0		
 M2.1	Planowanie i monitorowanie	Proces audytu	5	1	2	6.5	0	0	0	0	0	0	0	0	0	0		
 C1.1	Wdrażanie nowych produktów	Proces tworzenia produktów ubezpieczeniowych	6	0	3	8.6	0	0	0	0	0	0	0	0	0	0	HRM\\ITSM\\KM\\BPM	Dobór pracowników kreatywnych, poszukujących wciąż nowej wiedzy i nowych rozwiązań.\\Zapewnienie przcownikom możliwości rozwoju i uprawomocnienie do podejmowania decyzji. \\Wsparcie realizacji procesów przez systemy BPM/iBPM lub ACM zintegrowane z System do zarządzania wiedzą (KMS). \\Zarządanie wiedzą, w tym ocena przydatności posiadanej wiedzy i identyfikacja braków nowej wiedzy.\\Zapewnienie możliwości pozyskiwania wiedzy spoza organizacji ale równocześnie identyfikowania, weryfikacji, gromadzenia i dystrybucji wiedzy tworzonej i wykorzystywanej w organizacji.\\Procesy o b. dużym znaczeniu dla organizacji i o wysokich wymaganiach na wykorzystanie wiedzy
@@ -193,6 +193,7 @@ var trends=[];
 var structured=[];
 var intensity=[];
 var intensities=[];
+var recommendation0="";
 var recommendations1=[];
 var recommendations2=[];
 var company="",industry="",compsize="",compcountry="";
@@ -273,6 +274,7 @@ var lang_dict={
 	,"h42":["Process","Proces","Proceso","Verfahren"]
 	,"h43":["Recommendation area","Obszar rekomendacji","Área de recomendación","Empfehlungsbereich"]
 	,"h44":["Recommendation", "Treść rekomendacji", "Recomendación", "Empfehlung"]
+	,"p_q0":["General recommendations","Rekomendacje ogólne","Recomendaciones generales","Allgemeine Empfehlungen"]
 
 	,"weight_$NN:title":["1 - the lowest, ... , 6 - the highest","1 - najmniejsza, ... , 6 - największa","1 - la más baja, ..., 6 - la más alta","1 – der niedrigste, ... , 6 – der höchste"]
 	,"trend_$NN:title":["-2 - decreasing, ... , 2 - increasing","-2 - zmniejszający, ... , 2 - zwiększający","-2 - decreciente, ... , 2 - creciente","-2 - abnehmend, ... , 2 - steigend"]
@@ -632,6 +634,16 @@ var template4b=`
 		</tr>
 `
 var template4c=`
+		<thead>
+			<tr style="text-align:left">
+				<th colspan=5 id="p_q0" style="padding-top:24pt"></th>
+			</tr>
+		</thead>
+		<tr>
+			<td colspan=5>
+				<textarea id="rc_q0" class="form-control" rows="5" style="width:100%" oninput="rc_changed(this)" placeholder=""></textarea> 
+			</td>
+		</tr>
 		</tbody>
 	</table>
 </div>
@@ -665,17 +677,37 @@ var template4aa_pl=`
 		</thead>
 		<tbody>
 `;
+var template4cc_en=`
+		<thead>
+			<tr style="text-align:left">
+				<th colspan=5 id="p_q0">General recommendations</th>
+			</tr>
+		</thead>
+`
+var template4cc_pl=`
+		<thead>
+			<tr style="text-align:left">
+				<th colspan=5 id="p_q0" style="padding-top:24pt">Rekomendacje ogólne</th>
+			</tr>
+		</thead>
+`
+
 var template4aa=template4aa_en;
+var template4cc=template4cc_en;
 
 
 /* ---- functions ------- */
 function rc_changed(el) {
 	idn=el.id.split('_');           /* {pid}_q{n} */
 	var pid=idn[0], n=idn[1][1];
-	for(j=0;j<ids.length;j++) {
-		if(ids[j]==pid) {
-			if(n=='1') recommendations1[j]=el.value;
-			else if(n=='2') recommendations2[j]=el.value;
+	if(n==0) {
+		recommendation0=el.value;
+	} else { 
+		for(j=0;j<ids.length;j++) {
+			if(ids[j]==pid) {
+				if(n=='1') recommendations1[j]=el.value;
+				else if(n=='2') recommendations2[j]=el.value;
+			}
 		}
 	}
 	el.setAttribute('style','height:'+(el.scrollHeight+2)+'px');
@@ -935,6 +967,10 @@ function update() {
 			el.placeholder=default_recommendation(j);
 		} 
 	}	
+	el=document.getElementById("rc_q0");  // recommendation0
+	if(el) {
+		el.value=recommendation0;
+	} 
 	
 	store_state();
 }
@@ -973,7 +1009,7 @@ function read_processes(s) {
 	s=s.trimStart();
 	if(s[0]!='#') s=convert_csv(s);
 	var ss=s.replaceAll('|','\n').split('\n');
-	var vid=[],vcat=[];vpr=[];vws=[];vts=[];vx=[],vi=[],vst=[],com="",ev="",d="",w=[],ind="",csize="",cc="";rc1=[];rc2=[];
+	var vid=[],vcat=[];vpr=[];vws=[];vts=[];vx=[],vi=[],vst=[],com="",ev="",d="",w=[],ind="",csize="",cc="";rc0="";rc1=[];rc2=[];
 	for(var i=0;i<ss.length;i++) {
 		ss[i] = ss[i].replace(/(\r\n|\n|\r)/gm, "");
 		if(ss[i].length>1) {
@@ -993,6 +1029,10 @@ function read_processes(s) {
 				n++; ind=ss2.length>n && ss2[n].length>0 ?ss2[n]:0;
 				n++; csize=ss2.length>n && ss2[n].length>0 ?ss2[n]:0;
 				n++; cc=ss2.length>n && ss2[n].length>0 ?ss2[n]:0;
+				n++; // empty field
+				n++; // empty field
+				n++; // empty field
+				n++; rc0=ss2.length>n && ss2[n].length>0 ?ss2[n].replaceAll('\\','\n'):'';  // general recommnedations
 				continue;
 			}
 			var n=0; vid.push(ss2[n]);   // ids
@@ -1013,7 +1053,7 @@ function read_processes(s) {
 	}
 	company=com; evaluator=ev; data=d; enabled=e; st_weights=w; industry=ind; compsize=csize; compcountry=cc;
 	ids=vid; categories=vcat; processes=vpr; weights=vws; trends=vts; structured=vx; 
-	intensity=vi; intensities=vst; recommendations1=rc1; recommendations2=rc2;
+	intensity=vi; intensities=vst; recommendations1=rc1; recommendations2=rc2; recommendation0=rc0;
 }
 
 function create_forms(flag) {
@@ -1268,7 +1308,9 @@ function report() {
 		s+=" <td style='text-align:left'>"+recommendations2[i]+"</td>";
 		s+="</tr>"
 	}
-	s += template4c;
+	s += template4cc;
+	s += '<tr style="width=100%"><td colspan=5>'+recommendation0+'</td></tr>';
+	s += template1c;
 	s+='</center></p>';
 	s += '</body>';
 	server_save(s,fname);
@@ -1303,7 +1345,9 @@ function state_tostring(flag) {
 	for(var i=0;i<st_weights.length;i++) { // all weights
 		s+='\t'+(flag?'='+(100*st_weights[i]).toFixed()+"/100":st_weights[i]);  	
 	} 
-	s+='\t\t'+industry+'\t'+compsize+'\t'+compcountry+'\n';  // 2 empty + company info
+	s+='\t'+'\t'+industry+'\t'+compsize+'\t'+compcountry;  // 1 empty + company info
+	s+='\t'+'\t\t\t'+recommendation0.replaceAll('\n','\\');  // 3 empty + general recommendation
+	s+='\n';
 	for(var i=0;i<ids.length;i++) {  // for all processes
 		s+= ids[i]+'\t'+categories[i]+'\t'+processes[i]+'\t'
 		+weights[i]+'\t'+trends[i]+'\t'+structured[i]+'\t'+(flag?"="+(100*intensity[i]).toFixed()+"/100":intensity[i]);  //  
@@ -1539,6 +1583,7 @@ function lang_changed(s) {
 	document.getElementById(lang).style["color"]="blue";//"#9e7ba8";
 	template1aa = (s==="pl") ? template1aa_pl : template1aa_en;
 	template4aa = (s==="pl") ? template4aa_pl : template4aa_en;
+	template4cc = (s==="pl") ? template4cc_pl : template4cc_en;
 
 	var idx=lang_idx[lang];
 	for(var key in lang_dict) {
@@ -1574,7 +1619,12 @@ try {
 					document.getElementById(kk[0])[kk[1]]=s1;
 				}
 			} else {
-				document.getElementById(key).innerHTML=s1;
+//				var kkk=key.split("_");
+//				if(kkk.length>1 && kkk[0]=='p') { /* placeholder */
+//					document.getElementById(key).placeholder=s1;
+//				} else {
+					document.getElementById(key).innerHTML=s1;
+//				}
 			}
 		}
 } catch(err) {if(debug) console.log(err.message + "\nerror ->" + key+" "+s1);}
