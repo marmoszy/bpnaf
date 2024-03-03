@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>BPNAF</title>
+	<title>BPNAF v1.4</title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -45,14 +45,24 @@
 </script>
 	
 <script>
-	function main() {
-		var el=document.getElementById("ex6");
-		if(el && typeof example6 !== 'undefined') el.value=example6;
+
+	var search_enabled=0;
+
+	function main() { // parse params from url address
+		var s = decodeURIComponent(window.location.search.substring(1));
+		if(s.length>1) {
+			var ss = s.split('&');
+			for (var i = 0; i < ss.length; i++) {
+				var sss = ss[i].split('=');
+				window[sss[0]] = sss.length>1 ? sss[1] : 1;
+			}
+		}
 	}
+	
 </script>	
 
 
-<body onload="main();" style="background-color:#eee">
+<body style="background-color:#eee">
 
 <div class="container">
 	
@@ -70,13 +80,49 @@
 		</h1>
 	</center>
 </div>
+
+<div class="accordion" id="accordionExample">
+	
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="headingOne">
+			<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+
+			<!-- Accordion Item #1 -->
+			<h4>Intro</h4>
+
+			</button>
+		</h2>
+		<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+			<div class="accordion-body">
+
+<div id="info" style="display:none1;">
 <p>
 <p>The Business Process Nature Assessment Framework (BPNAF)  enables the quick and efficient assessment of the nature of business processes in an organization in terms of their unpredictability and knowledge intensity. The presentation of the results enables the objective recommendation of the selection of implementation methodologies, HRM policies, or IT systems supporting BPM in line with the real nature of business processes implemented in the organization, in a way that is understandable to both experts and non-experts.
 <p>This framework interface supports <a href="bpnaf5.html?lang=en">English</a>, <a href="bpnaf5.html">Polish</a> (default), <a href="bpnaf5.html?lang=es">Spanish</a> and <a href="bpnaf5.html?lang=de">German</a>.  It contains: (1) questionnaire generator for dedicated company and evaluating person, (2) system for completing the questionnaire with option of previewing all questionnaires for one entity (3) server-side and local-side questionnaire management including importing the results from prioprietary files and report genaration. Generated report contains process map and results matrix (BPNAM) in a form of two charts. As a starting point you can go through several examples available below.
 <p>The method overview can be found in <i>Marek Szelągowski,Practical assessment of the nature of business processes, Information Systems and e-Business Management</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs.pdf">pdf</a>) or
 <a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>
- 
-<p><h2>Getting started examples:</h2></p>
+</div>
+
+
+			</div>
+		</div>
+	</div>
+  
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="headingTwo">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+				
+			<!-- Accordion Item #2 -->
+			<h4>Getting started examples</h4>
+			
+			</button>
+		</h2>
+		<div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+			<div class="accordion-body">
+				
+
+<div id="examples" style="display:none1;">
+
 
 <div class="row">
 	<div class="col-sm-4">
@@ -173,7 +219,7 @@ It is prepared to be filled by an evaluator.
 	<div class="col-sm-4">
 		<div class="h-100 content">
 			<h3>Example<br>2</h3>
-			<p>This <a href="bpnaf5.html?ex=example2">example</a> contains the questionnaire contatinng 18 sample processes.
+			<p>This <a href="bpnaf5.html?ex=example5">example</a> contains the questionnaire contatinng 18 sample processes.
 It is partly filled by an evaluator.
 				<a href="bpnaf5.html?ex=example2">
 					<div style="border:1px solid lightgray;">
@@ -245,8 +291,26 @@ It is partly filled by an evaluator.
 		</div>
 	</div>
 </div> <!-- end of row -->
-	 
-<p><h2>Functionality examples:</h2></p> 
+</div>
+
+
+			</div>
+		</div>
+	</div>
+  
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="headingThree">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+
+			<!-- Accordion Item #3 -->
+			<h4>Functionality examples</h4>
+
+			</button>
+		</h2>
+		<div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+			<div class="accordion-body">
+
+<div id="functionality" style="display:none1">	 
   
 <div class="row">
 	<div class="col-md-4">
@@ -327,14 +391,33 @@ It is partly filled by an evaluator.
 		</div>
 	</div>
 </div> <!-- end of row -->
+</div>
 
-<p><h2>Operating activity:</h2></p>
+			</div>
+		</div>
+	</div>
+
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="headingFour">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+
+			<!--Accordion Item #4 -->
+			<h4>Questionaire creator</h4>
+
+			</button>
+		</h2>
+		<div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+			<div class="accordion-body">
+
+
+<div id="questionaire" style="display:none1">
+<!--<p><h2>Operating activity:</h2></p>-->
 
 <div class="row">
-	<div class="col-md-8">
+	<div class="col-md-12">
 		<div class="h-100 content">
 			<h3>Questionnaire creation</h3>
-			<p>The following form enables preparing a questionnaire that will be visible to dedicated users. After submiting it will generate the link to access it and redirects to this link. It its recommended to store the link from browser address bar. The link is a company and an evaluator dependent what allows for evaluating a company  by several experts.
+			<p>The following form enables preparing a questionnaire that will be visible to dedicated users. After submiting it will generate the link to access it and redirects to this link. It its recommended to store the link from browser address bar. The link is a company and an evaluator dependent what allows for evaluating a company by several experts. It is highly recommended to remember entered company name. When entering previously used company name followed by Tab key allows recalling company questionaire when creating new one for another evaluator.
 			<form id='f7' action='bpnaf.php' method="post" onsubmit="return on_submit();">
 				<input type="hidden" id="fx_name" name="fx_name" value="bpnaf_default.tsv">
 				<fieldset class="border rounded-3 p-3">
@@ -529,18 +612,84 @@ It is partly filled by an evaluator.
 			</form>
 		</div>
 	</div>	 
+</div>  <!-- end of row -->
+</div>
 
-	<div class="col-md-4">
+
+			</div>
+		</div>
+	</div>
+
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="headingFive">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+
+			<!-- Accordion Item #5 -->
+			<h4>Maintenance</h4>
+			
+			</button>
+		</h2>
+		<div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+			<div class="accordion-body">
+
+
+<div id="administrator" style="display:none1">
+<!--<p><h2>Maintenance:</h2></p>-->
+<script>
+function verify(event) {
+	if(document.getElementById("password").value==="mgrbpnaf") { 
+		return true;
+	} else {
+		alert("Login failure");
+		return false;
+	}
+}
+</script>	
+<div class="row">
+	<div class="col-md-12">
 		<div class="h-100 content">
 			<h3>Administrator panel</h3>
-			<p>The server component of the framework is dedicated to postprocessing of questionnaire datafiles. It has access to all questionnaires so in deployed system it needs to be password protected. At the moment it allows just for <a href="bpnaf.php">previewing</a> the content of quiestionnire files and go to selected one. 
+				<p> The administrator panel gives access to all created queestionires. It is password protected so please enter the password:
+<!-- 			The server component of the framework is dedicated to postprocessing of questionnaire datafiles. It has access to all questionnaires so it is password protected. 
+At the moment it allows just for previewing the content of quiestionnire files and go to selected one.  -->
+				
+			    <div class="container mt-5">
+			         <div class="row justify-content-center">
+			             <div class="col-md-6">
+			                 <!-- <h2 class="mb-4">Login</h2> -->
+			                 <form id="loginForm" action="bpnaf.php" onsubmit="return verify()">
+								 <!-- <div class="mb-3">
+			                         <label for="username" class="form-label">Username</label>
+			                         <input type="text" class="form-control" id="username" name="username" required>
+			                     </div> -->
+								 <div class="mb-3">
+			                         <label for="password" class="form-label">Password</label>
+			                         <input type="password" class="form-control" id="password" name="password" required>
+			                     </div>
+			                     <button type="submit" class="btn btn-primary">Login</button>
+			                 </form>
+			             </div>
+			         </div>
+				
+<!--				
 			<p>The questionnaire file represents tab separated items hence the preview in the textarea could be copied and pasted to spredsheet software. For example the columns sixth and seventh (F and G when pasting into A) represents the data for BPNAM chart. Be aware that floating point numbers are represented with the dot character as the decimal point separator! </p>
 			<p>The component requires the system to be installed on a web server with php enabled interpreter.</p>
-			<p>Note:</p>
+		<p>Note:</p>
 			<p>When deployed on a static (non-php-enabled) server, the system will operate like traditional desktop application. It means that storing anything automatically on that server will be not allowed. In such a case the previewing mentioned above will not work. Moreover, framework operation requires the user to store and load the questionnaires on his machine, what means that after filling the generated questionnaire one needs to save it on a local disk. In case of forgotting to save the last session is remembered by the browser. An example of such BPNAF deployment is on <a href="https://marmoszy.github.io/bpnaf">github.io</a>. It may serve rather as the working demo.</p>
+-->
+
 		</div>
 	</div>		
-</div>  <!-- end of row -->
+</div> <!-- end of row -->
+</div>
+
+
+			</div>
+		</div>
+	</div>
+
+  
+</div>
 
 </div> <!-- end of container -->
 
@@ -588,6 +737,36 @@ It is partly filled by an evaluator.
 	S4.3;;Utrzymanie systemów wenątrz-firmowych
 	S4.4;;Dystrubucja oraz zarządzanie sprzętem IT (Hardware oraz urządzenia pomocne)
 	`;
+	function convert_csv(s,fname) {
+		var s2='#;'+(fname||'')+'\n';
+		var ss=s.replaceAll('|','\n').split('\n');
+		for(var i=0;i<ss.length;i++) {
+			if(ss[i].indexOf('"')!=-1) {
+				ss[i] += ss[i+1];         // connect two lines if enter between quotes
+				i++;
+			}
+		}
+		for(var i=0;i<ss.length;i++) {
+			ss[i] = ss[i].replace(/(\r\n|\n|\r)/gm, "");
+			if(ss[i].length>1) {
+				var ss2=ss[i].split(/[;\t]/);
+				for(var j=ss2.length;j<14;j++) {
+					ss2.push("");
+				}
+				if(!isNaN(parseInt(ss2[0]))) {
+					ss2[5]=ss2[5].replace(/^\"+|\"+$/g, ''); // remove if in quotes
+					var n;
+					for(n=1;n<=4;n++) {
+						if(ss2[7+n].length>0) break;
+					}
+					s2+=ss2[4]+";"+ss2[3]+";"+ss2[5]+";"+ss2[6].trim()+";"+ss2[7].trim()+";"+(n>4?"0":n)+';'+ss2[13]+'\n';
+				}
+			}
+		}
+		if(debug) console.log(s2);
+		return(s2);
+	}
+	
 	function enableTab(id) { 	// Enable the tab character onkeypress (onkeydown) inside textarea
 		var el = document.getElementById(id);
 		el.onkeydown = function(e) {
@@ -665,6 +844,7 @@ It is partly filled by an evaluator.
 			
 		}
 	}
+		
 	function init_lists() {  
 	//fill ProcessHelpList from example1 internal variable		
 		var ss=example1.split("\n").slice(2,-2);
@@ -679,20 +859,22 @@ It is partly filled by an evaluator.
 		}
 	//fill CompanyHelpList from server directory
 		url = bpnafphp +"?fx=.";  // url for getting list of data directory
-		if(!window.location.protocol.startsWith("file:")) {
-			fetch(url, {cache:"reload"})
-			.then(response => {return response.text();})
-			.then(s => {
-				ss=s.match(/bpnaf_(.)+\.tsv/gi);                     // match bpnaf_*.tsv files
-				if(ss!=null) {
-					var el2=document.getElementById("CompanyHelpList");
-					for(var i=0;i<ss.length;i++) {
-						var option = document.createElement("option");   // creating new option
-						option.value = from_filename(ss[i]);
-						el2.appendChild(option);
+		if( !window.location.protocol.startsWith("file:") ) {
+			if(search_enabled>0) {
+				fetch(url, {cache:"reload"})
+				.then(response => {return response.text();})
+				.then(s => {
+					ss=s.match(/bpnaf_(.)+\.tsv/gi);                     // match bpnaf_*.tsv files
+					if(ss!=null) {
+						var el2=document.getElementById("CompanyHelpList");
+						for(var i=0;i<ss.length;i++) {
+							var option = document.createElement("option");   // creating new option
+							option.value = from_filename(ss[i]);
+							el2.appendChild(option);
+						}
 					}
-				}
-			})
+				})
+			}
 		} else {
 			console.log("Protocol: " + window.location.protocol);
 			for(var s in bpnaf5) {
@@ -758,6 +940,11 @@ It is partly filled by an evaluator.
 	function update() {
 		var ta = document.getElementById("ex7");  // update textarea
 		if(ta) {
+			if(ta.value.length>0 && ta.value[0]!='#' && !isNaN(parseInt(ta.value)) ) {
+				ta.value=convert_csv(ta.value);
+				process_add(null);
+				process_del(null);
+			}
 			update_table(ta.value);
 			update_map(ta.value);
 			update_mcs();
@@ -1050,6 +1237,8 @@ var svg_S=`
 		return(s);	
 	}
 	function on_submit() {
+		process_add(null);
+		process_del(null);
 		var company = document.getElementById("CompanyName").value;
 		if(company.includes(";")) {
 			company=company.split(/[;\t]/)[0];
@@ -1083,9 +1272,12 @@ var svg_S=`
 		}
 		return(confirm(s2));
 	}
+	main();
 	init_lists();
 	try {bpnaf5=JSON.parse(localStorage.bpnaf5);} catch(err) {}
 </script>
+
+
 
 </html>
 

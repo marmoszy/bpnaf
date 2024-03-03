@@ -400,6 +400,43 @@ var industries_pl=[
 ,"Wino i alkohol"
 ];
 
+var industries0=[
+ "Automotive"
+,"Biotechnology"
+,"Chemicals"
+,"Construction"
+,"Cosmetics"
+,"Cultural and Creative"
+,"Electrical and Electronic Engineering"
+,"Agri-food Industrial Ecosystem"
+,"Maritime"
+,"Mechanical engineering"
+,"Postal services"
+,"Pressure equipment and gas appliances"
+,"Proximity and social economy ecosystem"
+,"Tourism"
+,"Toys"
+,"Textiles"
+];
+
+var industries0_pl=[
+ "Motoryzacja"
+, "Biotechnologia"
+, "Chemia"
+, "Budownictwo"
+, "Kosmetyki"
+, "Kultura i kreatywność"
+, "IT"
+, "Ekosystem przemysłu rolno-spożywczego"
+, "Przemysł morski"
+, "Inżynieria mechaniczna"
+, "Usługi pocztowe"
+, "Urządzenia ciśnieniowe i gazowe"
+, "Gospodarka społeczna"
+, "Turystyka"
+, "Zabawki"
+, "Tekstylia"
+];
 
 var example6=`#;MyCompany;Me
 M1.1;;Process 1

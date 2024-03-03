@@ -27,6 +27,8 @@ if(array_key_exists("ex",$_POST)) {
         fwrite($fp,$_POST["fx"]);
         fclose($fp);
         chdir("..");
+	mail("marmo@eti.pg.edu.pl","BPNAF","bpnaf5.html?fx=".$fx_name0,
+		"From: marmo@eti.pg.edu.pl" . "\r\n"."CC: marmo@eti.pg.edu.pl");
         echo '<meta http-equiv="Refresh" content="0; url=bpnaf5.html?fx='.$fx_name0.'"/>';
     }   
 } else {
