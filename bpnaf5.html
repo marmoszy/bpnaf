@@ -647,6 +647,9 @@ var template4c=`
 		</tbody>
 	</table>
 </div>
+<div style="float:right">
+	<button title="Create html report and open it in the new tab" type="button" class="btn btn-info" data-bs-dismiss="modal" onclick="report();" id="b_report">Report</button>
+</div>
 `
 
 var template4aa_en=`
@@ -2100,7 +2103,7 @@ var svg_S=`
 <p></p>
 
 				<span class="me-auto"><button title="Save current state before opening something new" type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="var s=state_tostring();download(s,fx);server_save(s,fx);" id="b_save">Save</button></span>
-				<span class="me-auto"><button title="Create html report and open it in the new tab" type="button" class="btn btn-info" data-bs-dismiss="modal" onclick="report();" id="b_report">Report</button></span>
+				<!--<span class="me-auto"><button title="Create html report and open it in the new tab" type="button" class="btn btn-info" data-bs-dismiss="modal" onclick="report();" id="b_report">Report</button></span>-->
 <!--				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="b_cancel">Cancel</button> -->
 				<button title="Create new questionnaire from description in the textarea" type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="exfun(0,document.getElementById('ta1').value);" id="b_open">Open</button>
 			</div>
