@@ -1007,7 +1007,12 @@ function convert_csv(s,fname) {
 	if(debug) console.log(s2);
 	return(s2);
 }
-
+function text_decode(s) {
+	return s.replaceAll('\\','\n').replaceAll('~',';')
+}
+function text_encode(s) {
+	return s.replaceAll('\n','\\').replaceAll(';','~')
+}
 function read_processes(s) {
 	s=s.trimStart();
 	if(s[0]!='#') s=convert_csv(s);
@@ -1035,7 +1040,7 @@ function read_processes(s) {
 				n++; // empty field
 				n++; // empty field
 				n++; // empty field
-				n++; rc0=ss2.length>n && ss2[n].length>0 ?ss2[n].replaceAll('\\','\n'):'';  // general recommnedations
+				n++; rc0=ss2.length>n && ss2[n].length>0 ?text_decode(ss2[n]):'';  // general recommnedations
 				continue;
 			}
 			var n=0; vid.push(ss2[n]);   // ids
@@ -1050,8 +1055,8 @@ function read_processes(s) {
 				n++; t.push(ss2.length>n?ss2[n]:0);  
 			}
 			vst.push(t);
-			n++; rc1.push(ss2.length>n?ss2[n].replaceAll('\\','\n'):'');   // a recommnedation area
-			n++; rc2.push(ss2.length>n?ss2[n].replaceAll('\\','\n'):'');   // a recommendation
+			n++; rc1.push(ss2.length>n?text_decode(ss2[n]):'');   // a recommnedation area
+			n++; rc2.push(ss2.length>n?text_decode(ss2[n]):'');   // a recommendation
 		}
 	}
 	company=com; evaluator=ev; data=d; enabled=e; st_weights=w; industry=ind; compsize=csize; compcountry=cc;
@@ -1349,7 +1354,7 @@ function state_tostring(flag) {
 		s+='\t'+(flag?'='+(100*st_weights[i]).toFixed()+"/100":st_weights[i]);  	
 	} 
 	s+='\t'+'\t'+industry+'\t'+compsize+'\t'+compcountry;  // 1 empty + company info
-	s+='\t'+'\t\t\t'+recommendation0.replaceAll('\n','\\');  // 3 empty + general recommendation
+	s+='\t'+'\t\t\t'+text_encode(recommendation0);  // 3 empty + general recommendation
 	s+='\n';
 	for(var i=0;i<ids.length;i++) {  // for all processes
 		s+= ids[i]+'\t'+categories[i]+'\t'+processes[i]+'\t'
