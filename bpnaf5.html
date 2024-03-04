@@ -721,13 +721,13 @@ function svg_createpoint(svg,id,s,color,r,color2,title) { // building svg circle
 	var el=document.getElementById(id);
 	if(!el) {
 		el = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-		el.setAttribute('fill',color);
-		el.setAttribute('stroke-width',1);
-		el.setAttribute('stroke',color2||'darkblue');
 		el.setAttribute('id',id);		
-		el.setAttribute("r",r||6);				
 		svg.appendChild(el);
 	}
+	el.setAttribute('fill',color);
+	el.setAttribute('stroke-width',1);
+	el.setAttribute('stroke',color2||'darkblue');
+	el.setAttribute("r",r||6);				
 	var ss=s.split(",");
 	el.setAttribute("cx",ss[0]);				
 	el.setAttribute("cy",ss[1]);
@@ -751,13 +751,13 @@ function svg_createrect(svg,id,s,color,t,t2) { // building svg rect with coords 
 	var el=document.getElementById(id);
 	if(!el) {
 		el = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-		el.setAttribute('stroke','darkblue');
-		el.setAttribute('fill',color);
-		el.setAttribute('fill-opacity',0.6);
-		el.setAttribute('stroke-width',1);
 		el.setAttribute('id',id);
 		svg.appendChild(el);
 	}
+	el.setAttribute('stroke','darkblue');
+	el.setAttribute('fill',color);
+	el.setAttribute('fill-opacity',0.6);
+	el.setAttribute('stroke-width',1);
 	var ss=s.split(",");
 	el.setAttribute("x",ss[0]);
 	el.setAttribute("y",ss[1]);
@@ -857,6 +857,7 @@ function update() {
 						var s2 = ids[j] + " " + processes[j]
 								+"\n(w:"+weights[j]+", t:"+trends[j]+", s:"+x+", i:"+y+")";
 						//if(debug) console.log(ids[j]+" "+c2);
+						console.log(s2+" "+r);
 						svg_createpoint(bpnam,""+ids[j],s,c1,r,c2,s2);
 					}	
 				}
