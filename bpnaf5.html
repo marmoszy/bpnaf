@@ -838,6 +838,13 @@ function update() {
    		var el4=document.getElementById(ids[j]+"_name2");
 		if(el3 && el4) el4.innerHTML=el3.innerHTML; else {if(debug) console.log("Error:\n"+el3+'\n'+el4);}
 		
+		function fuzzify_xy(x,y,id) {
+			if (id[0]=='M') x -= 0.3;
+			else if (id[0]=='C') x -= 0.2;
+			else x -= 0.1;
+			return([x,y]);
+		}
+		
 		var radios = document.getElementsByName(ids[j]+"_r");  // radios value for bpnam
 		if(radios) {
 			for (var i = 0, length = radios.length; i < length; i++) {
@@ -849,13 +856,14 @@ function update() {
 					if(!isFinite(y)) y=0; // force drawing on 0 axis MM 28-12-20223
 					if(isFinite(y)) {
 						xy.push([x,y,j]);
-						var s=''+(100*x)+','+(500-50*y);
 						// if(debug) console.log(ids[j]+": ("+x+","+y+") "+s);
 						var c1 = ids[j][0]=='M'?colors2[0]:ids[j][0]=='C'?colors2[1]:colors2[2];
 						var r = weights[j]>4 ? 6 : weights[j]>2 ? 5 : 4;
 						var c2 = trends[j]>0 ? 'darkblue' : trends[j]<0 ? 'red' : 'darkblue';
 						var s2 = ids[j] + " " + processes[j]
 								+"\n(w:"+weights[j]+", t:"+trends[j]+", s:"+x+", i:"+y+")";
+						var xyf = fuzzify_xy(x,y,ids[j]);
+						var s=''+(100*xyf[0])+','+(500-50*xyf[1]);
 						//if(debug) console.log(ids[j]+" "+c2);
 						console.log(s2+" "+r);
 						svg_createpoint(bpnam,""+ids[j],s,c1,r,c2,s2);
