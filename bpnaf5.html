@@ -196,6 +196,8 @@ var intensities=[];
 var recommendation0="";
 var recommendations1=[];
 var recommendations2=[];
+var recommendations3=[];
+var recommendations4=[];
 var company="",industry="",compsize="",compcountry="";
 var evaluator="";
 var data="";
@@ -253,9 +255,9 @@ var lang_dict={
 	,"b_next":["Next","Następny","Próximo","Nächste"]
 	,"h1_":[
 		 ["Process Level","Process Name","Weight","Trend","Structu&shy;red","Structured with ad-hoc exceptions","Unstructured with predefined fragments","Unstruc&shy;tured","Knowledge Intensity"]
-		,["Poziom procesu","Nazwa procesu","Waga","Trend","Ustruktu&shy;ryzowane","Ustruktu&shy;ryzowane z wyjątkami","Nieustruk&shy;turyzowane z fragmentami","Nieustruk&shy;turyzowane","Intensywność wiedzy"]
-		,["Nivel de proceso","Nombre del proceso","Peso","Tendencia","Estructu&shy;rado","Estructu&shy;rado con excepciones","Desestructu&shy;rado con fragmentos","Desestructu&shy;rado","Intensidad del conoci&shy;miento"]
-		,["Prozessebene", "Prozessname", "Gewich&shy;tung", "Trend", "Struktu&shy;riert", "Strukturiert mit Ausnahmen", "Unstruk&shy;turiert mit Fragmenten", "Unstruk&shy;turiert", "Wissen&shy;sintensität"]
+		,["Poziom procesu","Nazwa procesu","Waga","Trend","Ustruktu&shy;ryzowane","Ustruktu&shy;ryzowane z wyjąt&shy;kami ad-hoc","Nieustruk&shy;turyzowane z pre&shy;definiowanymi fragmentami","Nieustruk&shy;turyzowane","Intensywność wiedzy"]
+		,["Nivel de proceso","Nombre del proceso","Peso","Tendencia","Estructu&shy;rado","Estructu&shy;rado con excepciones ad hoc","Desestructu&shy;rado con fragmentos predefinidos","Desestructu&shy;rado","Intensidad del conoci&shy;miento"]
+		,["Prozessebene", "Prozessname", "Gewich&shy;tung", "Trend", "Struktu&shy;riert", "Strukturiert mit Ad-hoc-Ausnahmen", "Unstruk&shy;turiert mit vorde&shy;finierten Fragmenten", "Unstruk&shy;turiert", "Wissen&shy;sintensität"]
 	]
 	,"h2_":[
 		 ["Statement","Do not agree","Partly agree","Mostly agree","Fully agree","Knowledge<br>Intensity"]
@@ -504,7 +506,7 @@ var template1c_finalize=`
 	<input type="button" class="btn btn-success" value="BPNAM" onclick="show_tab('bpnam-tab');" style="margin-right:12px;float:left"/>
 
 	<div style="float:right">
-		<button class="btn btn-danger" id="b_fine" onclick="if(confirm(get_string('s_fine'))){enabled=0;}else{enabled=0;} update();" style="margin-left:12px">Finalize</button>
+		<button class="btn btn-danger" id="b_fine" onclick="if(confirm(get_string('s_fine'))){enabled=0;}else{enabled=2;} update();" style="margin-left:12px">Finalize</button>
 	</div>
 </div>
 `;
@@ -604,7 +606,9 @@ var template2c=`
 
 var template3=''; // for bpnaf-div initial representation from html code (bpnam & home tabs) see: main()
 
-var template4a=`
+// recomendations templates
+
+var template4a=`  
 <div class="table-responsive">          
 	<table class="table w-auto">
 		<thead>
@@ -621,8 +625,8 @@ var template4a=`
 var template4b=`
 		<tr style="text-align:center">
 			<td>$DD</td>
-			<td id="$NN_q0" style="color:red"></td>
-			<td style="border: 1pt solid lightgray;background-color:$CC">$NN</td>
+			<td id="$NN_q0" style="color:red" title=""></td>
+			<td style="border: 1pt solid lightgray;background-color:$CC; color:blue" title="$NN $OO">$NN</td>
 			<td style="border: 1pt solid lightgray;text-align:left">
 				<!-- <span id="$NN_q1"  class="atextarea" role="textbox" contenteditable oninput="rc_changed(this)" placeholder="$OO"></span>   -->
 				<textarea id="$NN_q1" class="form-control" rows="3" oninput="rc_changed(this)" placeholder="$OO"></textarea>
@@ -710,6 +714,8 @@ function rc_changed(el) {
 			if(ids[j]==pid) {
 				if(n=='1') recommendations1[j]=el.value;
 				else if(n=='2') recommendations2[j]=el.value;
+				else if(n=='3') recommendations3[j]=el.value;
+				else if(n=='4') recommendations4[j]=el.value;
 			}
 		}
 	}
@@ -736,7 +742,7 @@ function svg_createpoint(svg,id,s,color,r,color2,title) { // building svg circle
 	var el=document.getElementById(id+"_title");
 	if(!el) {
 		el = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-		el.setAttribute('stroke','black');
+		el.setAttribute('stroke','none');
 		el.setAttribute('fill','black');
 		//el.setAttribute('stroke-width',1);
 		el.setAttribute('id',id+"_title");		
@@ -839,9 +845,10 @@ function update() {
 		if(el3 && el4) el4.innerHTML=el3.innerHTML; else {if(debug) console.log("Error:\n"+el3+'\n'+el4);}
 		
 		function fuzzify_xy(x,y,id) {
-			if (id[0]=='M') x -= 0.3;
+			if (id[0]=='M') x -= 0.35;
 			else if (id[0]=='C') x -= 0.2;
-			else x -= 0.1;
+			else x -= 0.05;
+			x -= parseFloat(id.substring(1))/20;
 			return([x,y]);
 		}
 		
@@ -865,7 +872,7 @@ function update() {
 						var xyf = fuzzify_xy(x,y,ids[j]);
 						var s=''+(100*xyf[0])+','+(500-50*xyf[1]);
 						//if(debug) console.log(ids[j]+" "+c2);
-						console.log(s2+" "+r);
+						//console.log(s2+" "+r);
 						svg_createpoint(bpnam,""+ids[j],s,c1,r,c2,s2);
 					}	
 				}
@@ -968,6 +975,7 @@ function update() {
 		el=document.getElementById(ids[j]+"_q0");  // quarter update
 		if(el) {
 			el.innerHTML=quarter(structured[j],intensity[j]);
+			el.setAttribute("title",default_recommendation(j))
 		} 
 		el=document.getElementById(ids[j]+"_q1");  // recommendation area
 		if(el) {
@@ -976,6 +984,16 @@ function update() {
 		el=document.getElementById(ids[j]+"_q2");  // recommendation
 		if(el) {
 			el.value=recommendations2[j];
+			el.placeholder=default_recommendation(j);
+		} 
+		el=document.getElementById(ids[j]+"_q3");  // recommendation
+		if(el) {
+			el.value=recommendations3[j];
+			el.placeholder=default_recommendation(j);
+		} 
+		el=document.getElementById(ids[j]+"_q4");  // recommendation
+		if(el) {
+			el.value=recommendations4[j];
 			el.placeholder=default_recommendation(j);
 		} 
 	}	
@@ -1026,7 +1044,8 @@ function read_processes(s) {
 	s=s.trimStart();
 	if(s[0]!='#') s=convert_csv(s);
 	var ss=s.replaceAll('|','\n').split('\n');
-	var vid=[],vcat=[];vpr=[];vws=[];vts=[];vx=[],vi=[],vst=[],com="",ev="",d="",w=[],ind="",csize="",cc="";rc0="";rc1=[];rc2=[];
+	var vid=[],vcat=[];vpr=[];vws=[];vts=[];vx=[],vi=[],vst=[],com="",ev="",d="",w=[],ind="",csize="",cc="";
+	var rc0="";rc1=[];rc2=[],rc3=[],rc4=[];
 	for(var i=0;i<ss.length;i++) {
 		ss[i] = ss[i].replace(/(\r\n|\n|\r)/gm, "");
 		if(ss[i].length>1) {
@@ -1049,7 +1068,7 @@ function read_processes(s) {
 				n++; // empty field
 				n++; // empty field
 				n++; // empty field
-				n++; rc0=ss2.length>n && ss2[n].length>0 ?text_decode(ss2[n]):'';  // general recommnedations
+				n++; rc0=ss2.length>n && ss2[n].length>0 ?text_decode(ss2[n]):'';  // general recommnedations rc0
 				continue;
 			}
 			var n=0; vid.push(ss2[n]);   // ids
@@ -1066,11 +1085,14 @@ function read_processes(s) {
 			vst.push(t);
 			n++; rc1.push(ss2.length>n?text_decode(ss2[n]):'');   // a recommnedation area
 			n++; rc2.push(ss2.length>n?text_decode(ss2[n]):'');   // a recommendation
+			n++; rc3.push(ss2.length>n?text_decode(ss2[n]):'');   // a recommendation
+			n++; rc4.push(ss2.length>n?text_decode(ss2[n]):'');   // a recommendation
 		}
 	}
 	company=com; evaluator=ev; data=d; enabled=e; st_weights=w; industry=ind; compsize=csize; compcountry=cc;
 	ids=vid; categories=vcat; processes=vpr; weights=vws; trends=vts; structured=vx; 
-	intensity=vi; intensities=vst; recommendations1=rc1; recommendations2=rc2; recommendation0=rc0;
+	intensity=vi; intensities=vst; 
+	recommendation0=rc0; recommendations1=rc1; recommendations2=rc2; recommendations3=rc3; recommendations4=rc4; 
 }
 
 function create_forms(flag) {
@@ -1271,6 +1293,7 @@ function update2(s,k) { // s -file content, k - data number ; uses global ids
 
 function report() {
 	var fname = (fx==null?(bpnafname+"_default"):fx);
+	//var fname = bpnafname+"_"+company+(evaluator!=""?(';'+evaluator):'');
 	fname =fname.split('.')[0] + ".html";
 	var s = '<title>'+fname.split('.')[0]+'</title><body style="padding:20px 20px 20px 10px">';
 	s += '<p><center>'+document.getElementById("header").outerHTML+'</center><br><br></p>';
@@ -1332,11 +1355,11 @@ function report() {
 	s += '</body>';
 	server_save(s,fname);
 	//var tab = window.open('about:blank', '_blank');tab.document.write(s); tab.document.close();
-    if(window.location.protocol.startsWith("file:")||document.location.hostname.includes(".github.io")) {
+    //if(window.location.protocol.startsWith("file:")||document.location.hostname.includes(".github.io")) {
 		download(s,fname);
-	} else {
-		openAsPageInNewTab(s, path + fname); 
-	}
+	//} else {
+	//	openAsPageInNewTab(s, path + fname); 
+	//}
 }
 
 function openAsPageInNewTab(pageContent,href) {
@@ -1371,7 +1394,8 @@ function state_tostring(flag) {
 		for(var j=0;j<intensities[i].length;j++) {  // all intensities
 			s+='\t'+intensities[i][j];  				
 		}
-		s+= '\t'+recommendations1[i].replaceAll('\n','\\')+'\t'+recommendations2[i].replaceAll('\n','\\');
+		s+= '\t'+text_encode(recommendations1[i])+'\t'+text_encode(recommendations2[i]);
+		s+= '\t'+text_encode(recommendations3[i])+'\t'+text_encode(recommendations4[i]);
 		if(flag) s+='\t\t'+(lang=="pl"?f1pl:f1en)+(-1*(i+1))+(lang=="pl"?f2pl:f2en);
 		s+='\n';
 	}
@@ -1484,7 +1508,7 @@ function readFile(e) {  // local file reader
 		var s=e.target.result;
 		if(s.startsWith(bom)) s=s.substring(bom.length);
 		if(s[0]!='#') s=convert_csv(s,file.name.slice(0,-4));
-		fx=bpnafname+"_"+"Default"+ext;
+		fx=bpnafname+"_"+"default"+ext;
 // ----- Warning: this allows storing local files on the server !!!
 		var ss=s.split(/[;\t]/);  
 		fx = bpnafname.toUpperCase()+"_"+(ss.length>1 ? ss[1] : '') + (ss.length>2 ? (';'+ss[2]) :'')+ext;
@@ -1645,14 +1669,16 @@ try {
 			}
 		}
 } catch(err) {if(debug) console.log(err.message + "\nerror ->" + key+" "+s1);}
+	
 	}
 
+	update();
 }
 function init(s) {
 	read_processes(s);
 	create_forms(enabled);
 	lang_changed(lang);
-	update();	
+	// update();	// moved to lang_changed
 }
 function pre_init() {
 	if(template3==='') {
@@ -1798,9 +1824,25 @@ function svg_copy(e) {
  <line x1="0" y1="450" x2="400" y2="450" style="fill:none;stroke:lightgray;stroke-width:1" />
 
  <text x="185" y="295" fill="red">B</text>
+ <text x="185" y="15" fill="red">B</text>
+ <text x="5" y="15" fill="red">B</text>
+ <text x="5" y="295" fill="red">B</text>
+ 
  <text x="185" y="315" fill="red">A</text>
+ <text x="185" y="495" fill="red">A</text>
+ <text x="5" y="495" fill="red">A</text>
+ <text x="5" y="315" fill="red">A</text>
+ 
  <text x="205" y="295" fill="red">D</text>
+ <text x="205" y="15" fill="red">D</text>
+ <text x="385" y="15" fill="red">D</text>
+ <text x="385" y="295" fill="red">D</text>
+ 
  <text x="205" y="315" fill="red">C</text>
+ <text x="205" y="495" fill="red">C</text>
+ <text x="385" y="495" fill="red">C</text>
+ <text x="385" y="315" fill="red">C</text>
+ 
  
  <text x="97" y="518" fill="black">1</text>
  <text x="197" y="518" fill="black">2</text>
