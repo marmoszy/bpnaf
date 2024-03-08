@@ -625,7 +625,7 @@ var template4a=`
 var template4b=`
 		<tr style="text-align:center">
 			<td>$DD</td>
-			<td id="$NN_q0" style="color:red" title=""></td>
+			<td id="$NN_q0" style="border: 1pt solid lightgray;color:red" title=""></td>
 			<td style="border: 1pt solid lightgray;background-color:$CC; color:blue" title="$NN $OO">$NN</td>
 			<td style="border: 1pt solid lightgray;text-align:left">
 				<!-- <span id="$NN_q1"  class="atextarea" role="textbox" contenteditable oninput="rc_changed(this)" placeholder="$OO"></span>   -->
@@ -974,8 +974,10 @@ function update() {
 	for(var j=0;j<ids.length;j++) {  // Quarter recommendations for all processes
 		el=document.getElementById(ids[j]+"_q0");  // quarter update
 		if(el) {
-			el.innerHTML=quarter(structured[j],intensity[j]);
+			q=quarter(structured[j],intensity[j]);
+			el.innerHTML=q;
 			el.setAttribute("title",default_recommendation(j))
+			el.style["background-color"]=(q=='A'||q=='B')?"#F0F8FF80":"#FFF0F580";
 		} 
 		el=document.getElementById(ids[j]+"_q1");  // recommendation area
 		if(el) {
@@ -1336,20 +1338,26 @@ function report() {
 	s += '<p><center>';
 	//s += document.getElementById("rc_container").innerHTML;
 	s += template4aa;
-	for(i=0;i<ids.length;i++) {
+	for(var i=0,j=0;i<ids.length;i++) {
 		var c=ids[i][0];
 		var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
-		s+="<tr>";
-		s+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
-		s+=" <td style='text-align:right;'>"+(i+1)+"</td>";
-		s+=" <td style='color:red'>"+quarter(structured[i],intensities[i])+"</td>";
-		s+=" <td style='color:blue;"+cc+"'>"+ids[i]+"</td>";
-		s+=" <td style='text-align:left'>"+recommendations1[i]+"</td>";
-		s+=" <td style='text-align:left'>"+recommendations2[i]+"</td>";
-		s+="</tr>"
+		if( recommendations1[i]!="" || recommendations2[i]!="" ) {
+			j += 1;
+			s+="<tr>";
+			s+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
+			s+=" <td style='text-align:right;'>"+(i+1)+"</td>";
+			if(i==4) {console.log("quarter: "+(i)+" "+ids[i]+" "+quarter(structured[i],intensity[i]))}
+			s+=" <td style='color:red'>"+quarter(structured[i],intensity[i])+"</td>";
+			s+=" <td style='color:blue;"+cc+"'>"+ids[i]+"</td>";
+			s+=" <td style='text-align:left'>"+recommendations1[i]+"</td>";
+			s+=" <td style='text-align:left'>"+recommendations2[i]+"</td>";
+			s+="</tr>"
+		}
 	}
-	s += template4cc;
-	s += '<tr style="width=100%"><td colspan=5>'+recommendation0+'</td></tr>';
+	if(recommendation0!="") {
+		s += template4cc;
+		s += '<tr style="width=100%"><td colspan=5>'+recommendation0+'</td></tr>';
+	}
 	s += template1c;
 	s+='</center></p>';
 	s += '</body>';
