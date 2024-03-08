@@ -1,4 +1,4 @@
-### Business Processes Nature Assesment Framework
+## Business Processes Nature Assesment Framework
 
 The Business Process Nature Assessment Framework (BPNAF)  enables the quick and efficient assessment of the nature of business processes in an organization in terms of their unpredictability and knowledge intensity. The presentation of the results enables the objective recommendation of the selection of implementation methodologies, HRM policies, or IT systems supporting BPM in line with the real nature of business processes implemented in the organization, in a way that is understandable to both experts and non-experts.
  
