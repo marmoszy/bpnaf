@@ -97,23 +97,50 @@
 
 <div id="info" style="display:none1;">
 <p>
-<p>The Business Process Nature Assessment Framework (BPNAF)  enables the quick and efficient assessment of the nature of business processes in an organization in terms of their unpredictability and knowledge intensity. The presentation of the results enables the objective recommendation of the selection of implementation methodologies, HRM policies, or IT systems supporting BPM in line with the real nature of business processes implemented in the organization, in a way that is understandable to both experts and non-experts.
-<p>This framework interface supports <a href="bpnaf5.html?lang=en">English</a>, <a href="bpnaf5.html">Polish</a> (default), <a href="bpnaf5.html?lang=es">Spanish</a> and <a href="bpnaf5.html?lang=de">German</a>.  It contains: (1) questionnaire generator for dedicated company and evaluating person, (2) system for completing the questionnaire with option of previewing all questionnaires for one entity (3) server-side and local-side questionnaire management including importing the results from prioprietary files and report genaration. Generated report contains process map and results matrix (BPNAM) in a form of two charts. As a starting point you can go through several examples available below.
-<p>The method overview can be found in <i>Marek Szelągowski,Practical assessment of the nature of business processes, Information Systems and e-Business Management</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs.pdf">pdf</a>) or
-<a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>
+<p>
+	The Business Process Nature Assessment Framework (BPNAF)  enables the quick and efficient assessment of the nature of business processes in an organization in terms of their unpredictability and knowledge intensity. The presentation of the results enables the objective recommendation of the selection of implementation methodologies, HRM policies, or IT systems supporting BPM in line with the real nature of business processes implemented in the organization, in a way that is understandable to both experts and non-experts.
+<p>
+	This framework contains: (1) questionnaire generator for dedicated company and evaluating person, (2) system for completing the questionnaire with option of previewing all questionnaires for one entity (3) questionnaire management including creation of the report. Generated report contains process map and results matrix (BPNAM) in a form of two charts and recommendations. As a starting point you can go through several examples available below.
+<p>
+	The framework interface supports <a href="bpnaf5.html?ex=example4&lang=en">English</a>, <a href="bpnaf5.html?ex=example7">Polish</a> (default), <a href="bpnaf5.html?ex=example8&lang=es">Spanish</a> and <a href="bpnaf5.html?ex=example9&lang=de">German</a>.
+<p>
+	The method overview can be found in <i>Marek Szelągowski,Practical assessment of the nature of business processes, Information Systems and e-Business Management</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs.pdf">pdf</a>) or <a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>.
 </div>
 
 
 			</div>
 		</div>
 	</div>
+
+	<div class="accordion-item">
+		<h2 class="accordion-header" id="headingOneA">
+			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneA" aria-expanded="false" aria-controls="collapseOneA">
+
+			<!-- Accordion Item #1a -->
+			<h4>Getting started</h4>
+
+			</button>
+		</h2>
+		<div id="collapseOneA" class="accordion-collapse collapse" aria-labelledby="headingOneA" data-bs-parent="#accordionExample">
+			<div class="accordion-body">
+
+<div id="info" style="display:none1;">
+<p>
+ Readme under construction. You can go to three examples below.
+
+</div>
+
+			</div>
+		</div>
+	</div>
+
   
 	<div class="accordion-item">
 		<h2 class="accordion-header" id="headingTwo">
 			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 				
 			<!-- Accordion Item #2 -->
-			<h4>Getting started examples</h4>
+			<h4>Three examples</h4>
 			
 			</button>
 		</h2>
@@ -122,7 +149,6 @@
 				
 
 <div id="examples" style="display:none1;">
-
 
 <div class="row">
 	<div class="col-sm-4">
@@ -297,13 +323,14 @@ It is partly filled by an evaluator.
 			</div>
 		</div>
 	</div>
-  
+
+<!--  
 	<div class="accordion-item">
 		<h2 class="accordion-header" id="headingThree">
 			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-
+-->
 			<!-- Accordion Item #3 -->
-			<h4>Functionality examples</h4>
+<!--			<h4>More examples</h4>
 
 			</button>
 		</h2>
@@ -390,12 +417,14 @@ It is partly filled by an evaluator.
 			</ul>
 		</div>
 	</div>
-</div> <!-- end of row -->
-</div>
+</div> --><!-- end of row -->
+<!--</div>
 
 			</div>
 		</div>
 	</div>
+
+-->
 
 	<div class="accordion-item">
 		<h2 class="accordion-header" id="headingFour">
@@ -657,7 +686,7 @@ At the moment it allows just for previewing the content of quiestionnire files a
 			         <div class="row justify-content-center">
 			             <div class="col-md-6">
 			                 <!-- <h2 class="mb-4">Login</h2> -->
-			                 <form id="loginForm" action="bpnaf.php" onsubmit="return verify()">
+			                 <form id="loginForm" action="bpnaf.php" method="post" onsubmit="return verify()">
 								 <!-- <div class="mb-3">
 			                         <label for="username" class="form-label">Username</label>
 			                         <input type="text" class="form-control" id="username" name="username" required>

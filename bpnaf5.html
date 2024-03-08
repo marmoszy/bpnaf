@@ -110,7 +110,10 @@ S2.1;;Proces promocji w mediach społecznościowych;4;1;3;;4;4;4;4;4;4;4;4;4;1
 S2.2;;Proces prowadzenia firmowego bloga;4;2;3;;4;4;4;4;4;4;3;3;3;3
 S2.3;;Proces organizacji meetupów;2;1;4;;4;4;4;4;4;4;4;4;4;3
 `
-var example4='#;Firma SA;Marek Oceaniusz|M1.1;;Proces 1|C1.1;;Proces 2|C1.2;;Proces 3|S1.1;;Proces 4';
+var example4='#;Company Inc.;Mark Evaluator|M1.1;;Process 1;1;-1;1;1|C1.1;;Process 2;2;-2;2;6|C1.2;;Process 3;3;1;3;7|S1.1;;Process 4;6;2;4;8';
+var example7='#;Firma S.A.;Marek Ocenty|M1.1;;Proces 1;1;-1;1;1|C1.1;;Proces 2;2;-2;2;6|C1.2;;Proces 3;3;1;3;7|S1.1;;Proces 4;6;2;4;8';
+var example8='#;Compañía de responsabilidad limitada;Mario Assessmendero|M1.1;;Proceso 1;1;-1;1;1|C1.1;;Proceso 2;2;-2;2;6|C1.2;;Proceso 3;3;1;3;7|S1.1;;Proceso 4;6;2;4;8';
+var example9='#;Gesellschaft mit beschränkter Haftung;Mark Bewertunger|M1.1;;Prozess 1;1;-1;1;1|C1.1;;Prozess 2;2;-2;2;6|C1.2;;Prozess 3;3;1;3;7|S1.1;;Prozess 4;6;2;4;8';
 
 var example5=`
 #			3.03.2024, 20:21:34	2			0	0.3	0.65	1		0	0	0				Dobór pracowników i metod rozwoju pracowników zgodnie z charakterem procesów. \\Wdrożenie Systemu BPM/iBPM integrującego różne źródła danych. Identyfikacja procesów lub ich fragmentów możliwych do automatyzacji przez RPA.\\Zarządzanie wiedzą z wykorzystaniem Systemu KMS repozytoriów wiedzy zasilanych danymi on line i offline.\\
@@ -1337,28 +1340,32 @@ function report() {
 	s += '<p><center>'+document.getElementById("svg_container").innerHTML+'</center></p>'
 	s += '<p><center>';
 	//s += document.getElementById("rc_container").innerHTML;
-	s += template4aa;
 	for(var i=0,j=0;i<ids.length;i++) {
-		var c=ids[i][0];
-		var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
-		if( recommendations1[i]!="" || recommendations2[i]!="" ) {
-			j += 1;
-			s+="<tr>";
-			s+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
-			s+=" <td style='text-align:right;'>"+(i+1)+"</td>";
-			if(i==4) {console.log("quarter: "+(i)+" "+ids[i]+" "+quarter(structured[i],intensity[i]))}
-			s+=" <td style='color:red'>"+quarter(structured[i],intensity[i])+"</td>";
-			s+=" <td style='color:blue;"+cc+"'>"+ids[i]+"</td>";
-			s+=" <td style='text-align:left'>"+recommendations1[i]+"</td>";
-			s+=" <td style='text-align:left'>"+recommendations2[i]+"</td>";
-			s+="</tr>"
+		if( recommendations1[i]=="" && recommendations2[i]=="" ) {j++;}
+	}
+	if(j<ids.length || recommendation0!=0) {
+		s += template4aa;
+		for(var i=0,j=0;i<ids.length;i++) {
+			var c=ids[i][0];
+			var cc="background-color:"+colors[(c=='M')?0:(c=='C')?1:(c=='S')?2:3]+";";
+			if( recommendations1[i]!="" || recommendations2[i]!="" ) {
+				j += 1;
+				s+="<tr>";
+				s+="<tr style='text-align:center;border-bottom: 1pt solid lightgray;'>";
+				s+=" <td style='text-align:right;'>"+(i+1)+"</td>";
+				s+=" <td style='color:red'>"+quarter(structured[i],intensity[i])+"</td>";
+				s+=" <td style='color:blue;"+cc+"'>"+ids[i]+"</td>";
+				s+=" <td style='text-align:left'>"+recommendations1[i]+"</td>";
+				s+=" <td style='text-align:left'>"+recommendations2[i]+"</td>";
+				s+="</tr>"
+			}
 		}
+		if(recommendation0!="") {
+			s += template4cc;
+			s += '<tr style="width=100%"><td colspan=5>'+recommendation0+'</td></tr>';
+		}
+		s += template1c;
 	}
-	if(recommendation0!="") {
-		s += template4cc;
-		s += '<tr style="width=100%"><td colspan=5>'+recommendation0+'</td></tr>';
-	}
-	s += template1c;
 	s+='</center></p>';
 	s += '</body>';
 	server_save(s,fname);
