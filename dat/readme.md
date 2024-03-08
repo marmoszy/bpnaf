@@ -1,4 +1,4 @@
-## BPNAF dat dir
+## BPNAF data directory
 The directory contains example BPNAF data files. They have extension tsv and contains tab separtated files according to following specification
 
 #### First line (configuration data):
