@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>BPNAF v1.4</title>
+	<title>BPNAF v1.5</title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1"/>
 
@@ -48,6 +48,197 @@
 
 	var search_enabled=0;
 
+	var lang="pl";
+	var lang_idx={"en":0,"pl":1,"es":2,"de":3};
+	var lang_dict={
+		 "lang_name":["English","Polski","Español","Deutsch"]
+		,"title":["Business Process Nature Assessment Framework"
+			,"Analiza natury procesów biznesowych"
+			,"Evaluación de la Naturaleza de los Procesos de Negocio"
+			,"Rahmenwerk zur Bewertung der Natur von Geschäftsprozessen"
+		]
+		,"intro":["Intro","Wprowadzenie","Introducción","Einführung"]
+		,"instruction":["Getting started","Instrukcja","Instrucción","Anweisung"]
+		,"examples":["Examples","Przykłady","Ejemplos","Beispiele"]
+		,"example":["Example","Przykład","Ejemplo","Beispiel"]
+		,"ex1_paragraph":[`This <a href="bpnaf5.html?ex=example1">example</a> contains the questionnaire contatinng 23 sample processes. It is prepared to be filled by an evaluator.`
+			,`Ten <a href="bpnaf5.html?ex=example1">przykład</a> zawiera kwestionariusz zawierający 23 przykładowe procesy. Jest przygotowany do wypełnienia przez osobę oceniającą.`
+			,`Este <a href="bpnaf5.html?ex=example1">ejemplo</a> contiene el cuestionario que contiene 23 procesos de muestra. Está preparado para ser llenado por un evaluador`
+			,`Dieses <a href="bpnaf5.html?ex=example1">Beispiel</a> enthält den Fragebogen mit 23 Beispielprozessen. Es ist für die Befüllung durch einen Gutachter vorbereitet.`]
+		,"ex2_paragraph":[`This <a href="bpnaf5.html?ex=example5">example</a> contains the questionnaire containing 18 sample processes. It is partly filled by an evaluator.`
+			,`Ten <a href="bpnaf5.html?ex=example5">przykładowy</a> kwestionariusz zawiera 18 procesów. Jest częściowo wypełniony - wymaga uzupełnienia w zakresie wiedzochłonności.`,`Este <a href="bpnaf5.html?ex=example5">ejemplo</a> contiene el cuestionario que contiene 18 procesos de muestra. Está parcialmente ocupado por un evaluador.`
+			,`Dieses <a href="bpnaf5.html?ex=example5">Beispiel</a> enthält den Fragebogen mit 18 Beispielprozessen. Es wird teilweise von einem Gutachter ausgefüllt.`]
+		,"ex3_paragraph":[`This <a href="bpnaf5.html?ex=example3">example</a> contains the questionnaire contatinng 8 sample processes. It is already filled by an evaluator.`
+			,`Ten <a href="bpnaf5.html?ex=example3">przykład</a> zawiera kwestionariusz zawierający 8 przykładowych procesów. Jest już wypełniony przez osobę oceniającą.`
+			,`Este <a href="bpnaf5.html?ex=example3">ejemplo</a> contiene el cuestionario que contiene 8 procesos de muestra. Ya está lleno por un evaluador.`
+			,`Dieses <a href="bpnaf5.html?ex=example3">Beispiel</a> enthält den Fragebogen mit 8 Beispielprozessen. Es ist bereits durch einen Gutachter ausgefüllt.`]
+		,"creator":["Questionnaires Creator","Generator kwestionariuszy","Creador de cuestionarios","Fragebogen-Ersteller"]
+		,"maintenance":["Maintenance","Utrzymanie systemu","Mantenimiento del sistema","Wartung"]
+		,"CompanyName0":["Company:","Firma:","Compañía:","Unternehmen:"]
+		,"CompanyInfo0":["Company Info:","Informacje o firmie:","Información de la compañía:","Firmeninfo:"]
+		,"CompanyCountry0":["Country:","Kraj:","País","Land"]
+		,"Industry0":["Industry:","Branża:","Industria:","Industrie:"]
+		,"Size0":["Size:","Wielkość:","Tamaño de la empresa:","Firmengröße:"]
+		,"MapDefinition0":["Processes Map Definition:","Definicja mapy procesów:","Definición del mapa de procesos:","Prozesskartendefinition:"]
+		,"t_mcsM":["M - Management processes","M - Procesy zarządcze","M - Procesos de gestión","M - Managementprozesse"]
+		,"t_mcsC":["C - Core processes","C - Procesy kluczowe","C - Procesos centrales","C - Kernprozess"]
+		,"t_mcsS":["S - Support processes","S - Procesy pomocnicze","S - Procesos de soporte","S - Supportprozesse"]
+		,"A1":["Processes Map","Mapa procesów","Mapa de Procesos","Prozesskarte"]
+		,"A2":["Processes Table","Tabela procesów","Tabla de Procesos","Prozesstabelle"]
+		,"A3":["Processes List","Lista procesów","Lista de procesos","Prozessliste"]
+		,"level":["Level ","Poziom ","Nivel ","Ebene "]
+		,"t_LevelN":[`Select by clicking the radio button, choose the value from listbox and edit a name. After selecting new combination the name will be cleared. You do not need to enter again the name if you come back to select previous combination (only first is meaningful for further processing)!`,
+		`Wybierz rodzaj procesu klikając radio-button, wybierz wartość z listy i edytuj nazwę. Po wybraniu nowej kombinacji nazwa zostanie wyczyszczona. Nie musisz ponownie wprowadzać nazwy, jeśli wrócisz, aby wybrać poprzednią kombinację (tylko pierwsza kombinacja ma znaczenie do dalszego przetwarzania)!`
+		,
+		`Seleccione haciendo clic en el botón de opción, elija el valor del cuadro de lista y edite un nombre. Después de seleccionar la nueva combinación, el nombre se borrará. No necesita ingresar nuevamente el nombre si regresa para seleccionar la combinación anterior (solo el primero tiene significado para su posterior procesamiento)!`
+		,
+		`Wählen Sie durch Klicken auf das Optionsfeld den Wert aus dem Listenfeld aus und bearbeiten Sie einen Namen. Nach der Auswahl einer neuen Kombination wird der Name gelöscht. Sie müssen den Namen nicht erneut eingeben, wenn Sie zur vorherigen Kombination zurückkehren (nur die erste ist sinnvoll). zur weiteren Bearbeitung)!`]
+		,"t_LevelN1":[`Enter N-1 level process name in a edit field`,`Wpisz w polu edycyjnym nazwę procesu poziomu N-1`,`Ingrese el nombre del proceso de nivel N-1 en un campo de edición`,`Geben Sie den Prozessnamen der Ebene N-1 in ein Bearbeitungsfeld ein`]
+		,"Evaluator0":["Evaluator:","Oceniający:","Evaluador:","Bewerter:"]
+		,"Language0":["Language:","Język:","Idioma:","Sprache:"]
+		,"b_add":["Add","Dodaj","Agregar","Hinzufügen"]
+		,"t_add":[`Add the name of the process to the Process List`,`Dodaj nazwę procesu do listy procesów`,`Agregue el nombre del proceso a la Lista de procesos`,`Fügen Sie den Namen des Prozesses zur Prozessliste hinzu`]
+		,"s_confirmadd":[`' already exists.\nDo you still want to add it?'`,` już istnieje.\nCzy nadal chcesz go dodać?`,` ya existe.\n¿Aún deseas agregarlo?`,` existiert bereits.\nMöchten Sie es noch hinzufügen?`]
+		,"b_delete":["Delete","Usuń","Borrar","Löschen"]
+		,"t_delete":[`Delete last process name from the Process List`,`Usuń ostatnią nazwę procesu z listy procesów`,`Eliminar el último nombre del proceso de la Lista de procesos`,`Löschen Sie den letzten Prozessnamen aus der Prozessliste`]
+		,"b_submit":["Submit","Generuj","Generar","Generieren"]
+		,"s_submit":['Do you want to submit?','Czy chcesz wygenerować kwestionariusz?','¿Quieres enviar?','Möchten Sie einreichen?']
+		,"info_paragraph":[`Readme under construction. You can go to three examples below.`
+			,`Readme w przygotowaniu. Poniżej możesz przejść do trzech przykładów.`
+			,`Léame en construcción. Puede ir a tres ejemplos a continuación.`
+			,`Readme im Aufbau. Nachfolgend finden Sie drei Beispiele.`]
+		,"a_panel":["Administrator Panel","Panel administratora","Panel de administrador","Administrator-Panel"]
+		,"a_paragraph":[`The administrator panel gives access to all created queestionires. It is password protected so please enter the password:`
+			,`Panel administracyjny daje dostęp do wszystkich utworzonych ankiet. Jest chroniony hasłem, proszę podać hasło:`
+			,`El panel de administrador da acceso a todos los cuestionarios creados. Está protegido con contraseña, así que introduzca la contraseña:`
+			,`Das Administrator-Panel bietet Zugriff auf alle erstellten Fragebögen. Es ist passwortgeschützt, also geben Sie bitte das Passwort ein:`]
+		,"q_creation":["Questionnaire creation","Tworzenie kwestionariusza","Creación de cuestionario","Erstellung eines Fragebogens"]
+		,"q_paragraph":[`The following form enables preparing a questionnaire that will be visible to dedicated users. After submiting it will generate the link to access it and redirects to this link. It its recommended to store the link from browser address bar. The link is a company and an evaluator dependent what allows for evaluating a company by several experts. It is highly recommended to remember entered company name. When entering previously used company name followed by Tab key allows recalling company questionaire when creating new one for another evaluator.`
+			,`Poniższy formularz umożliwia przygotowanie ankiety, która będzie widoczna dla dedykowanych użytkowników. Po przesłaniu wygeneruje link umożliwiający dostęp do niego i przekieruje do tego linku. Zalecane jest przechowywanie linku z paska adresu przeglądarki. Powiązanie jest zależne od firmy i oceniającego, co pozwala na ocenę firmy przez kilku ekspertów. Zdecydowanie zaleca się zapamiętanie wprowadzonej nazwy firmy. Wpisanie wcześniej używanej nazwy firmy i naciśnięcie klawisza Tab umożliwia przywołanie kwestionariusza firmy podczas tworzenia nowego dla innego oceniającego.`
+			,`El siguiente formulario permite preparar un cuestionario que será visible para los usuarios dedicados. Después de enviarlo, generará el enlace para acceder a él y redireccionará a este enlace. Se recomienda almacenar el enlace desde la barra de direcciones del navegador. El vínculo es dependiente de una empresa y un evaluador lo que permite que varios expertos evalúen una empresa. Se recomienda encarecidamente recordar el nombre de la empresa introducido. Al ingresar el nombre de la empresa utilizado anteriormente seguido de la tecla Tab, se puede recuperar el cuestionario de la empresa al crear uno nuevo para otro evaluador.`
+			,`Das folgende Formular ermöglicht die Erstellung eines Fragebogens, der für bestimmte Benutzer sichtbar ist. Nach dem Absenden wird der Link für den Zugriff generiert und zu diesem Link weitergeleitet. Es wird empfohlen, den Link in der Adressleiste des Browsers zu speichern. Der Link ist unternehmens- und bewerterabhängig und ermöglicht so die Bewertung eines Unternehmens durch mehrere Experten. Es wird dringend empfohlen, sich den eingegebenen Firmennamen zu merken. Durch Eingabe des zuvor verwendeten Firmennamens gefolgt von der Tabulatortaste können Sie den Unternehmensfragebogen erneut abrufen, wenn Sie einen neuen für einen anderen Bewerter erstellen.`]
+		,"info":[`
+		<p>
+		<p>
+			The Business Process Nature Assessment Framework (BPNAF)  enables the quick and efficient assessment of the nature of business processes in an organization in terms of their unpredictability and knowledge intensity. The presentation of the results enables the objective recommendation of the selection of implementation methodologies, HRM policies, or IT systems supporting BPM in line with the real nature of business processes implemented in the organization, in a way that is understandable to both experts and non-experts.
+		<p>
+			This framework contains: (1) questionnaire generator for dedicated company and evaluating person, (2) system for completing the questionnaire with option of previewing all questionnaires for one entity (3) questionnaire management including creation of the report. Generated report contains process map and results matrix (BPNAM) in a form of two charts and recommendations. As a starting point you can go through several examples available below.
+		<p>
+			The framework interface supports <a href="bpnaf5.html?ex=example4&lang=en">English</a>, <a href="bpnaf5.html?ex=example7">Polish</a> (default), <a href="bpnaf5.html?ex=example8&lang=es">Spanish</a> and <a href="bpnaf5.html?ex=example9&lang=de">German</a>.
+		<p>
+			The method overview can be found in <i>Marek Szelągowski,Practical assessment of the nature of business processes, Information Systems and e-Business Management</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs.pdf">pdf</a>) or <a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>.`
+			,
+		`
+		<p>
+		<p>
+		System analizy natury procesów biznesowych (BPNAF) umożliwia szybką i skuteczną ocenę charakteru procesów biznesowych w organizacji pod kątem ich nieprzewidywalności i intensywności wiedzy. Prezentacja wyników pozwala na obiektywną rekomendację wyboru metodologii wdrożeń, strategii zarządzania zasobami ludzkimi czy systemów informatycznych wspierających zarządzanie procesami, zgodnie z realnym charakterem procesów biznesowych realizowanych w organizacji, w sposób zrozumiały zarówno dla ekspertów, jak i osób niebędących specjalistami.
+		<p>
+		System ten zawiera: (1) generator ankiet dla dedykowanej firmy i osoby oceniającej, (2) system wypełniania ankiety z możliwością podglądu wszystkich ankiet dla jednego podmiotu, (3) zarządzanie ankietami, w tym tworzenie raportu. Wygenerowany raport zawiera mapę procesów oraz macierz wyników (BPNAM) w postaci dwóch wykresów i rekomendacji. Przed rozpoczęciem pracy, można przanalizować kilka przykładów dostępnych poniżej.
+		<p>
+		Interfejs systemu obsługuje <a href="bpnaf5.html?ex=example4&lang=en">angielski</a>, <a href="bpnaf5.html?ex=example7">polski</a> (domyślnie), <a href="bpnaf5.html?ex=example8&lang=es">hiszpański</a> i <a href="bpnaf5.html?ex=example9&lang=de">niemiecki</a>.
+		<p>
+		Opis metody można znaleźć w <i>Marek Szelągowski,Praktyczna ocena natury procesów biznesowych, Systemy informacyjne i zarządzanie e-biznesem</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs.pdf">pdf</a>) lub <a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>.`
+			,
+		`
+		<p>
+		<p>
+		Evaluación de la Naturaleza de los Procesos de Negocio (BPNAF) permite una evaluación rápida y eficiente de la naturaleza de los procesos de negocio en una organización en términos de su imprevisibilidad e intensidad de conocimiento. La presentación de los resultados permite recomendar objetivamente la selección de metodologías de implementación, políticas de gestión de recursos humanos o sistemas de TI que soporten BPM en línea con la naturaleza real de los procesos de negocio implementados en la organización, de una manera comprensible tanto para expertos como para no expertos. expertos.
+		<p>
+		Este marco contiene: (1) generador de cuestionarios para empresa dedicada y persona evaluadora, (2) sistema para completar el cuestionario con opción de vista previa de todos los cuestionarios para una entidad (3) gestión de cuestionarios, incluida la creación del informe. El informe generado contiene un mapa de procesos y una matriz de resultados (BPNAM) en forma de dos gráficos y recomendaciones. Como punto de partida, puede consultar varios ejemplos disponibles a continuación.
+		<p>
+		La interfaz del marco admite <a href="bpnaf5.html?ex=example4&lang=en">inglés</a>, <a href="bpnaf5.html?ex=example7">polaco</a> (predeterminado), <a href="bpnaf5.html?ex=example8&lang=es">español</a> y un <a href="bpnaf5.html?ex=example9&lang=de">alemán</a>.
+		<p>
+		La descripción general del método se puede encontrar en <i>Marek Szelągowski, Evaluación práctica de la naturaleza de los procesos de negocio, sistemas de información y gestión de negocios electrónicos</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs.pdf">pdf</a>) o <a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>.`,
+		`
+		<p>
+		<p>
+		Das Business Process Nature Assessment Framework (BPNAF) ermöglicht die schnelle und effiziente Bewertung der Beschaffenheit von Geschäftsprozessen in einer Organisation hinsichtlich ihrer Unvorhersehbarkeit und Wissensintensität. Die Präsentation der Ergebnisse ermöglicht die objektive Empfehlung der Auswahl von Implementierungsmethoden, HRM-Richtlinien oder IT-Systemen, die BPM unterstützen, im Einklang mit der tatsächlichen Natur der in der Organisation implementierten Geschäftsprozesse, und zwar auf eine Weise, die sowohl für Experten als auch für Laien verständlich ist. Experten.
+		<p>
+		Dieses Framework enthält: (1) Fragebogengenerator für bestimmte Unternehmen und bewertende Personen, (2) System zum Ausfüllen des Fragebogens mit der Möglichkeit, alle Fragebögen für eine Entität in der Vorschau anzuzeigen, (3) Fragebogenverwaltung einschließlich Erstellung des Berichts. Der generierte Bericht enthält eine Prozesskarte und eine Ergebnismatrix (BPNAM) in Form von zwei Diagrammen und Empfehlungen. Als Ausgangspunkt können Sie die unten aufgeführten Beispiele durchgehen.
+		<p>
+		Die Framework-Schnittstelle unterstützt <a href="bpnaf5.html?ex=example4&lang=en">Englisch</a>, <a href="bpnaf5.html?ex=example7">Polnisch</a> (Standard), <a href="bpnaf5.html?ex=example8&lang=es">Spanisch</a> und <a href="bpnaf5.html?ex=example9&lang=de">Deutsch</a>.
+		<p>
+		Die Methodenübersicht finden Sie in <i>Marek Szelągowski,Practical Assessment of the Nature of Business Processes, Information Systems and E-Business Management</i> (<a href="pdf/Szelągowski 2021_Practical Assessment of the Nature of BPs. pdf">pdf</a>) oder <a href="https://doi.org/10.1007/s10257-021-00501-y">https://doi.org/10.1007/s10257-021-00501-y</a>.`
+		]
+	}
+	function get_string(ids) {
+		return lang_dict[ids][lang_idx[lang]];
+	}
+	function lang_changed(s) {
+		//alert("lang_changed:"+s+" "+lang);
+		lang=s;  // set global var lang 
+		document.getElementById("lang").value=lang;
+
+		for(var key in lang_idx) {
+			document.getElementById(key).style["color"]="black";		
+		}
+		document.getElementById(lang).style["color"]="blue";//"#9e7ba8";
+/*
+		template1aa = (s==="pl") ? template1aa_pl : template1aa_en;
+		template4aa = (s==="pl") ? template4aa_pl : template4aa_en;
+		template4cc = (s==="pl") ? template4cc_pl : template4cc_en;
+*/
+
+		var idx=lang_idx[lang];
+		for(var key in lang_dict) {
+			var k=lang_dict[key];
+			var s1=k[idx<k.length?idx:0];
+	try {
+			if(Array.isArray(s1)) {
+				for(var j=0;j<s1.length;j++) {
+					if(key.includes("$NN")) {
+						for(var k=0;k<ids.length;k++) {
+							var key2 = key.replace("$NN",ids[k]).replace("$DD",(j+1));
+							var kk = key2.split(':');
+							if(kk.length>1) {
+								document.getElementById(kk[0])[kk[1]]=s1[j];
+							} else {
+								document.getElementById(key2).innerHTML=s1[j];
+							}
+							//document.getElementById(key2).innerHTML=s1[j];
+						}
+					} else {
+						document.getElementById(key+(j+1)).innerHTML=s1[j];
+					}
+				}
+			} else {
+				var kk = key.split(':');
+				if(kk.length>1) {
+					if(kk[0].includes("$NN")) {
+						for(var k=0;k<ids.length;k++) {
+							var key = kk[0].replace("$NN",ids[k]);
+							document.getElementById(key)[kk[1]]=s1;
+						}
+					} else {
+						document.getElementById(kk[0])[kk[1]]=s1;
+					}
+				} else {
+					ell=document.getElementsByName(key);
+					if(ell.length>0){
+						for(var l=0;l<ell.length;l++) {
+							ell[l].innerHTML=s1;
+						}
+					} else {
+						var kkk=key.split("_");
+						if(kkk.length>1 && kkk[0]=='p') { /* placeholder */
+								document.getElementById(key).placeholder=s1;
+						} else if(kkk.length>1 && kkk[0]=='t') { /* title */
+								document.getElementById(key).title=s1;
+						} else {
+							document.getElementById(key).innerHTML=s1;
+						}
+					}
+	//				}
+				}
+			}
+	} catch(err) {if(debug) console.log(err.message + "\nerror ->" + key+" "+s1);}
+	
+		}
+
+//		update();
+	}
+
+
 	function main() { // parse params from url address
 		var s = decodeURIComponent(window.location.search.substring(1));
 		if(s.length>1) {
@@ -57,6 +248,7 @@
 				window[sss[0]] = sss.length>1 ? sss[1] : 1;
 			}
 		}
+		lang_changed(lang);
 	}
 	
 </script>	
@@ -65,16 +257,34 @@
 <body style="background-color:#eee">
 
 <div class="container">
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container-fluid">
+		<button class="navbar-toggler" type="button"
+			data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+			aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle navigation">
+		  <span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarMenu">
+			<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+				<li class="nav-item"><a class="nav-link" aria-current="page" href="javascript:lang_changed('en');" id="en">EN</a></li>
+				<li class="nav-item"><a class="nav-link  active" href="javascript:lang_changed('pl');" id="pl">PL</a></li>
+				<li class="nav-item"><a class="nav-link" href="javascript:lang_changed('es');" id="es">ES</a></li>
+				<li class="nav-item"><a class="nav-link" href="javascript:lang_changed('de');" id="de">DE</a></li>
+			</ul>
+		</div>
+    </div>
+  </nav>
+
 	
 <!--
 <center><h2><a href="bpnaf5.html">Business Process Nature Assessment Framework</a></h2></center>
 -->
-<p><br>
-</p>
+
 <div class="mt-4 p-5 bg-gradient1 bg-light1" style="background-color:#b7d9fE;background-color1:#9e7ba8;margin-top:0!important;background-image:linear-gradient(to top,#e6ffe6,white,white,#b7d9fE)">
 	<center>
 		<h1 id="banner">
-			<a id="t_title" href="bpnaf5.html" class="text-white1">
+			<a id="title" href="bpnaf5.html" class="text-white1">
 				Business Process Nature Assessment Framework
 			</a>
 		</h1>
@@ -88,7 +298,7 @@
 			<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 
 			<!-- Accordion Item #1 -->
-			<h4>Intro</h4>
+			<h4 id="intro">Intro</h4>
 
 			</button>
 		</h2>
@@ -117,7 +327,7 @@
 			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOneA" aria-expanded="false" aria-controls="collapseOneA">
 
 			<!-- Accordion Item #1a -->
-			<h4>Getting started</h4>
+			<h4 id="instruction">Getting started</h4>
 
 			</button>
 		</h2>
@@ -126,8 +336,9 @@
 
 <div id="info" style="display:none1;">
 <p>
- Readme under construction. You can go to three examples below.
-
+ <span id="info_paragraph">
+	 Readme under construction. You can go to three examples below.
+ </span>
 </div>
 
 			</div>
@@ -140,7 +351,7 @@
 			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 				
 			<!-- Accordion Item #2 -->
-			<h4>Three examples</h4>
+			<h4 id="examples">Three examples</h4>
 			
 			</button>
 		</h2>
@@ -153,10 +364,8 @@
 <div class="row">
 	<div class="col-sm-4">
 		<div class="h-100 content">
-			<h3>Example<br>1</h3>
-			<p>This <a href="bpnaf5.html?ex=example1">example</a> contains the questionnaire contatinng 23 sample processes.
-It is prepared to be filled by an evaluator.
-
+			<h3><span name="example">Example</span><br>1</h3>
+			<p><span id="ex1_paragraph">This <a href="bpnaf5.html?ex=example1">example</a> contains the questionnaire contatinng 23 sample processes. It is prepared to be filled by an evaluator.</span>
 					<a href="bpnaf5.html?ex=example1">
 						<div style="border:1px solid lightgray;">
 							<table width="100%" style="text-align:center"><tbody><tr><td style="height:100px">
@@ -244,9 +453,8 @@ It is prepared to be filled by an evaluator.
  
 	<div class="col-sm-4">
 		<div class="h-100 content">
-			<h3>Example<br>2</h3>
-			<p>This <a href="bpnaf5.html?ex=example5">example</a> contains the questionnaire contatinng 18 sample processes.
-It is partly filled by an evaluator.
+			<h3><span name="example">Example</span><br>2</h3>
+			<p><span id="ex2_paragraph">This <a href="bpnaf5.html?ex=example5">example</a> contains the questionnaire contatinng 18 sample processes. It is partly filled by an evaluator.</span>
 				<a href="bpnaf5.html?ex=example2">
 					<div style="border:1px solid lightgray;">
 						<table width="100%" style="text-align:center"><tbody><tr><td style="height:100px">
@@ -276,11 +484,9 @@ It is partly filled by an evaluator.
 
 	<div class="col-sm-4">
 		<div class="h-100 content">
-			<h3>Example<br>3</h3>
+			<h3><span name="example">Example</span><br>3</h3>
 			<p>
-			This <a href="bpnaf5.html?ex=example3">example</a> contains the questionnaire contatinng 8 sample processes.
-			It is already filled by an evaluator.
-			
+			<span id="ex3_paragraph">This <a href="bpnaf5.html?ex=example3">example</a> contains the questionnaire contatinng 8 sample processes. It is already filled by an evaluator.</span>
 			<a href="bpnaf5.html?ex=example3">
 				<div style="border:1px solid lightgray;">
 					<table width="100%" style="text-align:center"><tbody><tr><td style="height:100px"></td></tr><tr><td style="height:100px">
@@ -431,7 +637,7 @@ It is partly filled by an evaluator.
 			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
 
 			<!--Accordion Item #4 -->
-			<h4>Questionaire creator</h4>
+			<h4 id="creator">Questionnaire creator</h4>
 
 			</button>
 		</h2>
@@ -445,16 +651,16 @@ It is partly filled by an evaluator.
 <div class="row">
 	<div class="col-md-12">
 		<div class="h-100 content">
-			<h3>Questionnaire creation</h3>
-			<p>The following form enables preparing a questionnaire that will be visible to dedicated users. After submiting it will generate the link to access it and redirects to this link. It its recommended to store the link from browser address bar. The link is a company and an evaluator dependent what allows for evaluating a company by several experts. It is highly recommended to remember entered company name. When entering previously used company name followed by Tab key allows recalling company questionaire when creating new one for another evaluator.
+			<h3 id="q_creation">Questionnaire creation</h3>
+			<p id="q_paragraph">The following form enables preparing a questionnaire that will be visible to dedicated users. After submiting it will generate the link to access it and redirects to this link. It its recommended to store the link from browser address bar. The link is a company and an evaluator dependent what allows for evaluating a company by several experts. It is highly recommended to remember entered company name. When entering previously used company name followed by Tab key allows recalling company questionaire when creating new one for another evaluator.
 			<form id='f7' action='bpnaf.php' method="post" onsubmit="return on_submit();">
 				<input type="hidden" id="fx_name" name="fx_name" value="bpnaf_default.tsv">
 				<fieldset class="border rounded-3 p-3">
-					<legend class="scheduler-border">Company Info:</legend>
+					<legend class="scheduler-border" id="CompanyInfo0">Company Info:</legend>
 					<div class="row">
 						<div class="col-7">
 							<div class="input-group">
-								<div class="input-group-text" title="Enter Company Name">Name:</div>
+								<div class="input-group-text" title="" id="CompanyName0">Name:</div>
 								<input type="text" id="CompanyName" class="form-control" list="CompanyHelpList" onchange="company_changed(this);">
 								<datalist id="CompanyHelpList">
 								</datalist>			
@@ -462,7 +668,7 @@ It is partly filled by an evaluator.
 						</div>
 						<div class="col-5">
 							<div class="input-group">
-								<div class="input-group-text" title="Select Company Country">Country:</div>
+								<div class="input-group-text" title="" id="CompanyCountry0">Country:</div>
 								<select id="CompanyCountry" class="form-control">
 								</select>
 							</div>
@@ -471,7 +677,7 @@ It is partly filled by an evaluator.
 					<div class="row">
 						<div class="col-7">
 							<div class="input-group">
-								<div class="input-group-text" title="Select optionally industry group codename of the company">Industry:</div>
+								<div class="input-group-text" title="" id="Industry0">Industry:</div>
 								<select id="Industry" class="form-select">
 								  <option value="0"></option>
 								</select>
@@ -479,7 +685,7 @@ It is partly filled by an evaluator.
 						</div>
 						<div class="col-5">
 							<div class="input-group">
-								<div class="input-group-text" title="Select optionally size group of the company">Size: </div>
+								<div class="input-group-text" title="" id="Size0">Size: </div>
 								<select id="CompSize" class="form-select">
 									<option value="0"></option>
 									<option value="1">Micro (&lt; 10)</option>
@@ -493,15 +699,15 @@ It is partly filled by an evaluator.
 				</fieldset>
 				<br>	
 				<fieldset class="border rounded-3 p-3">
-					<legend class="scheduler-border">Processes Map Definition:</legend>
+					<legend class="scheduler-border" id="MapDefinition0">Processes Map Definition:</legend>
 <div class="row">
 					<div class="mb-2">
 						<div class="input-group">
-							<div id="LevelN" class="input-group-text" title="Select by clicking the radio button, choose the value from listbox and edit a name. After selecting new combination the name will be cleared. You do not need to enter again the name if you come back to select previous combination (only first is meaningful for further processing)!" >
-								<font color="">Level N</font>&nbsp;:
+							<div class="input-group-text" id="t_LevelN" title="Select by clicking the radio button, choose the value from listbox and edit a name. After selecting new combination the name will be cleared. You do not need to enter again the name if you come back to select previous combination (only first is meaningful for further processing)!" >
+								<span name="level">Level</span>&nbsp;N&nbsp;:
 							</div> 		
 
-							<div style="background-color:#e6ffe6" class="input-group-text" title="M - Management, C - Core, S - Support" >
+							<div style="background-color:#e6ffe6" class="input-group-text" id="t_mcsM" title="M - Management" >
 								<input type="radio" name="MCS" value="M" checked onchange="mcs_changed(this);"/>&nbsp;M&nbsp;
 									<select id="M" class="" style="width:40px" onchange="mcs_changed(this);">
 									<option value="1">1</option>
@@ -515,7 +721,7 @@ It is partly filled by an evaluator.
 									<option value="9">9</option>
 								</select>
 							</div>
-							<div style="background-color:azure" class="input-group-text" title="M - Management, C - Core, S - Support" >
+							<div style="background-color:azure" class="input-group-text" id="t_mcsC" title="C - Core" >
 								<input type="radio" name="MCS" value="C" onchange="mcs_changed(this);"/>&nbsp;C&nbsp;
 								<select id="C" class="" style="width:40px" onchange="mcs_changed(this);" disabled>
 									<option value="1">1</option>
@@ -529,7 +735,7 @@ It is partly filled by an evaluator.
 									<option value="9">9</option>
 								</select>
 							</div>
-							<div style="background-color:#ffffcc" class="input-group-text" title="M - Management, C - Core, S - Support" >
+							<div style="background-color:#ffffcc" class="input-group-text" id="t_mcsS" title="S - Support" >
 								<input type="radio" name="MCS" value="S" onchange="mcs_changed(this);"/>&nbsp;S&nbsp;
 								<select id="S" class="" style="width:40px" onchange="mcs_changed(this);" disabled >
 									<option value="1">1</option>
@@ -544,7 +750,7 @@ It is partly filled by an evaluator.
 								</select>
 							</div>
 								<input type="text" id="CategoryName" class="form-control" list="CategoryHelpList" 
-								value="" placeholder="Management">
+								value="" placeholder="">
 							<datalist id="CategoryHelpList">
 
 							</datalist>
@@ -552,7 +758,7 @@ It is partly filled by an evaluator.
 					</div>
 					<div class="mb-2">
 						<div class="input-group">
-							<div class="input-group-text" title="Enter process N-1 level name in a edit field">Level N-1&nbsp;:
+							<div class="input-group-text" id="t_LevelN1" title="Enter process N-1 level name in a edit field" ><span name="level">Level</span>&nbsp;N-1&nbsp;:
 							</div>
 							<div id="LevelN1" class="input-group-text" title="Level N-1 code">
 								&nbsp;&nbsp;<span id="ProcessCode"><font color="blue">M1</font>.1</span>
@@ -563,8 +769,8 @@ It is partly filled by an evaluator.
 						</div>
 					</div>
 </div>
-					<button type="button" class="btn btn-info" title="Add the name of the process to the Process List" onclick="process_add(this);">Add</button>
-					<button type="button" class="btn btn-warning" title="Delecte last process name from the Process List" onclick="process_del(this);" style="float:right">Delete</button>
+					<button type="button" class="btn btn-info" id="t_add" title="Add the name of the process to the Process List" onclick="process_add(this);" ><span id="b_add">Add</span></button>
+					<button type="button" class="btn btn-warning" id="t_delete" title="Delete last process name from the Process List" onclick="process_del(this);" style="float:right"><span id="b_delete">Delete</span></button>
 <p></p>	
 					<div class="row">
 						<div class="container">
@@ -592,21 +798,21 @@ It is partly filled by an evaluator.
 								<div id="tabA1_c" class="container">
 										<div id="ProcessMap" style="height:310px;overflow:auto">
 					
-										</div>			
+										</div>
 								</div>
 							</div>
 							<div id="tabA2" class="tab-pane fade in show active">
 								<div id="tabA2_c" class="container">
 										<div id="ProcessTab" style="height:310px;overflow:auto">
 					
-										</div>			
+										</div>
 								</div>
 							</div>
 							<div id="tabA3" class="tab-pane fade in show">
 								<div id="tabA3_c" class="container">
 										<div style="height:310px">
 											<textarea id='ex7' name="fx" wrap="off" rows=12 style="width:100%;font-family:Consolas,monospace" onchange="update();"></textarea>
-										</div>			
+										</div>
 								</div>
 							</div>
 						</div>
@@ -615,7 +821,7 @@ It is partly filled by an evaluator.
 					<div class="row">
 						<div class="col-8">
 							 <div class="input-group">
-								<div class="input-group-text" title="Evaluator Codename">Evaluator:</div>
+								<div class="input-group-text" title="" id="Evaluator0">Evaluator:</div>
 								<input type="text" id="EvaluatorName" class="form-control" list="EvaluatorList" onchange="evaluator_add(this.value);" value=""/>
 								<datalist id="EvaluatorList">
 									<option value="1">
@@ -626,7 +832,7 @@ It is partly filled by an evaluator.
 						</div>
 						<div class="col-4">
 							<div class="input-group">
-								<div class="input-group-text" title="language">Language:</div>
+								<div class="input-group-text" title="" id="Language0">Language:</div>
 								<select class="form-select form-select-sm" id="lang" style="width:64px;display:right" onchange="lang_changed(this.value);">
 									<option value="en">en</option>
 									<option value="pl" selected>pl</option>
@@ -636,7 +842,7 @@ It is partly filled by an evaluator.
 							</div>
 						</div>
 					</div>
-					<input type="submit" id="submit" value="Submit" class="btn btn-primary" style="float:right" disabled/>
+					<button type="submit" id="b_submit" class="btn btn-primary" style="float:right" disabled>Submit</button>
 				</fieldset>
 			</form>
 		</div>
@@ -654,7 +860,7 @@ It is partly filled by an evaluator.
 			<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
 
 			<!-- Accordion Item #5 -->
-			<h4>Maintenance</h4>
+			<h4 id="maintenance">Maintenance</h4>
 			
 			</button>
 		</h2>
@@ -677,8 +883,8 @@ function verify(event) {
 <div class="row">
 	<div class="col-md-12">
 		<div class="h-100 content">
-			<h3>Administrator panel</h3>
-				<p> The administrator panel gives access to all created queestionires. It is password protected so please enter the password:
+			<h3 id="a_panel">Administrator panel</h3>
+				<p id="a_paragraph"> The administrator panel gives access to all created queestionires. It is password protected so please enter the password:
 <!-- 			The server component of the framework is dedicated to postprocessing of questionnaire datafiles. It has access to all questionnaires so it is password protected. 
 At the moment it allows just for previewing the content of quiestionnire files and go to selected one.  -->
 				
@@ -962,7 +1168,7 @@ At the moment it allows just for previewing the content of quiestionnire files a
 			el2.innerHTML=get_next(mcs,nn);
 		}
 		document.getElementById('CategoryName').value='';  // clear CategoryName
-		document.getElementById('CategoryName').placeholder=mcs=='M'?'Management':mcs=='C'?'Core':mcs=='S'?'Support':''; 
+		document.getElementById('CategoryName').placeholder=mcs=='M'?'':mcs=='C'?'':mcs=='S'?'':''; 
 		document.getElementById('LevelN1').style["background-color"] = 
 			mcs=='M'? '#e6ffe6':mcs=='C'?'azure':mcs=='S'?'#ffffcc':''; 
 	}
@@ -977,7 +1183,7 @@ At the moment it allows just for previewing the content of quiestionnire files a
 			update_table(ta.value);
 			update_map(ta.value);
 			update_mcs();
-			document.getElementById('submit').disabled=false;
+			document.getElementById('b_submit').disabled=false;
 		}
 	}
 	function update_mcs() {
@@ -1038,6 +1244,10 @@ At the moment it allows just for previewing the content of quiestionnire files a
 		var ev = '';
 		var s = company.split(";");					// Check evaluator info
 		if(s.length>1) {company=s[0];ev=s[1];}
+		var el=document.getElementById("EvaluatorName");  // Evaluator Name
+		if(el.value.length>0) {
+			ev=el.value;
+		}
 		
 		var el=document.getElementById("Industry"); // Industry
 		var industry =  el ? el.value : '';
@@ -1085,14 +1295,23 @@ At the moment it allows just for previewing the content of quiestionnire files a
 			s = ss.slice(s[0]==='#'?1:0).join('\n');
 			var hd='',no='1';
 			if(s[0]!='#') hd='#;'+company+';'+ev+';;;;;0;0.3;0.65;1;;'+industry+';'+compsize+';'+compcountry+'\n';
+			var names={};
 			for(var i=0;i<ss.length;i++) {
 				var t=ss[i].split('.');
 				var n=t[0].substring(1);
 				if(ss[i][0]===mcs && n===mcs_no) {
 					no=1+parseInt(t[1]);
 				}
+				var t2=ss[i].split(/[;\t]/);
+				if(t2.length>2 && t2[2].length>0) {
+					names[t2[2]]=1;  // collect already existing process names
+				}
 			}
-			s += mcs + mcs_no + '.' + no + ';' + mcs_name + ';' +  el.value+'\n';
+			var s2=mcs + mcs_no + '.' + no + ';' + mcs_name + ';' +  el.value+'\n';
+			
+			if( !(el.value in names) || confirm(el.value + get_string('s_confirmadd')) ) {
+				s += s2;
+			} 
 			ta.value = hd + s ; 
 			el.value='';
 		}
@@ -1295,9 +1514,9 @@ var svg_S=`
 				document.getElementById('f7').action = 
 					'bpnaf5.html?ex='+encodeURIComponent(s.replaceAll('\n','|'))+"&lang="+lang;
 			}
-			s2=s+'\nDo you want to open generated process map?\n'+s2+'\n';			
+			s2=s+'\nDo you want to open generated questionnaire?\n'+s2+'\n';			
 		} else {
-			s2='\nDo you want to submit?\n'+s2+'\nLink code:\n'+fname+'\n';
+			s2='\n'+get_string("s_submit")+'\n'+s2+'\nLink code:\n'+fname+'\n';
 		}
 		return(confirm(s2));
 	}
